@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda' // 使用lamda表达式
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        buildToolsVersion "25.0.2"
+        applicationId "xsda.xsda"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true // 方法数超过65535分包
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    //为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions{
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
+    
+    // 使用lamda表达式
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    
+    // 方法数超过65535分包
+    dexOptions {
+        javaMaxHeapSize "6144m"
+        preDexLibraries = false
+        jumboMode = true
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    // 百分比布局
+    compile 'com.zhy:percent-support-extends:1.1.1'
+    // 方法数超过65535分包(注: 1.0.1版本最稳定)
+    compile 'com.android.support:multidex:1.0.1'
+    // 该版本最稳定
+    compile 'com.jakewharton:butterknife:7.0.1'
+    // 设置系统状态栏颜色
+    compile 'com.githang:status-bar-compat:0.3'
+    // 布局不能预览则一定要添加以下三行依赖
+    //noinspection GradleDependency,GradleCompatible
+    compile 'com.android.support:design:25.4.0'
+    //noinspection GradleDependency,GradleCompatible
+    compile 'com.android.support:support-v4:25.4.0'
+    //noinspection GradleDependency,GradleCompatible
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    // LeanCloud 基础包
+    compile 'cn.leancloud.android:avoscloud-sdk:v4.6.4'
+    // 推送与实时聊天需要的包
+    compile('cn.leancloud.android:avoscloud-push:v4.6.4@aar') { transitive = true }
+    // LeanCloud 统计包
+    compile 'cn.leancloud.android:avoscloud-statistics:v4.6.4'
+    // LeanCloud 用户反馈包
+    compile 'cn.leancloud.android:avoscloud-feedback:v4.6.4@aar'
+    // avoscloud-sns：LeanCloud 第三方登录包
+    compile 'cn.leancloud.android:avoscloud-sns:v4.6.4@aar'
+    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+    // LeanCloud 应用内搜索包
+    compile 'cn.leancloud.android:avoscloud-search:v4.6.4@aar'
+    // RSA加密
+    compile files('libs/rsa.jar')
+    // 进度条
+    compile 'com.daimajia.numberprogressbar:library:1.4@aar'
+}

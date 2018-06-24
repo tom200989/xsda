@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_neterror_all"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_neterror_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:text="你的手机好像没网了"
+            android:textColor="@color/colorCompany"
+            app:layout_marginTopPercent="5%h"
+            app:layout_textSizePercent="2.5%h" />
+
+        <TextView
+            android:id="@+id/tv_neterror_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/tv_neterror_des"
+            android:layout_centerHorizontal="true"
+            android:text="@string/neterror"
+            android:textColor="@color/colorCompany"
+            app:layout_marginBottomPercent="10%h"
+            app:layout_textSizePercent="6%h" />
+
+        <TextView
+            android:id="@+id/tv_neterror_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_neterror_des"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/bg_conner_colorpink_3"
+            android:gravity="center"
+            android:text="@string/neterror_retry"
+            android:textColor="@android:color/white"
+            app:layout_heightPercent="6%h"
+            app:layout_marginTopPercent="18%h"
+            app:layout_widthPercent="30%w" />
+
+        <TextView
+            android:id="@+id/tv_neterror_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_neterror_retry"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/exit"
+            android:textColor="@color/colorCompany"
+            app:layout_heightPercent="6%h"
+            app:layout_marginTopPercent="5%h"
+            app:layout_widthPercent="30%w" />
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+</com.zhy.android.percent.support.PercentRelativeLayout>

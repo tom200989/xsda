@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="xsda.xsda.ui.SplashActivity">
+
+    <!-- 启动界面 -->
+    <xsda.xsda.widget.SplashWidget
+        android:id="@+id/widget_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <!-- 隐私条款 -->
+    <xsda.xsda.widget.PrivacyWidget
+        android:id="@+id/widget_privacy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <!-- 网络出错 -->
+    <xsda.xsda.widget.NetErrorWidget
+        android:id="@+id/widget_neterror"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <!-- 等待界面 -->
+    <xsda.xsda.widget.WaitWidget
+        android:id="@+id/widget_wait"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</com.zhy.android.percent.support.PercentRelativeLayout>
