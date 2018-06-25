@@ -1,10 +1,15 @@
 package xsda.xsda.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import com.liyi.liyiutils.main.LiyiEncryty;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import xsda.xsda.R;
 
@@ -62,6 +67,38 @@ public class Ogg {
         String en_appkey = Ogg.streamToString(in_appkey);
         String privateKey = Ogg.streamToString(in_private);
         return LiyiEncryty.decodeByPrivate(en_appkey, privateKey);
+    }
+
+    /**
+     * 获取本地版本号
+     *
+     * @param context
+     * @return 版本号整型
+     */
+    public static int getLocalVersion(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            // 00_从上下文中获取包管理者 --> 获取当前包用getPackageName
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            // 01_获取包信息中的版本号
+            int versionCode = packageInfo.versionCode;
+            // 02_返回版本号
+            return versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 把date转换成字符串
+     *
+     * @param date date
+     * @return 2018-01-05 16:28:36
+     */
+    public static String turnDateToString(Date date) {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sif = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sif.format(date);
     }
 
 }

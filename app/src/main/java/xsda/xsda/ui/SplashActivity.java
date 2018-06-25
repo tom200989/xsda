@@ -18,8 +18,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
+import xsda.xsda.helper.GetUpdateHelper;
 import xsda.xsda.helper.PingHelper;
 import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
 import xsda.xsda.widget.NetErrorWidget;
 import xsda.xsda.widget.PrivacyWidget;
@@ -98,11 +100,11 @@ public class SplashActivity extends RootActivity {
                 Sgg.getInstance(this).putBoolean(Cons.PRIVACY_READ, true);
                 widgetPrivacy.setVisibility(View.GONE);
                 // 检测新版本
-                checkUpdate();
+                checkConnect();
             });
         } else {
             // 检测新版本
-            checkUpdate();
+            checkConnect();
         }
 
     }
@@ -110,7 +112,7 @@ public class SplashActivity extends RootActivity {
     /**
      * 3.检查更新
      */
-    private void checkUpdate() {
+    private void checkConnect() {
         // 显示等待界面
         widgetSplash.setVisibility(View.VISIBLE);
         handler.postDelayed(this::ping, 3000);
@@ -125,8 +127,9 @@ public class SplashActivity extends RootActivity {
         
         pingHelper.setOnPingSuccessListener(msg -> {
             widgetSplash.setLoadingText(loading_success);
-            toast("检测成功", 2000);
-            // TODO: 2018/6/22 0022 跳转到登陆界面
+            // toast("ping成功", 2000);
+            // TODO: 2018/6/22 0022 检查更新
+            checkUpdate();
         });
         
         pingHelper.setOnProgressListener(progress -> {
@@ -146,10 +149,21 @@ public class SplashActivity extends RootActivity {
             widgetNeterror.setOnNetErrorBackListener(this::finish);
             widgetNeterror.setOnNetErrorRetryListener(() -> {
                 widgetNeterror.setVisibility(View.GONE);
-                checkUpdate();
+                checkConnect();
             });
         });
         pingHelper.ping(this, getString(R.string.ping_address));
+    }
+
+    /**
+     * 检查更新
+     */
+    private void checkUpdate() {
+        // 获取当前APP的版本号
+        int localVersion = Ogg.getLocalVersion(this);
+        // 请求LeanClound最新版本
+        GetUpdateHelper getUpdateHelper = new GetUpdateHelper();
+        getUpdateHelper.getNewVersion();
     }
 
     @Override
