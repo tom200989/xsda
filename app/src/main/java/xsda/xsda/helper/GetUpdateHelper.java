@@ -1,6 +1,7 @@
 package xsda.xsda.helper;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.GetCallback;
@@ -28,10 +29,11 @@ public class GetUpdateHelper extends GetCallback<AVObject> {
         if (e == null) {
             String updatedAt = Ogg.turnDateToString(avObject.getUpdatedAt());
             String newVersionCode = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_CODE);
-            String updatedFile = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_FILE);
+            AVFile avFile = avObject.getAVFile(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_FILE);
+            String url = avFile.getUrl();
             Lgg.t(Cons.TAG).ii("updatedAt: " + updatedAt);
             Lgg.t(Cons.TAG).ii("newVersionCode: " + newVersionCode);
-            Lgg.t(Cons.TAG).ii("updatedFile: " + updatedFile);
+            Lgg.t(Cons.TAG).ii("fileUrl: " + url);
         } else {
             Lgg.t(Cons.TAG).ee(e.getMessage());
         }

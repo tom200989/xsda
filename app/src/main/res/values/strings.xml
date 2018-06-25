@@ -14,4 +14,5 @@
     <string name="loading_text">数据加载中…</string>
     <string name="loading_success">正在跳转…</string>
     <string name="ping_address">"edvbrq20.api.lncld.net"</string>
+    <string name="ping_address_backup">api.leancloud.cn</string>
 </resources>

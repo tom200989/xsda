@@ -152,7 +152,7 @@ public class SplashActivity extends RootActivity {
                 checkConnect();
             });
         });
-        pingHelper.ping(this, getString(R.string.ping_address));
+        pingHelper.ping(this, getString(R.string.ping_address_backup));
     }
 
     /**
