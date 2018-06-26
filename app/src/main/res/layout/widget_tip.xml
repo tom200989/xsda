@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_update_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.7"
+        android:background="@color/colorGray" />
+
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        app:layout_marginTopPercent="5%h"
+        app:layout_marginBottomPercent="5%h"
+        android:id="@+id/rl_update_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_conner_8"
+        app:layout_widthPercent="80%w">
+
+        <!-- 检测到新版本 -->
+        <TextView
+            android:id="@+id/tv_update_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/check_update_title"
+            android:textColor="@color/colorCompanyDark"
+            app:layout_marginBottomPercent="3%h"
+            app:layout_marginTopPercent="3%h" />
+
+        <!-- 描述 -->
+        <TextView
+            android:id="@+id/tv_update_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_update_title"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:text="@string/check_update_default_des"
+            android:textColor="@color/colorCompany"
+            app:layout_marginBottomPercent="3%h"
+            app:layout_textSizePercent="2.3%h" />
+
+        <View
+            android:background="@color/colorCompanyDark"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_below="@id/tv_update_des"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        
+        <!-- 按钮 -->
+        <com.zhy.android.percent.support.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_update_des"
+            app:layout_heightPercent="10%h">
+
+            <TextView
+                android:id="@+id/tv_update_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/check_update_cancel"
+                android:textColor="@color/colorCompany"
+                app:layout_textSizePercent="25%h"
+                app:layout_widthPercent="50%w" />
+
+            <TextView
+                android:id="@+id/tv_update_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/tv_update_cancel"
+                android:gravity="center"
+                android:text="@string/check_update_ok"
+                android:textColor="@color/colorCompanyDark"
+                app:layout_textSizePercent="25%h"
+                app:layout_widthPercent="50%w" />
+
+        </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+</com.zhy.android.percent.support.PercentRelativeLayout>

@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,12 +21,15 @@ import butterknife.ButterKnife;
 import xsda.xsda.R;
 import xsda.xsda.helper.GetUpdateHelper;
 import xsda.xsda.helper.PingHelper;
+import xsda.xsda.helper.SDHelper;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
+import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.NetErrorWidget;
 import xsda.xsda.widget.PrivacyWidget;
 import xsda.xsda.widget.SplashWidget;
+import xsda.xsda.widget.TipWidget;
 import xsda.xsda.widget.WaitWidget;
 
 public class SplashActivity extends RootActivity {
@@ -39,6 +43,8 @@ public class SplashActivity extends RootActivity {
     NetErrorWidget widgetNeterror;// 网络异常
     @Bind(R.id.widget_wait)
     WaitWidget widgetWait;// 等待界面
+    @Bind(R.id.widget_update)
+    TipWidget widgetUpdate;// 新版本界面
 
     private Handler handler;
     private static final int REQUEST_NEED = 0x100;
@@ -91,13 +97,13 @@ public class SplashActivity extends RootActivity {
      */
     private void showPrivacy() {
         // 是否要进入隐私条款界面
-        if (!Sgg.getInstance(this).getBoolean(Cons.PRIVACY_READ, false)) {
+        if (!Sgg.getInstance(this).getBoolean(Cons.SP_PRIVACY_READ, false)) {
             // 延迟2秒出现隐私条款
             handler.postDelayed(() -> widgetPrivacy.setVisibility(View.VISIBLE), 0);
             // 设置隐私条款的点击事件
             widgetPrivacy.setOnClickAgreeListener(() -> {
                 // 提交隐私条款「已阅读」
-                Sgg.getInstance(this).putBoolean(Cons.PRIVACY_READ, true);
+                Sgg.getInstance(this).putBoolean(Cons.SP_PRIVACY_READ, true);
                 widgetPrivacy.setVisibility(View.GONE);
                 // 检测新版本
                 checkConnect();
@@ -124,14 +130,12 @@ public class SplashActivity extends RootActivity {
     public void ping() {
         // ping指定地址
         PingHelper pingHelper = new PingHelper();
-        
+
         pingHelper.setOnPingSuccessListener(msg -> {
             widgetSplash.setLoadingText(loading_success);
-            // toast("ping成功", 2000);
-            // TODO: 2018/6/22 0022 检查更新
-            checkUpdate();
+            checkUpdate();// 检测是否有新版本
         });
-        
+
         pingHelper.setOnProgressListener(progress -> {
             // 显示进度
             if (progress <= 50) {
@@ -143,7 +147,7 @@ public class SplashActivity extends RootActivity {
             }
             widgetSplash.setProgress(progress);
         });
-        
+
         pingHelper.setOnPingFailedListener(msg -> {
             widgetNeterror.setVisibility(View.VISIBLE);
             widgetNeterror.setOnNetErrorBackListener(this::finish);
@@ -152,7 +156,7 @@ public class SplashActivity extends RootActivity {
                 checkConnect();
             });
         });
-        pingHelper.ping(this, getString(R.string.ping_address_backup));
+        pingHelper.ping(this, getString(R.string.ping_address));
     }
 
     /**
@@ -163,12 +167,48 @@ public class SplashActivity extends RootActivity {
         int localVersion = Ogg.getLocalVersion(this);
         // 请求LeanClound最新版本
         GetUpdateHelper getUpdateHelper = new GetUpdateHelper();
+        getUpdateHelper.setOnGetUpdateListener(updateBean -> {
+            int newVersion = Integer.valueOf(updateBean.getNewVersionCode());
+            // 有更新版本
+            if (newVersion > localVersion) {
+                widgetUpdate.setVisibility(View.VISIBLE);
+                widgetUpdate.setOnClickOkListener(() -> {
+                    /* 判断SD卡是否挂载并留有足够空间 */
+                    SDHelper sdHelper = new SDHelper();
+                    sdHelper.setOnSdErrorListener(() -> {
+                        // 空间不足
+                        widgetUpdate.setVisibility(View.GONE);
+                        toGuideOrMain();
+                    });
+                    sdHelper.setOnSdNormalListener(() -> {
+                        // TODO: 2018/6/26 0026  空间正常
+                        Tgg.show(this,"下载新版本",0);
+                    });
+                    sdHelper.getRemindMemory(this,updateBean.getNewVersionSize());
+                });
+                widgetUpdate.setOnClickCancelListener(this::toGuideOrMain);
+            } else {
+                toGuideOrMain();
+            }
+        });
+        getUpdateHelper.setOnExceptionListener(e -> widgetNeterror.setVisibility(View.VISIBLE));
         getUpdateHelper.getNewVersion();
+    }
+
+    private void toGuideOrMain() {
+        if (Sgg.getInstance(this).getBoolean(Cons.SP_GUIDE, false)) {
+            // TODO: 2018/6/26 0026 进入主页
+            Tgg.show(this,"进入主页",0);
+        } else {
+            // TODO: 2018/6/26 0026 进入向导页
+            Tgg.show(this,"进入向导页",0);
+        }
     }
 
     @Override
     public void onBackPressed() {
         finish();
+        Process.killProcess(Process.myPid());
     }
 
     @Override

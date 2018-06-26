@@ -35,4 +35,11 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+    <!-- 新版本升级界面 -->
+    <xsda.xsda.widget.TipWidget
+        android:id="@+id/widget_update"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </com.zhy.android.percent.support.PercentRelativeLayout>

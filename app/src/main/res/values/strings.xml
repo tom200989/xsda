@@ -14,5 +14,11 @@
     <string name="loading_text">数据加载中…</string>
     <string name="loading_success">正在跳转…</string>
     <string name="ping_address">"edvbrq20.api.lncld.net"</string>
-    <string name="ping_address_backup">api.leancloud.cn</string>
+    <string name="ping_address_backup">www.baidu.com</string>
+    <string name="check_update_title">检测到新版本</string>
+    <string name="check_update_default_des">本次修复的bug:\n修复一些已知的bug</string>
+    <string name="check_update_cancel">下次再说</string>
+    <string name="check_update_ok">现在更新</string>
+    <string name="sdcard_no_mounted">检测到您手机储存卡存在异常\n无法更新</string>
+    <string name="sdcard_no_remained_space">剩余空间不足: %s</string>
 </resources>

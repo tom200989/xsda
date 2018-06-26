@@ -33,6 +33,7 @@ public class PingHelper {
                 String line = "";
                 i = 0;
                 while ((line = returnData.readLine()) != null & !TextUtils.isEmpty(line)) {
+                    Lgg.t(Cons.TAG).dd("checking: " + line);
                     if (i <= 4) {
                         Lgg.t(Cons.TAG).ii(line);
                         msg.append(line).append("\n");
@@ -60,6 +61,7 @@ public class PingHelper {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                pingFailedNext(e.getMessage());
             }
         });
         pingThread.start();

@@ -147,6 +147,7 @@ public class PrivacyWidget extends RelativeLayout {
      * 点击同意
      */
     private void clickAgree() {
+        setVisibility(GONE);
         // 判断用户是否勾选了隐私同意条例
         if (ivSplashCheckbox.getDrawable() == privacy_checkbox_checked) {
             clickAgreeNext();
@@ -157,6 +158,7 @@ public class PrivacyWidget extends RelativeLayout {
      * 点击不同意
      */
     private void clickUnAgree() {
+        setVisibility(GONE);
         clickNotAgreeNext();
         Process.killProcess(Process.myPid());
     }

@@ -41,7 +41,10 @@ public class NetErrorWidget extends RelativeLayout {
         tvNeterrorRetry = (TextView) findViewById(R.id.tv_neterror_retry);
         tvNeterrorBack = (TextView) findViewById(R.id.tv_neterror_back);
         rlNeterrorAll.setOnClickListener(v -> {});
-        tvNeterrorRetry.setOnClickListener(v -> retryNext());
+        tvNeterrorRetry.setOnClickListener(v -> {
+            setVisibility(GONE);
+            retryNext();
+        });
         tvNeterrorBack.setOnClickListener(v -> backNext());
     }
 
