@@ -21,4 +21,5 @@
     <string name="check_update_ok">现在更新</string>
     <string name="sdcard_no_mounted">检测到您手机储存卡存在异常\n无法更新</string>
     <string name="sdcard_no_remained_space">剩余空间不足: %s</string>
+    <string name="downloading">正在更新: %d%%</string>
 </resources>

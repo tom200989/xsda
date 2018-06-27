@@ -26,6 +26,7 @@ import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
+import xsda.xsda.widget.DownloadWidget;
 import xsda.xsda.widget.NetErrorWidget;
 import xsda.xsda.widget.PrivacyWidget;
 import xsda.xsda.widget.SplashWidget;
@@ -45,6 +46,8 @@ public class SplashActivity extends RootActivity {
     WaitWidget widgetWait;// 等待界面
     @Bind(R.id.widget_update)
     TipWidget widgetUpdate;// 新版本界面
+    @Bind(R.id.widget_download)
+    DownloadWidget widgetDownload;// 下载界面
 
     private Handler handler;
     private static final int REQUEST_NEED = 0x100;
@@ -163,31 +166,37 @@ public class SplashActivity extends RootActivity {
      * 检查更新
      */
     private void checkUpdate() {
-        // 获取当前APP的版本号
+        // 1.获取当前APP的版本号
         int localVersion = Ogg.getLocalVersion(this);
-        // 请求LeanClound最新版本
+        // 2.请求LeanClound最新版本
         GetUpdateHelper getUpdateHelper = new GetUpdateHelper();
         getUpdateHelper.setOnGetUpdateListener(updateBean -> {
+            // 2.1.获取到最新的版本号
             int newVersion = Integer.valueOf(updateBean.getNewVersionCode());
-            // 有更新版本
+            // 3.有更新版本
             if (newVersion > localVersion) {
                 widgetUpdate.setVisibility(View.VISIBLE);
                 widgetUpdate.setOnClickOkListener(() -> {
-                    /* 判断SD卡是否挂载并留有足够空间 */
+                    /* 4.判断SD卡是否挂载并留有足够空间 */
                     SDHelper sdHelper = new SDHelper();
                     sdHelper.setOnSdErrorListener(() -> {
-                        // 空间不足
+                        // 5.空间不足--> 继续切换到下个界面
                         widgetUpdate.setVisibility(View.GONE);
                         toGuideOrMain();
                     });
                     sdHelper.setOnSdNormalListener(() -> {
                         // TODO: 2018/6/26 0026  空间正常
-                        Tgg.show(this,"下载新版本",0);
+                        // 切换到下载界面
+                        widgetDownload.setVisibility(View.VISIBLE);
+                        // TODO: 2018/6/27 0027  执行下载逻辑
+                        
+                        Tgg.show(this, "下载新版本", 0);
                     });
-                    sdHelper.getRemindMemory(this,updateBean.getNewVersionSize());
+                    sdHelper.getRemindMemory(this, updateBean.getNewVersionSize());
                 });
                 widgetUpdate.setOnClickCancelListener(this::toGuideOrMain);
             } else {
+                // 3.没有新版本--> 切换到下个界面
                 toGuideOrMain();
             }
         });
@@ -195,13 +204,16 @@ public class SplashActivity extends RootActivity {
         getUpdateHelper.getNewVersion();
     }
 
+    /**
+     * 切换到向导页或者主页
+     */
     private void toGuideOrMain() {
         if (Sgg.getInstance(this).getBoolean(Cons.SP_GUIDE, false)) {
             // TODO: 2018/6/26 0026 进入主页
-            Tgg.show(this,"进入主页",0);
+            Tgg.show(this, "进入主页", 0);
         } else {
             // TODO: 2018/6/26 0026 进入向导页
-            Tgg.show(this,"进入向导页",0);
+            Tgg.show(this, "进入向导页", 0);
         }
     }
 

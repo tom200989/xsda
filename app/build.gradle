@@ -80,4 +80,6 @@ dependencies {
     // json转换
     compile 'com.alibaba:fastjson:1.2.47'
     compile 'com.alibaba:fastjson:1.1.68.android'
+    // 等待条
+    compile 'com.github.ybq:Android-SpinKit:1.1.0'
 }

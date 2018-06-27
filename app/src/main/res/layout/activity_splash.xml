@@ -42,4 +42,11 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+    <!-- 下载界面 -->
+    <xsda.xsda.widget.DownloadWidget
+        android:id="@+id/widget_download"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </com.zhy.android.percent.support.PercentRelativeLayout>

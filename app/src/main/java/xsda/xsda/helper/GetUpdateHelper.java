@@ -2,6 +2,7 @@ package xsda.xsda.helper;
 
 import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.GetCallback;
@@ -28,20 +29,22 @@ public class GetUpdateHelper extends GetCallback<AVObject> {
     @Override
     public void done(AVObject avObject, AVException e) {
         if (e == null) {
-            
-            String updatedAt = Ogg.turnDateToString(avObject.getUpdatedAt());
-            String newVersionCode = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_CODE);
-            String newVersionFix = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_FIX);
-            String newVersionFileUrl = avObject.getAVFile(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_FILE).getUrl();
-            String newVersionSize = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_SIZE);
-            
+
+            String updatedAt = Ogg.turnDateToString(avObject.getUpdatedAt());// 更新日期
+            String newVersionCode = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_CODE);// 新版本号
+            String newVersionFix = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_FIX);// 更新内容
+            AVFile avFile = avObject.getAVFile(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_FILE);// 更新文件
+            String newVersionFileUrl = avFile.getUrl();// 文件地址
+            String newVersionSize = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_SIZE);// 文件大小
+
             UpdateBean updateBean = new UpdateBean();
             updateBean.setUpdatedAt(updatedAt);
             updateBean.setNewVersionCode(newVersionCode);
             updateBean.setNewVersionFix(newVersionFix);
             updateBean.setNewVersionFileUrl(newVersionFileUrl);
             updateBean.setNewVersionSize(Long.valueOf(newVersionSize));
-            
+            updateBean.setFile(avFile);
+
             getUpdateNext(updateBean);
             Lgg.t(Cons.TAG).ii(JSONObject.toJSONString(updateBean));
         } else {

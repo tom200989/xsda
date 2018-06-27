@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_download_all"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/iv_download_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/downlogo"
+            app:layout_heightPercent="20%w"
+            app:layout_marginTopPercent="10%h"
+            app:layout_widthPercent="20%w" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/sk_download_ui"
+            style="@style/SpinKitView.Large.Wave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_download_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorCompanyDark"
+            app:layout_heightPercent="10%w"
+            app:layout_marginTopPercent="5%h"
+            app:layout_widthPercent="10%w" />
+
+        <ScrollView
+            android:id="@+id/scv_download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sk_download_ui"
+            android:layout_marginEnd="25dp"
+            android:layout_marginStart="25dp"
+            android:background="@android:color/white"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layout_heightPercent="30%h"
+            app:layout_marginTopPercent="5%h">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="@string/check_update_default_des"
+                android:textColor="@color/colorCompany"
+                app:layout_textSizePercent="2.3%sh" />
+
+        </ScrollView>
+
+        <!-- progress bar -->
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            android:id="@+id/pg_download_loagding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/tv_splash_copyright"
+            android:layout_below="@id/scv_download"
+            android:layout_centerHorizontal="true"
+            app:layout_marginBottomPercent="3%h"
+            app:layout_marginTopPercent="10%h"
+            app:layout_widthPercent="80%w"
+            app:progress_current="5"
+            app:progress_max="100"
+            app:progress_reached_bar_height="2dp"
+            app:progress_reached_color="@color/colorCompanyDark"
+            app:progress_text_color="@color/colorCompanyDark"
+            app:progress_text_offset="1dp"
+            app:progress_text_size="12sp"
+            app:progress_text_visibility="invisible"
+            app:progress_unreached_bar_height="2dp"
+            app:progress_unreached_color="@color/colorGray" />
+
+        <TextView
+            android:id="@+id/tv_download_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pg_download_loagding"
+            android:layout_centerHorizontal="true"
+            android:text="@string/downloading"
+            android:textColor="@color/colorCompanyDark"
+            app:layout_marginTopPercent="5%h" />
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+</com.zhy.android.percent.support.PercentRelativeLayout>

@@ -1,5 +1,7 @@
 package xsda.xsda.bean;
 
+import com.avos.avoscloud.AVFile;
+
 /**
  * Created by qianli.ma on 2018/6/26 0026.
  */
@@ -11,9 +13,18 @@ public class UpdateBean {
     private String newVersionFix;// 新版本描述
     private String newVersionFileUrl;// 新版本链接
     private long newVersionSize;// 新版本大小
+    private AVFile file;// 文件对象(用于下载)
 
     public UpdateBean() {
 
+    }
+
+    public AVFile getFile() {
+        return file;
+    }
+
+    public void setFile(AVFile file) {
+        this.file = file;
     }
 
     public long getNewVersionSize() {
