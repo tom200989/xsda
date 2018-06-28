@@ -97,7 +97,7 @@ public class TipWidget extends RelativeLayout {
      *
      * @param des 更新的内容
      */
-    public void setUpdateDes(String des) {
+    public void setUpdateDesFix(String des) {
         tvUpdateDes.setText(des);
     }
 }

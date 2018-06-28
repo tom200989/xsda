@@ -46,7 +46,7 @@ public class GetUpdateHelper extends GetCallback<AVObject> {
             updateBean.setFile(avFile);
 
             getUpdateNext(updateBean);
-            Lgg.t(Cons.TAG).ii(JSONObject.toJSONString(updateBean));
+            Lgg.t(Cons.TAG).ii("GetUpdateHelper(): result\n" + JSONObject.toJSONString(updateBean));
         } else {
             Lgg.t(Cons.TAG).ee(e.getMessage());
             exceptionNext(e);

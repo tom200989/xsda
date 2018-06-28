@@ -4,9 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 
 import com.liyi.liyiutils.main.LiyiEncryty;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -99,6 +104,62 @@ public class Ogg {
     public static String turnDateToString(Date date) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sif = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sif.format(date);
+    }
+
+
+    /**
+     * byte转file
+     *
+     * @param bytes    数据源
+     * @param dirPath  存放的目录
+     * @param fileName 希望转换的文件名
+     * @return 转换后的文件对象
+     */
+    public static File byte2File(byte[] bytes, String dirPath, String fileName) {
+        BufferedOutputStream bos = null;
+        FileOutputStream fos = null;
+        File file = null;
+        try {
+            File dir = new File(dirPath);
+            if (!dir.exists() | !dir.isDirectory()) {
+                dir.mkdirs();
+            }
+            file = new File(dirPath + File.separator + fileName);
+            fos = new FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return file;
+    }
+
+    /**
+     * 初始化创建「安装包目录」
+     */
+    public static void createInstallRootDir() {
+        File sdcard = Environment.getExternalStorageDirectory();
+        String installDirPath = sdcard.getAbsolutePath() + File.separator + Cons.INSTALL_FILEPATH;
+        File installDir = new File(installDirPath);
+        if (!installDir.exists() | !installDir.isDirectory()) {
+            boolean isCreate = installDir.mkdir();
+            Lgg.t(Cons.TAG).ii("init create the download dir: " + isCreate);
+        }
     }
 
 }

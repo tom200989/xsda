@@ -6,7 +6,7 @@ package xsda.xsda.utils;
 
 public class Cons {
     public final static String TAG = "ma_xsda";
-    public final static String ROOT_FILEPATH = "ma_xsda";
+    public final static String INSTALL_FILEPATH = "xsdaApk";
     public final static String SP_PRIVACY_READ = "SP_PRIVACY_READ";
     public final static String SP_GUIDE = "SP_GUIDE";
 

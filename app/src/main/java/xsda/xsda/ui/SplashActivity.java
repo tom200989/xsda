@@ -19,11 +19,16 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
+import xsda.xsda.bean.UpdateBean;
+import xsda.xsda.helper.DownloadHelper;
 import xsda.xsda.helper.GetUpdateHelper;
+import xsda.xsda.helper.InstallApkHelper;
 import xsda.xsda.helper.PingHelper;
 import xsda.xsda.helper.SDHelper;
 import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
+import xsda.xsda.utils.RCode;
 import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.DownloadWidget;
@@ -50,11 +55,11 @@ public class SplashActivity extends RootActivity {
     DownloadWidget widgetDownload;// 下载界面
 
     private Handler handler;
-    private static final int REQUEST_NEED = 0x100;
+    private static final int REQUEST_NEED = RCode.BASE_REQUEST_CODE;
     private static String[] PERMISSIONS_NEED = {// 填写需要申请的权限
             Manifest.permission.READ_EXTERNAL_STORAGE,// 读取外部存储
             Manifest.permission.WRITE_EXTERNAL_STORAGE,// 写入外部存储
-            Manifest.permission.READ_PHONE_STATE,// 电话状态
+            Manifest.permission.READ_PHONE_STATE// 电话状态
             // .... 需要什么权限, 需要先声明 ....
             // 注意: 非危险权限不需要申请, 一定不能加进来, 否则影响业务逻辑
     };
@@ -64,11 +69,24 @@ public class SplashActivity extends RootActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        handler = new Handler();
+        // 初始化某些操作
+        init();
         // 设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, colorStatuBar, false);
         // 申请权限
         showPermission();
+    }
+
+    /**
+     * 初始化某些操作
+     */
+    private void init() {
+        handler = new Handler();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     /**
@@ -83,6 +101,7 @@ public class SplashActivity extends RootActivity {
             // 1.开启对应的权限(同一个组的权限只需要申请一个, 同组的权限即可开通使用)
             int exstorePer = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             int phonePer = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+
             // 2.权限本身不允许--> 请求
             if (exstorePer == PackageManager.PERMISSION_DENIED // 读写权限
                         | phonePer == PackageManager.PERMISSION_DENIED // 电话记录权限
@@ -159,7 +178,7 @@ public class SplashActivity extends RootActivity {
                 checkConnect();
             });
         });
-        pingHelper.ping(this, getString(R.string.ping_address));
+        pingHelper.ping(this, getString(R.string.ping_address_backup));
     }
 
     /**
@@ -176,8 +195,9 @@ public class SplashActivity extends RootActivity {
             // 3.有更新版本
             if (newVersion > localVersion) {
                 widgetUpdate.setVisibility(View.VISIBLE);
+                widgetUpdate.setUpdateDesFix(updateBean.getNewVersionFix());
                 widgetUpdate.setOnClickOkListener(() -> {
-                    /* 4.判断SD卡是否挂载并留有足够空间 */
+                    // 4.判断SD卡是否挂载并留有足够空间
                     SDHelper sdHelper = new SDHelper();
                     sdHelper.setOnSdErrorListener(() -> {
                         // 5.空间不足--> 继续切换到下个界面
@@ -185,12 +205,10 @@ public class SplashActivity extends RootActivity {
                         toGuideOrMain();
                     });
                     sdHelper.setOnSdNormalListener(() -> {
-                        // TODO: 2018/6/26 0026  空间正常
-                        // 切换到下载界面
+                        // 5.空间正常--> 切换到下载界面
                         widgetDownload.setVisibility(View.VISIBLE);
-                        // TODO: 2018/6/27 0027  执行下载逻辑
-                        
-                        Tgg.show(this, "下载新版本", 0);
+                        widgetDownload.setUpdateFix(updateBean.getNewVersionFix());
+                        downNewVersion(updateBean);
                     });
                     sdHelper.getRemindMemory(this, updateBean.getNewVersionSize());
                 });
@@ -202,6 +220,33 @@ public class SplashActivity extends RootActivity {
         });
         getUpdateHelper.setOnExceptionListener(e -> widgetNeterror.setVisibility(View.VISIBLE));
         getUpdateHelper.getNewVersion();
+    }
+
+    /**
+     * 执行下载逻辑
+     *
+     * @param updateBean 新版本对象
+     */
+    private void downNewVersion(UpdateBean updateBean) {
+        DownloadHelper downloadHelper = new DownloadHelper();
+        downloadHelper.setOnProgressListener(progress -> widgetDownload.setProgress(progress));
+        downloadHelper.setOnDownErrorListener(e -> {
+            widgetDownload.showDownErrorUi();
+            widgetDownload.setOnRetryListener(() -> {
+                // 重试按钮
+                widgetDownload.setProgress(0);
+                downNewVersion(updateBean);
+            });
+            widgetDownload.setOnBackListener(this::toGuideOrMain);
+        });
+        downloadHelper.setOnDownFinishListener(apk -> {// 下载完毕
+            // 获取下载的文件名(非路径), bbb.apk
+            String apkName = apk.getName();
+            Lgg.t(Cons.TAG).ii("apkName: " + apkName);
+            // 开始安装 
+            InstallApkHelper.install(this, apkName);
+        });
+        downloadHelper.download(updateBean.getFile());
     }
 
     /**
@@ -219,16 +264,55 @@ public class SplashActivity extends RootActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
-        Process.killProcess(Process.myPid());
+        // 对界面做分类判断
+        if (widgetSplash.getVisibility() == View.VISIBLE) {// 启动页
+            finish();
+            Process.killProcess(Process.myPid());
+        } else if (widgetPrivacy.getVisibility() == View.VISIBLE) {// 隐私页
+            finish();
+            Process.killProcess(Process.myPid());
+        } else if (widgetNeterror.getVisibility() == View.VISIBLE) {// 出错页
+            finish();
+            Process.killProcess(Process.myPid());
+        } else if (widgetUpdate.getVisibility() == View.VISIBLE) {// 更新提示页
+            // 界面隐藏 
+            widgetUpdate.setVisibility(View.GONE);
+            // 继续向下执行
+            toGuideOrMain();
+        } else if (widgetDownload.getVisibility() == View.VISIBLE) {// 下载页
+            // TODO: 2018/6/28 0028  弹出询问界面是否终止取消
+            Tgg.show(this, "将会取消下载, 之前下载的内容将清除", 3000);
+        } else {
+            finish();
+            Process.killProcess(Process.myPid());
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case RCode.BASE_REQUEST_CODE:// 基本的权限申请
+                applyBasePermission(permissions, grantResults);
+                break;
+        }
+    }
+
+    /**
+     * 申请基本的权限
+     *
+     * @param grantResults 权限组
+     */
+    private void applyBasePermission(String[] permissions, int[] grantResults) {
+
+        for (String permission : permissions) {
+            Lgg.t("ma_permission").ii(permission);
+        }
+
         // 1.把所有回调的权限状态添加到自定义集合
         List<Integer> ints = new ArrayList<>();
         for (int grantResult : grantResults) {
+            Lgg.t("ma_permission").ii(grantResult + "");
             ints.add(grantResult);
         }
 
@@ -239,5 +323,11 @@ public class SplashActivity extends RootActivity {
             // 显示隐私条款
             showPrivacy();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + " onDestroy()");
     }
 }

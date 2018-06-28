@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda' // 使用lamda表达式
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'xsda'
+            keyPassword 'horse13922813924'
+            storeFile file('G:/xsda/code/key/xsda.jks')
+            storePassword 'horse13922813924'
+        }
+    }
     compileSdkVersion 26
     defaultConfig {
         buildToolsVersion "25.0.2"
@@ -13,16 +21,14 @@ android {
         multiDexEnabled true // 方法数超过65535分包
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
     //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
     lintOptions {
         abortOnError false
     }
-    
     // 使用lamda表达式
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -32,9 +38,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
-    
     // 方法数超过65535分包
     dexOptions {
         javaMaxHeapSize "6144m"

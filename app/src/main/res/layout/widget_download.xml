@@ -44,10 +44,11 @@
             android:background="@android:color/white"
             android:overScrollMode="never"
             android:scrollbars="none"
-            app:layout_heightPercent="30%h"
+            app:layout_heightPercent="25%h"
             app:layout_marginTopPercent="5%h">
 
             <TextView
+                android:id="@+id/tv_download_des_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
@@ -62,11 +63,10 @@
             android:id="@+id/pg_download_loagding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/tv_splash_copyright"
             android:layout_below="@id/scv_download"
             android:layout_centerHorizontal="true"
             app:layout_marginBottomPercent="3%h"
-            app:layout_marginTopPercent="10%h"
+            app:layout_marginTopPercent="5%h"
             app:layout_widthPercent="80%w"
             app:progress_current="5"
             app:progress_max="100"
@@ -88,6 +88,35 @@
             android:text="@string/downloading"
             android:textColor="@color/colorCompanyDark"
             app:layout_marginTopPercent="5%h" />
+
+        <TextView
+            android:id="@+id/tv_download_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pg_download_loagding"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/bg_conner_5_stroke"
+            android:gravity="center"
+            android:text="@string/download_retry"
+            android:textColor="@color/colorCompanyDark"
+            android:visibility="gone"
+            app:layout_heightPercent="6%h"
+            app:layout_marginTopPercent="5%h"
+            app:layout_widthPercent="30%w" />
+
+        <TextView
+            android:id="@+id/tv_download_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_download_retry"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/check_update_cancel"
+            android:textColor="@color/colorCompany"
+            android:visibility="gone"
+            app:layout_heightPercent="6%h"
+            app:layout_marginTopPercent="3%h"
+            app:layout_widthPercent="30%w" />
 
     </com.zhy.android.percent.support.PercentRelativeLayout>
 

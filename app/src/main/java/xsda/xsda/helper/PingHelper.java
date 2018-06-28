@@ -26,6 +26,7 @@ public class PingHelper {
     public void ping(Activity activity, String address) {
         pingThread = new Thread(() -> {
             try {
+                Lgg.t(Cons.TAG).ii("Pinging...");
                 Process process = Runtime.getRuntime().exec("ping " + address);
                 InputStreamReader r = new InputStreamReader(process.getInputStream());
                 LineNumberReader returnData = new LineNumberReader(r);
