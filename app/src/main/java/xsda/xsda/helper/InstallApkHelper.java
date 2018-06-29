@@ -40,7 +40,6 @@ public class InstallApkHelper {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
             activity.startActivity(intent);
-            activity.finish();
 
         } else {
 
@@ -48,7 +47,6 @@ public class InstallApkHelper {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
             activity.startActivity(intent);
-            activity.finish();
         }
     }
 }

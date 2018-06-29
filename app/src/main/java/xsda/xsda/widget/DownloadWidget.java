@@ -24,10 +24,13 @@ public class DownloadWidget extends RelativeLayout {
     private SpinKitView skDownloadUi;// 动效
     private ScrollView scvDownload;// 描述滚动面板
     private NumberProgressBar pgDownloadLoagding;// 进度条
+
+    private TextView tvDownloadDesFix;// 更新说明
+
     private TextView tvDownloadPercent;// 百分比显示
     private TextView tvDownloadRetry;// 重试按钮
     private TextView tvDownloadBack;// 下次再说
-    private TextView tvDownloadDesFix;
+    private TextView tvDownloadInstall;// 安装按钮
 
     public DownloadWidget(Context context) {
         this(context, null, 0);
@@ -40,10 +43,11 @@ public class DownloadWidget extends RelativeLayout {
     public DownloadWidget(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         View.inflate(context, R.layout.widget_download, this);
-        assignViews();
+        initView();
+        clickEvent();
     }
 
-    private void assignViews() {
+    private void initView() {
         rlDownloadAll = (RelativeLayout) findViewById(R.id.rl_download_all);
         ivDownloadLogo = (ImageView) findViewById(R.id.iv_download_logo);
         skDownloadUi = (SpinKitView) findViewById(R.id.sk_download_ui);
@@ -53,20 +57,33 @@ public class DownloadWidget extends RelativeLayout {
         tvDownloadPercent = (TextView) findViewById(R.id.tv_download_percent);
         tvDownloadRetry = findViewById(R.id.tv_download_retry);
         tvDownloadBack = findViewById(R.id.tv_download_back);
+        tvDownloadInstall = findViewById(R.id.tv_download_install);
+    }
+
+    private void clickEvent() {
+
+        // 屏蔽用户的其他操作
         rlDownloadAll.setOnClickListener(v -> {
-            // 屏蔽用户的其他操作
         });
-        tvDownloadRetry.setOnClickListener(v -> {// 点击重试
-            tvDownloadRetry.setVisibility(GONE);
-            tvDownloadBack.setVisibility(GONE);
-            tvDownloadPercent.setVisibility(VISIBLE);
+
+        // 点击重试
+        tvDownloadRetry.setOnClickListener(v -> {
+            showLoadingUi();
             retryDownNext();
         });
-        tvDownloadBack.setOnClickListener(v -> {// 点击回退
+
+        // 点击回退
+        tvDownloadBack.setOnClickListener(v -> {
             setVisibility(GONE);
             backNext();
         });
+
+        // 点击安装
+        tvDownloadInstall.setOnClickListener(v -> {
+            installNext();
+        });
     }
+
 
     /**
      * 设置更新描述
@@ -81,9 +98,33 @@ public class DownloadWidget extends RelativeLayout {
      * 显示下载出错的UI
      */
     public void showDownErrorUi() {
-        tvDownloadRetry.setVisibility(VISIBLE);
-        tvDownloadBack.setVisibility(VISIBLE);
+        tvDownloadInstall.setVisibility(GONE);// 安装
+        tvDownloadPercent.setVisibility(GONE);// 百分比
+        tvDownloadRetry.setVisibility(VISIBLE);// 重试
+        tvDownloadBack.setVisibility(VISIBLE);// 下次再说
+        pgDownloadLoagding.setVisibility(VISIBLE);// 进度条
+    }
+
+    /**
+     * 显示正在下载的UI
+     */
+    public void showLoadingUi() {
+        tvDownloadInstall.setVisibility(GONE);
+        tvDownloadPercent.setVisibility(VISIBLE);
+        tvDownloadRetry.setVisibility(GONE);
+        tvDownloadBack.setVisibility(GONE);
+        pgDownloadLoagding.setVisibility(VISIBLE);
+    }
+
+    /**
+     * 显示「安装」UI
+     */
+    public void showInstallUi() {
+        tvDownloadInstall.setVisibility(VISIBLE);
         tvDownloadPercent.setVisibility(GONE);
+        tvDownloadRetry.setVisibility(GONE);
+        tvDownloadBack.setVisibility(VISIBLE);
+        pgDownloadLoagding.setVisibility(GONE);
     }
 
     /**
@@ -95,6 +136,25 @@ public class DownloadWidget extends RelativeLayout {
         progress = progress < 5 ? 5 : progress;
         pgDownloadLoagding.setProgress(progress);
         tvDownloadPercent.setText(String.format(getResources().getString(R.string.downloading), progress));
+    }
+
+    private OnInstallListener onInstallListener;
+
+    // 接口OnInstallListener
+    public interface OnInstallListener {
+        void install();
+    }
+
+    // 对外方式setOnInstallListener
+    public void setOnInstallListener(OnInstallListener onInstallListener) {
+        this.onInstallListener = onInstallListener;
+    }
+
+    // 封装方法installNext
+    private void installNext() {
+        if (onInstallListener != null) {
+            onInstallListener.install();
+        }
     }
 
     private OnBackListener onBackListener;

@@ -28,6 +28,7 @@ public class DownloadHelper {
         // 创建文件夹
         File installDir = getInstallDir();
         createDir(installDir);
+        preDownloadNext();
         // 请求下载
         file.getDataInBackground(new GetDataCallback() {
             @Override
@@ -93,6 +94,25 @@ public class DownloadHelper {
                     file.delete();
                 }
             }
+        }
+    }
+
+    private OnPreDownloadListener onPreDownloadListener;
+
+    // 接口OnPreDownloadListener
+    public interface OnPreDownloadListener {
+        void preDownload();
+    }
+
+    // 对外方式setOnPreDownloadListener
+    public void setOnPreDownloadListener(OnPreDownloadListener onPreDownloadListener) {
+        this.onPreDownloadListener = onPreDownloadListener;
+    }
+
+    // 封装方法preDownloadNext
+    private void preDownloadNext() {
+        if (onPreDownloadListener != null) {
+            onPreDownloadListener.preDownload();
         }
     }
 

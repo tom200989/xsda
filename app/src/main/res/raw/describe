@@ -8,3 +8,12 @@
 
 注意事项:
 1.AvObject.getAvFile(key): key指的是存放文件时所对应的那个字段值
+2.检测新版本, 先检测xsdaApk目录, 
+apkcode: 当前安装包的版本
+leancode: 网络上的版本
+currentcode: 当前安装的版本
+
+if(leancode > currentcode)--> 网络版本 > 当前运行版本
+    if(apkcode == leancode) --> 说明下载过--> 显示安装
+    else --> 显示下载
+else --> 继续运行 

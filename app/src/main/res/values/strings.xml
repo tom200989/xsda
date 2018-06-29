@@ -23,4 +23,5 @@
     <string name="sdcard_no_remained_space">剩余空间不足: %s</string>
     <string name="downloading">正在更新: %d%%</string>
     <string name="download_retry">重新下载</string>
+    <string name="download_install">安装</string>
 </resources>

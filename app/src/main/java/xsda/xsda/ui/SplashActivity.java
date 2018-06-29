@@ -82,6 +82,7 @@ public class SplashActivity extends RootActivity {
      */
     private void init() {
         handler = new Handler();
+        Ogg.createInstallRootDir();
     }
 
     @Override
@@ -185,34 +186,44 @@ public class SplashActivity extends RootActivity {
      * 检查更新
      */
     private void checkUpdate() {
-        // 1.获取当前APP的版本号
-        int localVersion = Ogg.getLocalVersion(this);
+        // 1.获取当前运行APP的版本号
+        int runVersion = Ogg.getLocalVersion(this);
         // 2.请求LeanClound最新版本
         GetUpdateHelper getUpdateHelper = new GetUpdateHelper();
         getUpdateHelper.setOnGetUpdateListener(updateBean -> {
             // 2.1.获取到最新的版本号
             int newVersion = Integer.valueOf(updateBean.getNewVersionCode());
             // 3.有更新版本
-            if (newVersion > localVersion) {
+            if (newVersion > runVersion) {
                 widgetUpdate.setVisibility(View.VISIBLE);
                 widgetUpdate.setUpdateDesFix(updateBean.getNewVersionFix());
+                // 4.点击了「确定更新」
                 widgetUpdate.setOnClickOkListener(() -> {
-                    // 4.判断SD卡是否挂载并留有足够空间
+                    
+                    // 4.1.判断SD卡是否挂载并留有足够空间
                     SDHelper sdHelper = new SDHelper();
+                    // 4.2.空间不足--> 继续切换到下个界面
                     sdHelper.setOnSdErrorListener(() -> {
-                        // 5.空间不足--> 继续切换到下个界面
                         widgetUpdate.setVisibility(View.GONE);
                         toGuideOrMain();
                     });
+                    
+                    // 4.2.空间正常--> 切换到下载界面
                     sdHelper.setOnSdNormalListener(() -> {
-                        // 5.空间正常--> 切换到下载界面
                         widgetDownload.setVisibility(View.VISIBLE);
+                        // 设置描述
                         widgetDownload.setUpdateFix(updateBean.getNewVersionFix());
+                        // TODO: 2018/6/29 0029  
+                        // 开始下载
                         downNewVersion(updateBean);
                     });
+                    
                     sdHelper.getRemindMemory(this, updateBean.getNewVersionSize());
                 });
+
+                // 4.点击了「下次再说」
                 widgetUpdate.setOnClickCancelListener(this::toGuideOrMain);
+                
             } else {
                 // 3.没有新版本--> 切换到下个界面
                 toGuideOrMain();
@@ -228,24 +239,51 @@ public class SplashActivity extends RootActivity {
      * @param updateBean 新版本对象
      */
     private void downNewVersion(UpdateBean updateBean) {
+
         DownloadHelper downloadHelper = new DownloadHelper();
-        downloadHelper.setOnProgressListener(progress -> widgetDownload.setProgress(progress));
+
+        /* 准备下载 */
+        downloadHelper.setOnPreDownloadListener(() -> {
+            // 显示下载中
+            widgetDownload.showLoadingUi();
+            // 显示进度
+            widgetDownload.setProgress(0);
+        });
+        
+        /* 下载过程 */
+        downloadHelper.setOnProgressListener(progress -> {
+            // 显示下载中
+            widgetDownload.showLoadingUi();
+            // 显示进度
+            widgetDownload.setProgress(progress);
+        });
+        
+        /* 下载出错 */
         downloadHelper.setOnDownErrorListener(e -> {
+            // 显示出错
             widgetDownload.showDownErrorUi();
+            // 出错后为重试按钮设置监听
             widgetDownload.setOnRetryListener(() -> {
-                // 重试按钮
                 widgetDownload.setProgress(0);
                 downNewVersion(updateBean);
             });
+            // 出错后为返回按钮设置监听
             widgetDownload.setOnBackListener(this::toGuideOrMain);
         });
-        downloadHelper.setOnDownFinishListener(apk -> {// 下载完毕
-            // 获取下载的文件名(非路径), bbb.apk
-            String apkName = apk.getName();
-            Lgg.t(Cons.TAG).ii("apkName: " + apkName);
-            // 开始安装 
-            InstallApkHelper.install(this, apkName);
+        
+        /* 下载完毕 */
+        downloadHelper.setOnDownFinishListener(apk -> {
+            // 显示安装
+            widgetDownload.showInstallUi();
+            widgetDownload.setOnInstallListener(() -> {
+                // 获取下载的文件名(非路径), bbb.apk
+                String apkName = apk.getName();
+                Lgg.t(Cons.TAG).ii("apkName: " + apkName);
+                // 开始安装
+                InstallApkHelper.install(this, apkName);
+            });
         });
+
         downloadHelper.download(updateBean.getFile());
     }
 
@@ -280,7 +318,7 @@ public class SplashActivity extends RootActivity {
             // 继续向下执行
             toGuideOrMain();
         } else if (widgetDownload.getVisibility() == View.VISIBLE) {// 下载页
-            // TODO: 2018/6/28 0028  弹出询问界面是否终止取消
+            // TODO: 2018/6/28 0028  弹出询问界面提示用户要重新下载,是否确定回退
             Tgg.show(this, "将会取消下载, 之前下载的内容将清除", 3000);
         } else {
             finish();

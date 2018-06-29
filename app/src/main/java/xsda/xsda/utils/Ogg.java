@@ -162,4 +162,10 @@ public class Ogg {
         }
     }
 
+    public static void checkApkVersionInfo(Context context, String apkPath) {
+        PackageManager packageManager = context.getPackageManager();
+        PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES);
+        // TODO: 2018/6/29 0029  查找安装包版本
+    }
+
 }
