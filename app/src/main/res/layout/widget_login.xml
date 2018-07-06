@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="xsda.xsda.ui.LoginActivity">
+
+    <!-- LOGO -->
+    <ImageView
+        android:id="@+id/iv_login_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorCompanyDark"
+        app:layout_heightPercent="20%w"
+        app:layout_marginTopPercent="10%h"
+        app:layout_widthPercent="20%w" />
+
+    <!-- input username -->
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_login_input_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_login_logo"
+        android:layout_centerHorizontal="true"
+        app:layout_heightPercent="8%h"
+        app:layout_marginTopPercent="15%h"
+        app:layout_widthPercent="70%w">
+
+        <EditText
+            android:id="@+id/et_login_input_username"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="bottom"
+            android:hint="@string/login_input_hint_username"
+            android:inputType="text"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/colorCompanyDark"
+            android:textColorHint="@color/colorCompany"
+            android:textCursorDrawable="@null"
+            app:layout_paddingBottomPercent="15%h"
+            app:layout_textSizePercent="30%h" />
+
+        <View
+            android:id="@+id/v_login_input_username_line"
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorCompanyDark" />
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <!-- input password -->
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_login_input_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_login_input_username"
+        android:layout_centerHorizontal="true"
+        app:layout_heightPercent="8%h"
+        app:layout_marginTopPercent="3%h"
+        app:layout_widthPercent="70%w">
+
+        <EditText
+            android:id="@+id/et_login_input_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="bottom"
+            android:hint="@string/login_input_hint_password"
+            android:inputType="textPassword"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/colorCompanyDark"
+            android:textColorHint="@color/colorCompany"
+            android:textCursorDrawable="@null"
+            app:layout_paddingBottomPercent="15%h"
+            app:layout_textSizePercent="30%h" />
+
+        <View
+            android:id="@+id/v_login_input_password_line"
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorCompany" />
+
+        <ImageView
+            android:id="@+id/iv_login_eye"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:src="@drawable/unvisible_eye"
+            app:layout_heightPercent="90%h"
+            app:layout_widthPercent="90%h" />
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <!-- login button -->
+    <TextView
+        android:id="@+id/tv_login_click"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_login_input_password"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_login_click_selector"
+        android:gravity="center"
+        android:text="@string/login_bottom_text"
+        android:textColor="@android:color/white"
+        app:layout_heightPercent="6.5%h"
+        app:layout_marginTopPercent="6%h"
+        app:layout_textSizePercent="2.5%h"
+        app:layout_widthPercent="70%w" />
+
+    <!-- register -->
+    <TextView
+        android:id="@+id/tv_login_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_login_click"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/register_text"
+        android:textColor="@color/colorCompany"
+        app:layout_heightPercent="6%h"
+        app:layout_marginTopPercent="3%h"
+        app:layout_textSizePercent="2.5%h"
+        app:layout_widthPercent="30%w" />
+
+    <!-- wave -->
+    <com.john.waveview.WaveView
+        android:id="@+id/wv_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        app:above_wave_color="@color/colorCompany"
+        app:blow_wave_color="@color/colorCompanyDark"
+        app:layout_heightPercent="20%h"
+        app:progress="90"
+        app:wave_height="large"
+        app:wave_hz="slow"
+        app:wave_length="middle" />
+
+    <!-- wechat login -->
+    <ImageView
+        android:id="@+id/iv_login_wechat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorCompanyDark"
+        app:layout_heightPercent="8%h"
+        app:layout_marginBottomPercent="5%h"
+        app:layout_widthPercent="8%h" />
+
+</com.zhy.android.percent.support.PercentRelativeLayout>

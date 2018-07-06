@@ -26,4 +26,8 @@
     <string name="download_retry">重新下载</string>
     <string name="download_install">安装</string>
     <string name="guide_click">立即体验</string>
+    <string name="login_bottom_text">立即登陆</string>
+    <string name="login_input_hint_username">请输入您的用户名(最多20字符)</string>
+    <string name="login_input_hint_password">请输入您的密码(最多20字符)</string>
+    <string name="register_text">注册</string>
 </resources>

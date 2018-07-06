@@ -32,7 +32,6 @@ import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.RCode;
 import xsda.xsda.utils.Sgg;
-import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.DownloadWidget;
 import xsda.xsda.widget.GuideWidget;
 import xsda.xsda.widget.NetErrorWidget;
@@ -69,7 +68,7 @@ public class SplashActivity extends RootActivity {
             // .... 需要什么权限, 需要先声明 ....
             // 注意: 非危险权限不需要申请, 一定不能加进来, 否则影响业务逻辑
     };
-    
+
     private PingHelper pingHelper;
     private GetUpdateHelper getUpdateHelper;
     private SDHelper sdHelper;
@@ -346,15 +345,15 @@ public class SplashActivity extends RootActivity {
      */
     private void toGuideOrMain() {
         if (Sgg.getInstance(this).getBoolean(Cons.SP_GUIDE, false)) {
-            // TODO: 2018/6/26 0026 进入主页
-            Tgg.show(this, "进入主页", 0);
+            // 进入登陆页
+            to(this, LoginActivity.class, true);
         } else {
             // 进入向导页
             widgetGuide.setVisibility(View.VISIBLE);
             // 点击「立即体验」
             widgetGuide.setOnClickNowListener(() -> {
-                // TODO: 2018/6/26 0026 进入主页
-                Tgg.show(this, "进入主页", 0);
+                // 进入登陆页
+                to(this, LoginActivity.class, true);
             });
         }
     }

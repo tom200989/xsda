@@ -29,15 +29,17 @@
         <activity
             android:name=".ui.SplashActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
         <!-- 实时通信模块、推送都要使用 PushService -->
         <service android:name="com.avos.avoscloud.PushService" />
+
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -48,12 +50,11 @@
         <!-- 实时通信模块、推送 END -->
 
         <!-- 反馈组件（需要加入以下声明）START -->
-        <activity
-            android:name="com.avos.avoscloud.feedback.ThreadActivity">
+        <activity android:name="com.avos.avoscloud.feedback.ThreadActivity">
         </activity>
         <!-- 反馈组件 END -->
 
-        <!-- android 7.0 以上安装APK包(必须)-->
+        <!-- android 7.0 以上安装APK包(必须) -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="xsda.xsda"
@@ -64,6 +65,14 @@
                 android:resource="@xml/apk_path" />
         </provider>
 
+        <!-- 登陆界面 -->
+        <activity android:name=".ui.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

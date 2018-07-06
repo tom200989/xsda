@@ -2,11 +2,15 @@ package xsda.xsda.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Window;
 
 import xsda.xsda.R;
+import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Tgg;
 
 /**
@@ -46,5 +50,64 @@ public class RootActivity extends Activity {
      */
     public void toast(String tip, int duration) {
         Tgg.show(this, tip, duration);
+    }
+
+    /**
+     * 跳转(默认方式)
+     *
+     * @param context   当前环境
+     * @param clazz     目标
+     * @param isDefault 是否默认方式
+     */
+    public void to(Context context, Class<?> clazz, boolean isDefault) {
+        to(context, clazz, true, true, false, 0);
+    }
+
+    /**
+     * 跳转
+     *
+     * @param context         上下文
+     * @param clazz           目标
+     * @param isSingleTop     独立任务栈
+     * @param isFinish        结束当前
+     * @param overridepedding 转场
+     * @param delay           延迟
+     */
+    public void to(final Context context,// 上下文
+                   final Class<?> clazz,// 目标
+                   final boolean isSingleTop,// 独立任务栈
+                   final boolean isFinish,// 结束当前
+                   boolean overridepedding, // 转场
+                   final int delay) {// 延迟
+        final Activity activity = (Activity) context;
+        new Thread(() -> {
+            try {
+                Thread.sleep(delay);
+                if (activity != null) {
+                    activity.runOnUiThread(() -> {
+                        Intent intent = new Intent(context, clazz);
+                        // 独立任务栈
+                        if (isSingleTop) {
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        }
+                        // 启动
+                        context.startActivity(intent);
+                        // 转场(务必在启动后才可调用)
+                        if (!overridepedding) {
+                            activity.overridePendingTransition(0, 0);
+                        }
+                        // 结束当前(务必在启动后才可调用)
+                        if (isFinish) {
+                            activity.finish();
+                        }
+                        Lgg.t(Cons.TAG).ii("RootActivity:to(): " + clazz.getSimpleName());
+                    });
+                }
+            } catch (Exception e) {
+                Lgg.t(Cons.TAG).ee("RootActivity:to():error: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        }).start();
     }
 }

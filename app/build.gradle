@@ -12,7 +12,7 @@ android {
     }
     compileSdkVersion 26
     defaultConfig {
-        buildToolsVersion "25.0.2"
+        buildToolsVersion "27.0.3"
         applicationId "xsda.xsda"
         minSdkVersion 19
         targetSdkVersion 26
@@ -91,4 +91,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.1.68.android'
     // 等待条
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
+    compile 'com.android.support.constraint:constraint-layout:1.1.2'
+    // 波浪条
+    compile 'com.github.john990:WaveView:v0.9'
 }
