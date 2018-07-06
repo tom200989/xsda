@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_sui">com.higesea.xsda</string>
     <string name="app_privity_title">数据和隐私</string>
     <string name="app_privity_des">(\"我们\")可能会不时收集敏感信息(运动,位置,设备信息,昵称,性别,生日,密码和电子邮件等).这些信息与您的健康,生物识别等有关,但是,在我们收集,处理和使用这些信息之前,我们需要您的同意.我们希望将这些信息用于向您提供与您使用设备应用相关的健康和生活方式相关的服务.您并非一定要同意我们收集,处理和使用此类数据.但是,如果您选择不同意的话,或者随后撤回您的同意,我们可能无法为您提供我们应用的某些功能.您可以随时通过在APP中删除您的帐户来取消您的同意.我们会提醒您提出撤销同意时的含义.\n\n *如果您未满13岁或以其他方式受法律限制,请您的父母或法定监护人代表您同意.\n\n如果您同意我们收集,处理和使用您的健康,生物识别等数据,请在下面的方框中打勾：</string>
     <string name="app_privity_check_agree">我同意收集，处理和使用关于我的健康，生物特征等数据。 我明白我可以随时撤回我的同意</string>
@@ -24,4 +25,5 @@
     <string name="downloading">正在更新: %d%%</string>
     <string name="download_retry">重新下载</string>
     <string name="download_install">安装</string>
+    <string name="guide_click">立即体验</string>
 </resources>

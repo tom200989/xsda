@@ -60,6 +60,7 @@
 
         <!-- progress bar -->
         <com.daimajia.numberprogressbar.NumberProgressBar
+            android:visibility="gone"
             android:id="@+id/pg_download_loagding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

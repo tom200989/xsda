@@ -162,10 +162,44 @@ public class Ogg {
         }
     }
 
-    public static void checkApkVersionInfo(Context context, String apkPath) {
+    /**
+     * 查询需要安装的APK的信息
+     *
+     * @param context 环境
+     * @param apkPath APK所在路径
+     * @return 包信息
+     */
+    public static PackageInfo checkApkVersionInfo(Context context, String apkPath) {
         PackageManager packageManager = context.getPackageManager();
-        PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES);
-        // TODO: 2018/6/29 0029  查找安装包版本
+        return packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES);
+    }
+
+    /**
+     * 获取
+     *
+     * @param leanCloudApkName 从leanCloud获取到的APK信息
+     * @return 如果为null:没有下载过最新版本
+     */
+    public static String getLocalInstallApkPath(String leanCloudApkName) {
+        File sdcard = Environment.getExternalStorageDirectory();
+        String installDirPath = sdcard.getAbsolutePath() + File.separator + Cons.INSTALL_FILEPATH;
+        File installDir = new File(installDirPath);
+        if (!installDir.exists() | !installDir.isDirectory()) {// 不存在--> null
+            boolean isCreate = installDir.mkdir();
+            return null;
+        } else {
+            File[] files = installDir.listFiles();
+            if (files.length <= 0) {// 空目录--> null
+                return null;
+            } else {
+                for (File file : files) {
+                    if (file.getName().contains(leanCloudApkName)) {
+                        return file.getAbsolutePath();
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }

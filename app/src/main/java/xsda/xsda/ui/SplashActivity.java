@@ -1,6 +1,7 @@
 package xsda.xsda.ui;
 
 import android.Manifest;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.githang.statusbar.StatusBarCompat;
@@ -32,6 +34,7 @@ import xsda.xsda.utils.RCode;
 import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.DownloadWidget;
+import xsda.xsda.widget.GuideWidget;
 import xsda.xsda.widget.NetErrorWidget;
 import xsda.xsda.widget.PrivacyWidget;
 import xsda.xsda.widget.SplashWidget;
@@ -53,8 +56,11 @@ public class SplashActivity extends RootActivity {
     TipWidget widgetUpdate;// 新版本界面
     @Bind(R.id.widget_download)
     DownloadWidget widgetDownload;// 下载界面
+    @Bind(R.id.widget_guide)
+    GuideWidget widgetGuide;// 引导页
 
     private Handler handler;
+    private UpdateBean updateBean;
     private static final int REQUEST_NEED = RCode.BASE_REQUEST_CODE;
     private static String[] PERMISSIONS_NEED = {// 填写需要申请的权限
             Manifest.permission.READ_EXTERNAL_STORAGE,// 读取外部存储
@@ -63,6 +69,11 @@ public class SplashActivity extends RootActivity {
             // .... 需要什么权限, 需要先声明 ....
             // 注意: 非危险权限不需要申请, 一定不能加进来, 否则影响业务逻辑
     };
+    
+    private PingHelper pingHelper;
+    private GetUpdateHelper getUpdateHelper;
+    private SDHelper sdHelper;
+    private DownloadHelper downloadHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +94,11 @@ public class SplashActivity extends RootActivity {
     private void init() {
         handler = new Handler();
         Ogg.createInstallRootDir();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        // 初始化业务逻辑辅助类
+        initPingLogic();
+        initCheckUpdateLogic();
+        initCheckSdCardLogic();
+        initDownNewVersionLogic();
     }
 
     /**
@@ -135,7 +146,6 @@ public class SplashActivity extends RootActivity {
             // 检测新版本
             checkConnect();
         }
-
     }
 
     /**
@@ -144,19 +154,19 @@ public class SplashActivity extends RootActivity {
     private void checkConnect() {
         // 显示等待界面
         widgetSplash.setVisibility(View.VISIBLE);
-        handler.postDelayed(this::ping, 3000);
+        handler.postDelayed(() -> pingHelper.ping(this, getString(R.string.ping_address_backup)), 3000);
     }
 
     /**
      * 4.检测是否连接上LeanClound服务器
      */
-    public void ping() {
+    private void initPingLogic() {
         // ping指定地址
-        PingHelper pingHelper = new PingHelper();
-
+        pingHelper = new PingHelper();
         pingHelper.setOnPingSuccessListener(msg -> {
             widgetSplash.setLoadingText(loading_success);
-            checkUpdate();// 检测是否有新版本
+            // 检测是否有新版本
+            getUpdateHelper.getNewVersion();
         });
 
         pingHelper.setOnProgressListener(progress -> {
@@ -171,26 +181,32 @@ public class SplashActivity extends RootActivity {
             widgetSplash.setProgress(progress);
         });
 
-        pingHelper.setOnPingFailedListener(msg -> {
-            widgetNeterror.setVisibility(View.VISIBLE);
-            widgetNeterror.setOnNetErrorBackListener(this::finish);
-            widgetNeterror.setOnNetErrorRetryListener(() -> {
-                widgetNeterror.setVisibility(View.GONE);
-                checkConnect();
-            });
+        pingHelper.setOnPingFailedListener(msg -> showErrorNet());
+    }
+
+    /**
+     * 显示网络连接失败--> 重试界面
+     */
+    private void showErrorNet() {
+        widgetNeterror.setVisibility(View.VISIBLE);
+        widgetNeterror.setOnNetErrorBackListener(this::finish);
+        widgetNeterror.setOnNetErrorRetryListener(() -> {
+            widgetNeterror.setVisibility(View.GONE);
+            checkConnect();
         });
-        pingHelper.ping(this, getString(R.string.ping_address_backup));
     }
 
     /**
      * 检查更新
      */
-    private void checkUpdate() {
+    private void initCheckUpdateLogic() {
         // 1.获取当前运行APP的版本号
         int runVersion = Ogg.getLocalVersion(this);
         // 2.请求LeanClound最新版本
-        GetUpdateHelper getUpdateHelper = new GetUpdateHelper();
+        getUpdateHelper = new GetUpdateHelper();
         getUpdateHelper.setOnGetUpdateListener(updateBean -> {
+            // 2.0.全域设置
+            SplashActivity.this.updateBean = updateBean;
             // 2.1.获取到最新的版本号
             int newVersion = Integer.valueOf(updateBean.getNewVersionCode());
             // 3.有更新版本
@@ -198,49 +214,89 @@ public class SplashActivity extends RootActivity {
                 widgetUpdate.setVisibility(View.VISIBLE);
                 widgetUpdate.setUpdateDesFix(updateBean.getNewVersionFix());
                 // 4.点击了「确定更新」
-                widgetUpdate.setOnClickOkListener(() -> {
-                    
-                    // 4.1.判断SD卡是否挂载并留有足够空间
-                    SDHelper sdHelper = new SDHelper();
-                    // 4.2.空间不足--> 继续切换到下个界面
-                    sdHelper.setOnSdErrorListener(() -> {
-                        widgetUpdate.setVisibility(View.GONE);
-                        toGuideOrMain();
-                    });
-                    
-                    // 4.2.空间正常--> 切换到下载界面
-                    sdHelper.setOnSdNormalListener(() -> {
-                        widgetDownload.setVisibility(View.VISIBLE);
-                        // 设置描述
-                        widgetDownload.setUpdateFix(updateBean.getNewVersionFix());
-                        // TODO: 2018/6/29 0029  
-                        // 开始下载
-                        downNewVersion(updateBean);
-                    });
-                    
-                    sdHelper.getRemindMemory(this, updateBean.getNewVersionSize());
-                });
-
+                widgetUpdate.setOnClickOkListener(() -> sdHelper.getRemindMemory(this, updateBean.getNewVersionSize()));
                 // 4.点击了「下次再说」
                 widgetUpdate.setOnClickCancelListener(this::toGuideOrMain);
-                
+
             } else {
                 // 3.没有新版本--> 切换到下个界面
                 toGuideOrMain();
             }
         });
-        getUpdateHelper.setOnExceptionListener(e -> widgetNeterror.setVisibility(View.VISIBLE));
-        getUpdateHelper.getNewVersion();
+        getUpdateHelper.setOnExceptionListener(e -> {
+            showErrorNet();
+            Lgg.t(Cons.TAG).ee("initCheckUpdateLogic() --> error");
+        });
+    }
+
+    /**
+     * 查询SD状态
+     */
+    private void initCheckSdCardLogic() {
+        // 4.1.判断SD卡是否挂载并留有足够空间
+        sdHelper = new SDHelper();
+        // 4.2.空间不足--> 继续切换到下个界面
+        sdHelper.setOnSdErrorListener(() -> {
+            widgetUpdate.setVisibility(View.GONE);
+            toGuideOrMain();
+        });
+
+        // 4.2.空间正常--> 切换到下载界面
+        sdHelper.setOnSdNormalListener(() -> {
+            widgetDownload.setVisibility(View.VISIBLE);
+            // 设置描述
+            widgetDownload.setUpdateFix(updateBean.getNewVersionFix());
+            // 根据情况显示安装还是下载
+            ToInstallOrDownload(updateBean);
+        });
+    }
+
+    /**
+     * 根据情况显示安装还是下载
+     *
+     * @param updateBean 从网络获取的信息
+     */
+    private void ToInstallOrDownload(UpdateBean updateBean) {
+        String localApkPath = Ogg.getLocalInstallApkPath(updateBean.getFile().getName());
+        Lgg.t(Cons.TAG).ii("ToInstallOrDownload(): localApkPath: " + localApkPath);
+        // 1.如果没有找到对应路径--> 下载
+        if (TextUtils.isEmpty(localApkPath)) {
+            downloadHelper.download(updateBean.getFile());
+        } else {
+            // 2.获取本地包信息
+            PackageInfo packageInfo = Ogg.checkApkVersionInfo(this, localApkPath);
+            String localPackageName = packageInfo.packageName;
+            String localSharedUserId = packageInfo.sharedUserId;
+            int localVersionCode = packageInfo.versionCode;
+            Lgg.t(Cons.TAG).ii("ToInstallOrDownload():\nlocalPackageName: " + localPackageName + "\nlocalSharedUserId: " + localSharedUserId + "\nlocalVersionCode: " + localVersionCode);
+
+            // 3.包名是否与当前运行的APP的包名一致
+            if (localPackageName.contains(getPackageName()) & localSharedUserId.contains(getString(R.string.app_sui))) {
+                Lgg.t(Cons.TAG).ii("packageName and shareUserId is same");
+                // 4.安装包版本号是否和网络存档的版本号一致
+                if (localVersionCode == Integer.valueOf(updateBean.getNewVersionCode())) {
+                    Lgg.t(Cons.TAG).ii("version is same to leadCloud");
+                    // 5.显示安装UI
+                    widgetDownload.showInstallUi();
+                } else {
+                    Lgg.t(Cons.TAG).ii("version is not same to leadCloud");
+                    // 5.显示下载UI--> 执行下载逻辑
+                    downloadHelper.download(updateBean.getFile());
+                }
+            } else {
+                Lgg.t(Cons.TAG).ii("packageName and shareUserId is not same");
+                downloadHelper.download(updateBean.getFile());
+            }
+
+        }
     }
 
     /**
      * 执行下载逻辑
-     *
-     * @param updateBean 新版本对象
      */
-    private void downNewVersion(UpdateBean updateBean) {
+    private void initDownNewVersionLogic() {
 
-        DownloadHelper downloadHelper = new DownloadHelper();
+        downloadHelper = new DownloadHelper();
 
         /* 准备下载 */
         downloadHelper.setOnPreDownloadListener(() -> {
@@ -265,7 +321,7 @@ public class SplashActivity extends RootActivity {
             // 出错后为重试按钮设置监听
             widgetDownload.setOnRetryListener(() -> {
                 widgetDownload.setProgress(0);
-                downNewVersion(updateBean);
+                downloadHelper.download(updateBean.getFile());
             });
             // 出错后为返回按钮设置监听
             widgetDownload.setOnBackListener(this::toGuideOrMain);
@@ -283,8 +339,6 @@ public class SplashActivity extends RootActivity {
                 InstallApkHelper.install(this, apkName);
             });
         });
-
-        downloadHelper.download(updateBean.getFile());
     }
 
     /**
@@ -295,32 +349,41 @@ public class SplashActivity extends RootActivity {
             // TODO: 2018/6/26 0026 进入主页
             Tgg.show(this, "进入主页", 0);
         } else {
-            // TODO: 2018/6/26 0026 进入向导页
-            Tgg.show(this, "进入向导页", 0);
+            // 进入向导页
+            widgetGuide.setVisibility(View.VISIBLE);
+            // 点击「立即体验」
+            widgetGuide.setOnClickNowListener(() -> {
+                // TODO: 2018/6/26 0026 进入主页
+                Tgg.show(this, "进入主页", 0);
+            });
         }
     }
 
     @Override
     public void onBackPressed() {
         // 对界面做分类判断
-        if (widgetSplash.getVisibility() == View.VISIBLE) {// 启动页
-            finish();
-            Process.killProcess(Process.myPid());
-        } else if (widgetPrivacy.getVisibility() == View.VISIBLE) {// 隐私页
-            finish();
-            Process.killProcess(Process.myPid());
-        } else if (widgetNeterror.getVisibility() == View.VISIBLE) {// 出错页
-            finish();
-            Process.killProcess(Process.myPid());
-        } else if (widgetUpdate.getVisibility() == View.VISIBLE) {// 更新提示页
-            // 界面隐藏 
-            widgetUpdate.setVisibility(View.GONE);
-            // 继续向下执行
-            toGuideOrMain();
-        } else if (widgetDownload.getVisibility() == View.VISIBLE) {// 下载页
-            // TODO: 2018/6/28 0028  弹出询问界面提示用户要重新下载,是否确定回退
-            Tgg.show(this, "将会取消下载, 之前下载的内容将清除", 3000);
-        } else {
+        if (widgetSplash.getVisibility() == View.VISIBLE) {// 启动页当前
+
+            if (widgetPrivacy.getVisibility() == View.VISIBLE) {// 隐私页
+                finish();
+                Process.killProcess(Process.myPid());
+            } else if (widgetNeterror.getVisibility() == View.VISIBLE) {// 出错页
+                finish();
+                Process.killProcess(Process.myPid());
+            } else if (widgetUpdate.getVisibility() == View.VISIBLE) {// 更新提示页
+                // 界面隐藏 
+                widgetUpdate.setVisibility(View.GONE);
+                // 继续向下执行
+                toGuideOrMain();
+            } else if (widgetDownload.getVisibility() == View.VISIBLE) {// 下载页
+                widgetDownload.setVisibility(View.GONE);
+                toGuideOrMain();
+            } else {
+                finish();
+                Process.killProcess(Process.myPid());
+            }
+
+        } else {// 启动页非当前
             finish();
             Process.killProcess(Process.myPid());
         }

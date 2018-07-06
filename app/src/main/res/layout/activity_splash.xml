@@ -49,4 +49,11 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+    <!-- 引导页 -->
+    <xsda.xsda.widget.GuideWidget
+        android:id="@+id/widget_guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </com.zhy.android.percent.support.PercentRelativeLayout>
