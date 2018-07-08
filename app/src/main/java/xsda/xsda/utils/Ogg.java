@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import xsda.xsda.R;
 
@@ -200,6 +201,17 @@ public class Ogg {
             }
         }
         return null;
+    }
+
+    /**
+     * 匹配手机号码
+     *
+     * @param phoneNum 手机号码
+     * @return 是否匹配
+     */
+    public static boolean matchPhoneReg(String phoneNum) {
+        String reg = "^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\\d{8}$";
+        return Pattern.compile(reg).matcher(phoneNum).matches();
     }
 
 }

@@ -29,11 +29,14 @@
     <string name="login_bottom_text">立即登陆</string>
     <string name="login_input_hint_username">请输入您的手机号(仅限中国大陆)</string>
     <string name="login_input_hint_password">请输入您的密码</string>
-    <string name="register_input_hint_password">请输入您的密码(16位)</string>
-    <string name="login_input_hint_confirmpassword">请确认您的密码(16位)</string>
+    <string name="register_input_hint_password">请输入您的密码(8~16位)</string>
+    <string name="login_input_hint_confirmpassword">请确认您的密码(8~16位)</string>
     <string name="register_input_hint_verifycode">请输入验证码</string>
     <string name="register_text">注册</string>
     <string name="login_forgot">忘记密码</string>
     <string name="register_get_verifycode">获取验证码</string>
     <string name="register_commit">提交注册</string>
+    <string name="register_username_tip">请输入正确的手机号</string>
+    <string name="register_password_tip">请输入8~16位密码</string>
+    <string name="register_confirmpassword_tip">请确认8~16位密码</string>
 </resources>
