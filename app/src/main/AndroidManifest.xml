@@ -30,9 +30,9 @@
             android:name=".ui.SplashActivity"
             android:screenOrientation="portrait">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
 
@@ -50,7 +50,9 @@
         <!-- 实时通信模块、推送 END -->
 
         <!-- 反馈组件（需要加入以下声明）START -->
-        <activity android:name="com.avos.avoscloud.feedback.ThreadActivity">
+        <activity
+            android:name="com.avos.avoscloud.feedback.ThreadActivity"
+            android:screenOrientation="portrait">
         </activity>
         <!-- 反馈组件 END -->
 
@@ -66,7 +68,9 @@
         </provider>
 
         <!-- 登陆界面 -->
-        <activity android:name=".ui.LoginActivity">
+        <activity
+            android:name=".ui.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
