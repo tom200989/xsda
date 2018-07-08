@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorCompanyDark"
+        android:background="@drawable/applogo"
         app:layout_heightPercent="20%w"
         app:layout_marginTopPercent="10%h"
         app:layout_widthPercent="20%w" />
@@ -27,18 +27,29 @@
         android:layout_below="@id/iv_login_logo"
         android:layout_centerHorizontal="true"
         app:layout_heightPercent="8%h"
-        app:layout_marginTopPercent="15%h"
+        app:layout_marginTopPercent="10%h"
         app:layout_widthPercent="70%w">
+
+        <ImageView
+            android:id="@+id/iv_login_username_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/username_logo"
+            app:layout_heightPercent="50%h"
+            app:layout_marginBottomPercent="15%h"
+            app:layout_widthPercent="50%h" />
 
         <EditText
             android:id="@+id/et_login_input_username"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_toEndOf="@id/iv_login_username_logo"
             android:background="@null"
             android:gravity="bottom"
             android:hint="@string/login_input_hint_username"
             android:inputType="text"
-            android:maxLength="20"
+            android:maxLength="11"
             android:maxLines="1"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
@@ -67,15 +78,26 @@
         app:layout_marginTopPercent="3%h"
         app:layout_widthPercent="70%w">
 
+        <ImageView
+            android:id="@+id/iv_login_password_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/password_logo"
+            app:layout_heightPercent="50%h"
+            app:layout_marginBottomPercent="15%h"
+            app:layout_widthPercent="50%h" />
+
         <EditText
             android:id="@+id/et_login_input_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_toEndOf="@id/iv_login_password_logo"
             android:background="@null"
             android:gravity="bottom"
             android:hint="@string/login_input_hint_password"
             android:inputType="textPassword"
-            android:maxLength="20"
+            android:maxLength="16"
             android:maxLines="1"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
@@ -98,25 +120,42 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:padding="10dp"
             android:src="@drawable/unvisible_eye"
             app:layout_heightPercent="90%h"
+            app:layout_paddingPercent="25%h"
             app:layout_widthPercent="90%h" />
     </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <!-- forgot password -->
+    <TextView
+        android:id="@+id/tv_login_forgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/rl_login_input_password"
+        android:gravity="end|center_vertical"
+        android:text="@string/login_forgot"
+        android:textColor="@color/colorCompanyDark"
+        app:layout_heightPercent="5%h"
+        app:layout_marginLeftPercent="15%w"
+        app:layout_marginRightPercent="15%w"
+        app:layout_marginTopPercent="2%h"
+        app:layout_textSizePercent="2.5%h"
+        app:layout_widthPercent="20%w" />
 
     <!-- login button -->
     <TextView
         android:id="@+id/tv_login_click"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_login_input_password"
+        android:layout_below="@id/tv_login_forgot"
         android:layout_centerHorizontal="true"
         android:background="@drawable/bg_login_click_selector"
         android:gravity="center"
         android:text="@string/login_bottom_text"
         android:textColor="@android:color/white"
         app:layout_heightPercent="6.5%h"
-        app:layout_marginTopPercent="6%h"
+        app:layout_marginTopPercent="3%h"
         app:layout_textSizePercent="2.5%h"
         app:layout_widthPercent="70%w" />
 
@@ -125,8 +164,9 @@
         android:id="@+id/tv_login_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_login_click"
+        android:layout_below="@+id/tv_login_click"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
         android:gravity="center"
         android:text="@string/register_text"
         android:textColor="@color/colorCompany"
@@ -157,7 +197,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorCompanyDark"
+        android:background="@drawable/wechat_logo"
         app:layout_heightPercent="8%h"
         app:layout_marginBottomPercent="5%h"
         app:layout_widthPercent="8%h" />

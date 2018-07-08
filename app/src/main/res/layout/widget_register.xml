@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- banner -->
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_register_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_heightPercent="9%h">
+
+        <ImageView
+            android:id="@+id/iv_register_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_pink"
+            app:layout_heightPercent="100%h"
+            app:layout_paddingPercent="28%h"
+            app:layout_widthPercent="100%h" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/register_text"
+            android:textColor="@color/colorCompanyDark"
+            app:layout_textSizePercent="30%h" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@color/colorCompany" />
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <!-- logo -->
+    <ImageView
+        android:id="@+id/iv_register_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_register_banner"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.7"
+        android:src="@drawable/register_logo"
+        app:layout_heightPercent="15%h"
+        app:layout_marginTopPercent="3%h"
+        app:layout_widthPercent="22%w" />
+
+    <!-- username -->
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_register_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_register_logo"
+        android:layout_centerHorizontal="true"
+        app:layout_heightPercent="8%h"
+        app:layout_marginTopPercent="3%h"
+        app:layout_widthPercent="70%w">
+
+        <ImageView
+            android:id="@+id/iv_register_username_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/username_logo"
+            app:layout_heightPercent="50%h"
+            app:layout_marginBottomPercent="15%h"
+            app:layout_widthPercent="50%h" />
+
+        <EditText
+            android:id="@+id/et_register_input_username"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/iv_register_username_logo"
+            android:background="@null"
+            android:gravity="bottom"
+            android:hint="@string/login_input_hint_username"
+            android:inputType="text"
+            android:maxLength="11"
+            android:maxLines="1"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/colorCompanyDark"
+            android:textColorHint="@color/colorCompany"
+            android:textCursorDrawable="@null"
+            app:layout_paddingBottomPercent="15%h"
+            app:layout_textSizePercent="30%h" />
+
+        <View
+            android:id="@+id/v_register_username_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorCompanyDark" />
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <!-- password -->
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_register_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_register_username"
+        android:layout_centerHorizontal="true"
+        app:layout_heightPercent="8%h"
+        app:layout_marginTopPercent="2%h"
+        app:layout_widthPercent="70%w">
+
+        <ImageView
+            android:id="@+id/iv_register_password_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/password_logo"
+            app:layout_heightPercent="50%h"
+            app:layout_marginBottomPercent="15%h"
+            app:layout_widthPercent="50%h" />
+
+        <EditText
+            android:id="@+id/et_register_input_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@id/iv_register_password_logo"
+            android:background="@null"
+            android:gravity="bottom"
+            android:hint="@string/register_input_hint_password"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:maxLines="1"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/colorCompanyDark"
+            android:textColorHint="@color/colorCompany"
+            android:textCursorDrawable="@null"
+            app:layout_paddingBottomPercent="15%h"
+            app:layout_textSizePercent="30%h" />
+
+        <View
+            android:id="@+id/v_register_password_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorCompany" />
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <!-- confirm password -->
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_register_confirmPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_register_password"
+        android:layout_centerHorizontal="true"
+        app:layout_heightPercent="8%h"
+        app:layout_marginTopPercent="2%h"
+        app:layout_widthPercent="70%w">
+
+        <ImageView
+            android:id="@+id/iv_register_confirmPassword_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/confirmpassword_logo"
+            app:layout_heightPercent="50%h"
+            app:layout_marginBottomPercent="15%h"
+            app:layout_widthPercent="50%h" />
+
+        <EditText
+            android:id="@+id/et_register_input_confirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/iv_register_confirmPassword_logo"
+            android:background="@null"
+            android:gravity="bottom"
+            android:hint="@string/login_input_hint_confirmpassword"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:maxLines="1"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/colorCompanyDark"
+            android:textColorHint="@color/colorCompany"
+            android:textCursorDrawable="@null"
+            app:layout_paddingBottomPercent="15%h"
+            app:layout_textSizePercent="30%h" />
+
+        <View
+            android:id="@+id/v_register_confirmPassword_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorCompany" />
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <!-- verify code -->
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_register_verifyCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_register_confirmPassword"
+        android:layout_centerHorizontal="true"
+        app:layout_heightPercent="8%h"
+        app:layout_marginTopPercent="2%h"
+        app:layout_widthPercent="70%w">
+
+        <ImageView
+            android:id="@+id/iv_register_verifyCode_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/verify_logo"
+            app:layout_heightPercent="50%h"
+            app:layout_marginBottomPercent="15%h"
+            app:layout_widthPercent="50%h" />
+
+        <TextView
+            android:id="@+id/iv_register_getVerifyCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="bottom"
+            android:text="@string/register_get_verifycode"
+            android:textColor="@color/colorCompanyDark"
+            app:layout_heightPercent="100%h"
+            app:layout_paddingBottomPercent="15%h" />
+
+        <EditText
+            android:id="@+id/et_register_input_verifyCode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/iv_register_verifyCode_logo"
+            android:layout_toStartOf="@id/iv_register_getVerifyCode"
+            android:background="@null"
+            android:gravity="bottom"
+            android:hint="@string/register_input_hint_verifycode"
+            android:inputType="textPassword"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/colorCompanyDark"
+            android:textColorHint="@color/colorCompany"
+            android:textCursorDrawable="@null"
+            app:layout_paddingBottomPercent="15%h"
+            app:layout_textSizePercent="30%h" />
+
+        <View
+            android:id="@+id/v_register_verifyCode_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorCompany" />
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <!-- commit -->
+    <TextView
+        android:id="@+id/tv_register_commit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_register_verifyCode"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_login_click_selector"
+        android:gravity="center"
+        android:text="@string/register_commit"
+        android:textColor="@android:color/white"
+        app:layout_heightPercent="7%h"
+        app:layout_marginTopPercent="10%h"
+        app:layout_widthPercent="70%w" />
+
+</com.zhy.android.percent.support.PercentRelativeLayout>

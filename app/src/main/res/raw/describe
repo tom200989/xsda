@@ -17,3 +17,7 @@ if(leancode > currentcode)--> 网络版本 > 当前运行版本
     if(apkcode == leancode) --> 说明下载过--> 显示安装
     else --> 显示下载
 else --> 继续运行 
+
+
+TODO:待添加
+1.判断是否为模拟器

@@ -32,6 +32,7 @@ public class LoginWidget extends RelativeLayout {
     private WaveView wvLogin;
     private TextView tvLoginClick;
     private TextView tvRegisterClick;
+    private TextView tvForgot;
 
     private int colorFocus;
     private int colorUnFocus;
@@ -74,6 +75,7 @@ public class LoginWidget extends RelativeLayout {
         wvLogin = (WaveView) findViewById(R.id.wv_login);
         tvLoginClick = (TextView) findViewById(R.id.tv_login_click);
         tvRegisterClick = findViewById(R.id.tv_login_register);
+        tvForgot = findViewById(R.id.tv_login_forgot);
     }
 
     private void initEvent() {
@@ -115,6 +117,13 @@ public class LoginWidget extends RelativeLayout {
      */
     public void normalLogin() {
         // TODO: 2018/7/6 0006  
+    }
+
+    /**
+     * 忘记密码
+     */
+    public void forgotPassword( ) {
+        // TODO: 2018/7/8 0008  
     }
 
 }
