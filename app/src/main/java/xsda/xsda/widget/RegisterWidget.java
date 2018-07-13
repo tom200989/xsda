@@ -11,7 +11,12 @@ import android.widget.TextView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import xsda.xsda.R;
+import xsda.xsda.helper.GetServerDateHelper;
+import xsda.xsda.helper.GetVerifyCodeHelper;
+import xsda.xsda.helper.TimerHelper;
+import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Ogg;
+import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 
 /**
@@ -44,32 +49,41 @@ public class RegisterWidget extends RelativeLayout {
 
     private int color_checked;
     private int color_unchecked;
+    private String text_timeout;
     private EditText[] ets;
     private View[] lines;
+    private String text_success;
+    private GetVerifyCodeHelper getVerifyCodeHelper;
+    private TimerHelper timer;
+    private long countdown = 120;
+    private long currentServerDate;
+    private long limitVerify = countdown * 1000;// 限制2分钟以内不可再点击
 
     private void initViews(Context context) {
         View.inflate(context, R.layout.widget_register, this);
-        rlRegisterBanner = (PercentRelativeLayout) findViewById(R.id.rl_register_banner);
-        ivRegisterBack = (ImageView) findViewById(R.id.iv_register_back);
-        ivRegisterLogo = (ImageView) findViewById(R.id.iv_register_logo);
-        rlRegisterUsername = (PercentRelativeLayout) findViewById(R.id.rl_register_username);
-        ivRegisterUsernameLogo = (ImageView) findViewById(R.id.iv_register_username_logo);
-        etRegisterInputUsername = (EditText) findViewById(R.id.et_register_input_username);
+        rlRegisterBanner = findViewById(R.id.rl_register_banner);
+        ivRegisterBack = findViewById(R.id.iv_register_back);
+        ivRegisterLogo = findViewById(R.id.iv_register_logo);
+        rlRegisterUsername = findViewById(R.id.rl_register_username);
+        ivRegisterUsernameLogo = findViewById(R.id.iv_register_username_logo);
+        etRegisterInputUsername = findViewById(R.id.et_register_input_username);
         vRegisterUsernameLine = findViewById(R.id.v_register_username_line);
-        rlRegisterPassword = (PercentRelativeLayout) findViewById(R.id.rl_register_password);
-        ivRegisterPasswordLogo = (ImageView) findViewById(R.id.iv_register_password_logo);
-        etRegisterInputPassword = (EditText) findViewById(R.id.et_register_input_password);
+        rlRegisterPassword = findViewById(R.id.rl_register_password);
+        ivRegisterPasswordLogo = findViewById(R.id.iv_register_password_logo);
+        etRegisterInputPassword = findViewById(R.id.et_register_input_password);
         vRegisterPasswordLine = findViewById(R.id.v_register_password_line);
-        rlRegisterConfirmPassword = (PercentRelativeLayout) findViewById(R.id.rl_register_confirmPassword);
-        ivRegisterConfirmPasswordLogo = (ImageView) findViewById(R.id.iv_register_confirmPassword_logo);
-        etRegisterInputConfirmPassword = (EditText) findViewById(R.id.et_register_input_confirmPassword);
+        rlRegisterConfirmPassword = findViewById(R.id.rl_register_confirmPassword);
+        ivRegisterConfirmPasswordLogo = findViewById(R.id.iv_register_confirmPassword_logo);
+        etRegisterInputConfirmPassword = findViewById(R.id.et_register_input_confirmPassword);
         vRegisterConfirmPasswordLine = findViewById(R.id.v_register_confirmPassword_line);
-        rlRegisterVerifyCode = (PercentRelativeLayout) findViewById(R.id.rl_register_verifyCode);
-        ivRegisterVerifyCodeLogo = (ImageView) findViewById(R.id.iv_register_verifyCode_logo);
-        tvRegisterGetVerifyCode = (TextView) findViewById(R.id.tv_register_getVerifyCode);
-        etRegisterInputVerifyCode = (EditText) findViewById(R.id.et_register_input_verifyCode);
+        rlRegisterVerifyCode = findViewById(R.id.rl_register_verifyCode);
+        ivRegisterVerifyCodeLogo = findViewById(R.id.iv_register_verifyCode_logo);
+        tvRegisterGetVerifyCode = findViewById(R.id.tv_register_getVerifyCode);
+        tvRegisterGetVerifyCode.setClickable(false);
+        toGetVerifyInit(context);// 获取验证码按钮的初始状态
+        etRegisterInputVerifyCode = findViewById(R.id.et_register_input_verifyCode);
         vRegisterVerifyCodeLine = findViewById(R.id.v_register_verifyCode_line);
-        tvRegisterCommit = (TextView) findViewById(R.id.tv_register_commit);
+        tvRegisterCommit = findViewById(R.id.tv_register_commit);
         ets = new EditText[]{etRegisterInputUsername, etRegisterInputPassword, etRegisterInputConfirmPassword, etRegisterInputVerifyCode};
         lines = new View[]{vRegisterUsernameLine, vRegisterPasswordLine, vRegisterConfirmPasswordLine, vRegisterVerifyCodeLine};
     }
@@ -84,9 +98,94 @@ public class RegisterWidget extends RelativeLayout {
 
     public RegisterWidget(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initRes();
+        initRes(context);
         initViews(context);
-        initEvent(context);
+        getServerDate(context);
+
+    }
+
+    /**
+     * 获取服务器时间
+     *
+     * @param context
+     */
+    private void getServerDate(Context context) {
+        GetServerDateHelper getServerDateHelper = new GetServerDateHelper();
+        getServerDateHelper.setOnGetServerErrorListener(e -> {
+            // TODO: 2018/7/13 0013  回调到外部--> 让外部去处理错误的逻辑
+        });
+        getServerDateHelper.setOnGetServerDateLongSuccessListener(currentServerDate -> {
+            // 得到服务器当前时间
+            this.currentServerDate = currentServerDate;
+            initEvent(context);
+            initHelper(context);
+        });
+        getServerDateHelper.get();
+    }
+
+    private void initHelper(Context context) {
+        /* 获取验证码 */
+        getVerifyCodeHelper = new GetVerifyCodeHelper();
+        getVerifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(context, text_timeout, 2000));
+        getVerifyCodeHelper.setOnVerifyErrorListener(e -> Tgg.show(context, text_timeout, 2000));
+        getVerifyCodeHelper.setOnVerifySuccessListener(() -> {
+            // 提示留意短信
+            Tgg.show(context, text_success, 2000);
+            // 显示倒计时
+            countDown(context);
+        });
+    }
+
+    /**
+     * 显示倒计时
+     *
+     * @param context
+     */
+    private void countDown(Context context) {
+        if (timer == null) {
+            timer = new TimerHelper(context) {
+                @Override
+                public void doSomething() {
+                    if (countdown >= 1) {
+                        tvRegisterGetVerifyCode.setClickable(false);
+                        tvRegisterGetVerifyCode.setTextColor(context.getResources().getColor(R.color.colorGrayDark));
+                        tvRegisterGetVerifyCode.setText(String.valueOf(countdown-- + "s"));
+                    } else {
+                        tvRegisterGetVerifyCode.setClickable(true);
+                        tvRegisterGetVerifyCode.setTextColor(context.getResources().getColor(R.color.colorCompanyDark));
+                        tvRegisterGetVerifyCode.setText(context.getString(R.string.register_get_verifycode));
+                        timer.stop();
+                    }
+                }
+            };
+        }
+        timer.start(0, 1000);
+    }
+
+    /**
+     * 获取验证码按钮的初始状态
+     */
+    private void toGetVerifyInit(Context context) {
+        // 获取上次获取验证码成功的时间
+        long lastServerDate = Sgg.getInstance(context).getLong(Cons.SP_SERVER_DATE, 0);
+        // 时间正常
+        if (currentServerDate > lastServerDate) {
+            // 2分钟已过
+            if (currentServerDate - lastServerDate > limitVerify) {
+                countdown = 120;
+                tvRegisterGetVerifyCode.setClickable(true);
+            } else {// 2分钟没过
+                tvRegisterGetVerifyCode.setClickable(false);
+                // 计算出剩余时间
+                countdown = (limitVerify - (currentServerDate - lastServerDate)) / 1000;
+                // 启动倒数定时器
+                countDown(context);
+            }
+        } else {// 时间不正常(当前服务器时间 < 上次记录的时间)
+            tvRegisterGetVerifyCode.setClickable(false);
+            exit();
+            Tgg.show(context, context.getString(R.string.register_time_error), 2000);
+        }
     }
 
     private void initEvent(Context context) {
@@ -101,12 +200,15 @@ public class RegisterWidget extends RelativeLayout {
         tvRegisterGetVerifyCode.setOnClickListener(v -> {
             // 校验手机号和密码
             if (matchEdittext(context)) {
-                // TODO: 2018/7/8 0008 符合规则的开始请求验证码
+                // 符合规则的开始请求验证码
+                String phoneNum = etRegisterInputUsername.getText().toString();
+                String password = etRegisterInputPassword.getText().toString();
+                getVerifyCodeHelper.get(phoneNum, password);
             }
         });
         // 提交注册
         tvRegisterCommit.setOnClickListener(v -> {
-            // TODO: 2018/7/8 0008  
+            // TODO: 2018/7/8 0008  提交注册
         });
     }
 
@@ -137,8 +239,19 @@ public class RegisterWidget extends RelativeLayout {
         }
     }
 
-    private void initRes() {
+    private void initRes(Context context) {
         color_checked = getResources().getColor(R.color.colorCompanyDark);
         color_unchecked = getResources().getColor(R.color.colorCompany);
+        text_timeout = context.getString(R.string.register_timeout);
+        text_success = context.getString(R.string.register_success);
+    }
+
+    /**
+     * 退出当前界面
+     */
+    public void exit() {
+        setVisibility(GONE);
+        timer.stop();
+        timer = null;
     }
 }

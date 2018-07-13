@@ -14,13 +14,6 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <!-- 隐私条款 -->
-    <xsda.xsda.widget.PrivacyWidget
-        android:id="@+id/widget_privacy"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
     <!-- 网络出错 -->
     <xsda.xsda.widget.NetErrorWidget
         android:id="@+id/widget_neterror"

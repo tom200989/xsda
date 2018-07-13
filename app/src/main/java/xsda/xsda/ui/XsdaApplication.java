@@ -14,6 +14,19 @@ import xsda.xsda.utils.Ogg;
 
 public class XsdaApplication extends MultiDexApplication {
 
+    public static XsdaApplication app;
+
+    public static XsdaApplication getApp() {
+        if (app == null) {
+            synchronized (XsdaApplication.class) {
+                if (app == null) {
+                    app = new XsdaApplication();
+                }
+            }
+        }
+        return app;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -25,4 +38,5 @@ public class XsdaApplication extends MultiDexApplication {
         // 开启LeanClound调试
         AVOSCloud.setDebugLogEnabled(true);
     }
+
 }

@@ -35,7 +35,6 @@ import xsda.xsda.utils.Sgg;
 import xsda.xsda.widget.DownloadWidget;
 import xsda.xsda.widget.GuideWidget;
 import xsda.xsda.widget.NetErrorWidget;
-import xsda.xsda.widget.PrivacyWidget;
 import xsda.xsda.widget.SplashWidget;
 import xsda.xsda.widget.TipWidget;
 import xsda.xsda.widget.WaitWidget;
@@ -45,8 +44,6 @@ public class SplashActivity extends RootActivity {
 
     @Bind(R.id.widget_splash)
     SplashWidget widgetSplash;// 起始界面
-    @Bind(R.id.widget_privacy)
-    PrivacyWidget widgetPrivacy;// 隐私条款
     @Bind(R.id.widget_neterror)
     NetErrorWidget widgetNeterror;// 网络异常
     @Bind(R.id.widget_wait)
@@ -106,8 +103,7 @@ public class SplashActivity extends RootActivity {
     private void showPermission() {
         // 6.0 以上申请权限
         if (Build.VERSION.SDK_INT < 23) {
-            // 显示隐私条款
-            showPrivacy();
+            checkConnect();
         } else {
             // 1.开启对应的权限(同一个组的权限只需要申请一个, 同组的权限即可开通使用)
             int exstorePer = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -119,31 +115,8 @@ public class SplashActivity extends RootActivity {
                     ) {
                 ActivityCompat.requestPermissions(this, PERMISSIONS_NEED, REQUEST_NEED);
             } else {// 2.权限本身允许--> 执行业务逻辑
-                // 显示隐私条款
-                showPrivacy();
-            }
-        }
-    }
-
-    /**
-     * 2.显示隐私条款
-     */
-    private void showPrivacy() {
-        // 是否要进入隐私条款界面
-        if (!Sgg.getInstance(this).getBoolean(Cons.SP_PRIVACY_READ, false)) {
-            // 延迟2秒出现隐私条款
-            handler.postDelayed(() -> widgetPrivacy.setVisibility(View.VISIBLE), 0);
-            // 设置隐私条款的点击事件
-            widgetPrivacy.setOnClickAgreeListener(() -> {
-                // 提交隐私条款「已阅读」
-                Sgg.getInstance(this).putBoolean(Cons.SP_PRIVACY_READ, true);
-                widgetPrivacy.setVisibility(View.GONE);
-                // 检测新版本
                 checkConnect();
-            });
-        } else {
-            // 检测新版本
-            checkConnect();
+            }
         }
     }
 
@@ -363,10 +336,7 @@ public class SplashActivity extends RootActivity {
         // 对界面做分类判断
         if (widgetSplash.getVisibility() == View.VISIBLE) {// 启动页当前
 
-            if (widgetPrivacy.getVisibility() == View.VISIBLE) {// 隐私页
-                finish();
-                Process.killProcess(Process.myPid());
-            } else if (widgetNeterror.getVisibility() == View.VISIBLE) {// 出错页
+           if (widgetNeterror.getVisibility() == View.VISIBLE) {// 出错页
                 finish();
                 Process.killProcess(Process.myPid());
             } else if (widgetUpdate.getVisibility() == View.VISIBLE) {// 更新提示页
@@ -420,8 +390,7 @@ public class SplashActivity extends RootActivity {
         if (ints.contains(PackageManager.PERMISSION_DENIED)) {
             finish();
         } else {
-            // 显示隐私条款
-            showPrivacy();
+            checkConnect();
         }
     }
 

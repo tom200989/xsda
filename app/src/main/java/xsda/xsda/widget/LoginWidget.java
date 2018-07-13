@@ -102,28 +102,28 @@ public class LoginWidget extends RelativeLayout {
      * 注册
      */
     private void register() {
-        // TODO: 2018/7/6 0006  
+        // TODO: 2018/7/6 0006  注册逻辑
     }
 
     /**
      * 微信登陆
      */
     public void weChat() {
-        // TODO: 2018/7/6 0006  
+        // TODO: 2018/7/6 0006  微信登陆逻辑
     }
 
     /**
      * 普通登陆
      */
     public void normalLogin() {
-        // TODO: 2018/7/6 0006  
+        // TODO: 2018/7/6 0006  常规登陆逻辑
     }
 
     /**
      * 忘记密码
      */
     public void forgotPassword( ) {
-        // TODO: 2018/7/8 0008  
+        // TODO: 2018/7/8 0008  忘记密码逻辑
     }
 
 }
