@@ -1,5 +1,6 @@
 package xsda.xsda.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -15,6 +16,8 @@ import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.GetVerifyCodeHelper;
 import xsda.xsda.helper.TimerHelper;
 import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Egg;
+import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
@@ -25,6 +28,7 @@ import xsda.xsda.utils.Tgg;
 
 public class RegisterWidget extends RelativeLayout {
 
+    private View rlRegisterAll;
     private PercentRelativeLayout rlRegisterBanner;
     private ImageView ivRegisterBack;
     private ImageView ivRegisterLogo;
@@ -50,17 +54,21 @@ public class RegisterWidget extends RelativeLayout {
     private int color_checked;
     private int color_unchecked;
     private String text_timeout;
+    private String text_frequently;
     private EditText[] ets;
     private View[] lines;
     private String text_success;
     private GetVerifyCodeHelper getVerifyCodeHelper;
     private TimerHelper timer;
-    private long countdown = 120;
-    private long currentServerDate;
+    private long countdown = 120;// 默认间隔120秒才可重复获取验证码
+    private long currentServerDate;// 服务器当前时间
     private long limitVerify = countdown * 1000;// 限制2分钟以内不可再点击
+
 
     private void initViews(Context context) {
         View.inflate(context, R.layout.widget_register, this);
+        rlRegisterAll = findViewById(R.id.rl_register_all);
+        rlRegisterAll.setOnClickListener(v -> Lgg.t(Cons.TAG).ii("click register empty"));
         rlRegisterBanner = findViewById(R.id.rl_register_banner);
         ivRegisterBack = findViewById(R.id.iv_register_back);
         ivRegisterLogo = findViewById(R.id.iv_register_logo);
@@ -78,8 +86,8 @@ public class RegisterWidget extends RelativeLayout {
         vRegisterConfirmPasswordLine = findViewById(R.id.v_register_confirmPassword_line);
         rlRegisterVerifyCode = findViewById(R.id.rl_register_verifyCode);
         ivRegisterVerifyCodeLogo = findViewById(R.id.iv_register_verifyCode_logo);
-        tvRegisterGetVerifyCode = findViewById(R.id.tv_register_getVerifyCode);
-        tvRegisterGetVerifyCode.setClickable(false);
+        tvRegisterGetVerifyCode = findViewById(R.id.tv_register_getVerifyCode);// 验证码按钮
+        tvRegisterGetVerifyCode.setClickable(false);// 验证码设置默认不可点
         toGetVerifyInit(context);// 获取验证码按钮的初始状态
         etRegisterInputVerifyCode = findViewById(R.id.et_register_input_verifyCode);
         vRegisterVerifyCodeLine = findViewById(R.id.v_register_verifyCode_line);
@@ -99,9 +107,7 @@ public class RegisterWidget extends RelativeLayout {
     public RegisterWidget(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initRes(context);
-        initViews(context);
         getServerDate(context);
-
     }
 
     /**
@@ -113,10 +119,12 @@ public class RegisterWidget extends RelativeLayout {
         GetServerDateHelper getServerDateHelper = new GetServerDateHelper();
         getServerDateHelper.setOnGetServerErrorListener(e -> {
             // TODO: 2018/7/13 0013  回调到外部--> 让外部去处理错误的逻辑
+            Tgg.show(context, "注册出错了--> 回调", 2000);
         });
         getServerDateHelper.setOnGetServerDateLongSuccessListener(currentServerDate -> {
             // 得到服务器当前时间
             this.currentServerDate = currentServerDate;
+            initViews(context);
             initEvent(context);
             initHelper(context);
         });
@@ -127,7 +135,14 @@ public class RegisterWidget extends RelativeLayout {
         /* 获取验证码 */
         getVerifyCodeHelper = new GetVerifyCodeHelper();
         getVerifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(context, text_timeout, 2000));
-        getVerifyCodeHelper.setOnVerifyErrorListener(e -> Tgg.show(context, text_timeout, 2000));
+        getVerifyCodeHelper.setOnVerifyErrorListener(e -> {
+            if (e.getCode() == Egg.CANT_SEND_SMS_TOO_FREQUENTLY) {
+                // 验证码获取频繁
+                Tgg.show(context, text_frequently, 2000);
+            } else {
+                Tgg.show(context, text_timeout, 2000);
+            }
+        });
         getVerifyCodeHelper.setOnVerifySuccessListener(() -> {
             // 提示留意短信
             Tgg.show(context, text_success, 2000);
@@ -146,16 +161,18 @@ public class RegisterWidget extends RelativeLayout {
             timer = new TimerHelper(context) {
                 @Override
                 public void doSomething() {
-                    if (countdown >= 1) {
-                        tvRegisterGetVerifyCode.setClickable(false);
-                        tvRegisterGetVerifyCode.setTextColor(context.getResources().getColor(R.color.colorGrayDark));
-                        tvRegisterGetVerifyCode.setText(String.valueOf(countdown-- + "s"));
-                    } else {
-                        tvRegisterGetVerifyCode.setClickable(true);
-                        tvRegisterGetVerifyCode.setTextColor(context.getResources().getColor(R.color.colorCompanyDark));
-                        tvRegisterGetVerifyCode.setText(context.getString(R.string.register_get_verifycode));
-                        timer.stop();
-                    }
+                    ((Activity) context).runOnUiThread(() -> {
+                        if (countdown >= 1) {
+                            tvRegisterGetVerifyCode.setClickable(false);
+                            tvRegisterGetVerifyCode.setTextColor(context.getResources().getColor(R.color.colorGrayDark));
+                            tvRegisterGetVerifyCode.setText(String.valueOf(countdown-- + "s"));
+                        } else {
+                            tvRegisterGetVerifyCode.setClickable(true);
+                            tvRegisterGetVerifyCode.setTextColor(context.getResources().getColor(R.color.colorCompanyDark));
+                            tvRegisterGetVerifyCode.setText(context.getString(R.string.register_get_verifycode));
+                            timer.stop();
+                        }
+                    });
                 }
             };
         }
@@ -189,26 +206,31 @@ public class RegisterWidget extends RelativeLayout {
     }
 
     private void initEvent(Context context) {
-        // 设定焦点监听
+        // E.设定焦点监听
         for (int i = 0; i < ets.length; i++) {
             int finalI = i;
             ets[i].setOnFocusChangeListener((v, hasFocus) -> lines[finalI].setBackgroundColor(hasFocus ? color_checked : color_unchecked));
         }
-        // 回退
+
+        // E.回退
         ivRegisterBack.setOnClickListener(v -> setVisibility(GONE));
-        // 获取验证码
+
+        // E.获取验证码
         tvRegisterGetVerifyCode.setOnClickListener(v -> {
             // 校验手机号和密码
             if (matchEdittext(context)) {
                 // 符合规则的开始请求验证码
                 String phoneNum = etRegisterInputUsername.getText().toString();
                 String password = etRegisterInputPassword.getText().toString();
+                Tgg.show(context, context.getString(R.string.register_begin2getverify_tip), 2000);
                 getVerifyCodeHelper.get(phoneNum, password);
             }
         });
-        // 提交注册
+
+        // E.提交注册
         tvRegisterCommit.setOnClickListener(v -> {
             // TODO: 2018/7/8 0008  提交注册
+            // 校验手机号密码验证码等等
         });
     }
 
@@ -234,6 +256,11 @@ public class RegisterWidget extends RelativeLayout {
             etRegisterInputConfirmPassword.requestFocus();
             Tgg.show(context, context.getString(R.string.register_confirmpassword_tip), 2000);
             return false;
+        } else if (!etRegisterInputPassword.getText().toString()// 第一次密码
+                            .equals(etRegisterInputConfirmPassword.getText().toString())) {// 第二次密码
+            etRegisterInputConfirmPassword.requestFocus();
+            Tgg.show(context, context.getString(R.string.register_passwordnotsame_tip), 2000);
+            return false;
         } else {
             return true;
         }
@@ -243,6 +270,7 @@ public class RegisterWidget extends RelativeLayout {
         color_checked = getResources().getColor(R.color.colorCompanyDark);
         color_unchecked = getResources().getColor(R.color.colorCompany);
         text_timeout = context.getString(R.string.register_timeout);
+        text_frequently = context.getString(R.string.register_frequently_tip);
         text_success = context.getString(R.string.register_success);
     }
 
@@ -251,7 +279,9 @@ public class RegisterWidget extends RelativeLayout {
      */
     public void exit() {
         setVisibility(GONE);
-        timer.stop();
-        timer = null;
+        if (timer != null) {
+            timer.stop();
+            timer = null;
+        }
     }
 }

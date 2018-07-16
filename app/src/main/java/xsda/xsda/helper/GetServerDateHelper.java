@@ -6,6 +6,9 @@ import com.avos.avoscloud.callback.AVServerDateCallback;
 
 import java.util.Date;
 
+import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Lgg;
+
 /**
  * Created by qianli.ma on 2018/7/13 0013.
  */
@@ -20,7 +23,9 @@ public class GetServerDateHelper {
                     return;
                 }
                 getServerDateSuccessNext(date);
-                getServerDateLongSuccessNext(date.getTime());
+                long serverTime = date.getTime();
+                Lgg.t(Cons.TAG).ii("serverTime: " + serverTime);
+                getServerDateLongSuccessNext(serverTime);
             }
         });
     }
