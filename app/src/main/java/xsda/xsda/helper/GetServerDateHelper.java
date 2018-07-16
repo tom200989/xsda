@@ -7,6 +7,7 @@ import com.avos.avoscloud.callback.AVServerDateCallback;
 import java.util.Date;
 
 import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
 
 /**
@@ -19,6 +20,7 @@ public class GetServerDateHelper {
             @Override
             public void done(Date date, AVException e) {
                 if (e != null) {
+                    Egg.print(getClass().getSimpleName(), "getVerifyCode", e,null);
                     getServerErrorNext(e);
                     return;
                 }
@@ -72,7 +74,7 @@ public class GetServerDateHelper {
 
     // 接口OnGetServerErrorListener
     public interface OnGetServerErrorListener {
-        void getServerError(Exception e);
+        void getServerError(AVException e);
     }
 
     // 对外方式setOnGetServerErrorListener
@@ -81,7 +83,7 @@ public class GetServerDateHelper {
     }
 
     // 封装方法getServerErrorNext
-    private void getServerErrorNext(Exception e) {
+    private void getServerErrorNext(AVException e) {
         if (onGetServerErrorListener != null) {
             onGetServerErrorListener.getServerError(e);
         }

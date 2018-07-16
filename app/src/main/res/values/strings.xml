@@ -34,9 +34,12 @@
     <string name="register_password_tip">请输入8~16位密码</string>
     <string name="register_confirmpassword_tip">请确认8~16位密码</string>
     <string name="register_passwordnotsame_tip">两次输入的密码不一致</string>
-    <string name="register_begin2getverify_tip">正在请求验证码</string>
-    <string name="register_frequently_tip">该手机号已经注册</string>
+    <string name="register_begin2getverify_tip">发送成功</string>
+    <string name="register_frequently_tip">发送验证码过于频繁\n请稍候再试</string>
     <string name="register_timeout">网络超时\n请稍候再试试</string>
     <string name="register_success">短信已发送\n请注意查收</string>
     <string name="register_time_error">你改过时间了 哼哼~</string>
+    <string name="register_not_verify_empty">验证码不能为空</string>
+    <string name="register_commit_verify_failed">无效的验证码\n请稍候重试</string>
+    <string name="register_commit_verify_success">验证码校验成功</string>
 </resources>

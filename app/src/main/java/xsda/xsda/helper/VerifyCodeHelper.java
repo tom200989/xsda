@@ -1,6 +1,7 @@
 package xsda.xsda.helper;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.avos.avoscloud.SignUpCallback;
@@ -8,13 +9,14 @@ import com.avos.avoscloud.SignUpCallback;
 import xsda.xsda.ui.XsdaApplication;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
+import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Sgg;
 
 /**
  * Created by Administrator on 2018/7/8 0008.
  */
 
-public class GetVerifyCodeHelper {
+public class VerifyCodeHelper {
 
     /**
      * 发起验证请求
@@ -22,16 +24,36 @@ public class GetVerifyCodeHelper {
      * @param phoneNum 电话
      * @param password 密码
      */
-    public void get(String phoneNum, String password) {
+    public void getVerifyCode(String phoneNum, String password) {
 
         // 1.从服务器获取时间 
         GetServerDateHelper getServerDateHelper = new GetServerDateHelper();
         getServerDateHelper.setOnGetServerErrorListener(this::getServerDateErrorNext);
         getServerDateHelper.setOnGetServerDateLongSuccessListener(millute -> {
+            // TODO: 2018/7/16 0016  判断用户是否存在
             // 2.创建用户并调起注册请求
             createUserAndRequestVerify(phoneNum, password, millute);
         });
         getServerDateHelper.get();
+    }
+
+    /**
+     * 提交验证码
+     *
+     * @param verifyCode 验证码
+     */
+    public void commitVerifyCode(String verifyCode) {
+        AVUser.verifyMobilePhoneInBackground(verifyCode, new AVMobilePhoneVerifyCallback() {
+            @Override
+            public void done(AVException e) {
+                Egg.print(getClass().getSimpleName(), "commitVerifyCode", e, "校验验证码失败");
+                if (e != null) {
+                    commitVerifyErrorNext(e);
+                } else {
+                    commitVerifySuccessNext();
+                }
+            }
+        });
     }
 
     /**
@@ -42,6 +64,7 @@ public class GetVerifyCodeHelper {
      * @param millute  服务器时间
      */
     private void createUserAndRequestVerify(String phoneNum, String password, long millute) {
+        Lgg.t(Cons.TAG).ii("createUserAndRequestVerify");
         AVUser user = new AVUser();
         user.setUsername(phoneNum);
         user.setPassword(password);
@@ -49,7 +72,7 @@ public class GetVerifyCodeHelper {
         user.put("mobilePhoneNumber", phoneNum);
         user.signUpInBackground(new SignUpCallback() {
             public void done(AVException e) {
-                Egg.print(e);
+                Egg.print(getClass().getSimpleName(), "createUserAndRequestVerify", e, null);
                 if (e != null) {
                     // 3.1.如果号码已经存在
                     if (e.getCode() == Egg.MOBILE_PHONE_NUMBER_HAS_ALREADY_BEEN_TAKEN) {
@@ -74,10 +97,11 @@ public class GetVerifyCodeHelper {
      * @param millute  服务器时间
      */
     private void directToGetVerifyCode(String phoneNum, long millute) {
+        Lgg.t(Cons.TAG).ii("directToGetVerifyCode");
         AVUser.requestMobilePhoneVerifyInBackground(phoneNum, new RequestMobileCodeCallback() {
             @Override
             public void done(AVException e) {
-                Egg.print(e);
+                Egg.print(getClass().getSimpleName(), "directToGetVerifyCode", e, null);
                 if (e != null) {
                     // 4.验证失败
                     verifyErrorNext(e);
@@ -128,7 +152,7 @@ public class GetVerifyCodeHelper {
     }
 
     // 对外方式setOnVerifyErrorListener
-    public void setOnVerifyErrorListener(OnVerifyErrorListener onVerifyErrorListener) {
+    public void setOnGetVerifyErrorListener(OnVerifyErrorListener onVerifyErrorListener) {
         this.onVerifyErrorListener = onVerifyErrorListener;
     }
 
@@ -147,7 +171,7 @@ public class GetVerifyCodeHelper {
     }
 
     // 对外方式setOnVerifySuccessListener
-    public void setOnVerifySuccessListener(OnVerifySuccessListener onVerifySuccessListener) {
+    public void setOnGetVerifySuccessListener(OnVerifySuccessListener onVerifySuccessListener) {
         this.onVerifySuccessListener = onVerifySuccessListener;
     }
 
@@ -155,6 +179,44 @@ public class GetVerifyCodeHelper {
     private void verifySuccessNext() {
         if (onVerifySuccessListener != null) {
             onVerifySuccessListener.verifySuccess();
+        }
+    }
+
+    private OnCommitVerifyErrorListener onCommitVerifyErrorListener;
+
+    // 接口OnCommitVerifyErrorListener
+    public interface OnCommitVerifyErrorListener {
+        void commitVerifyError(AVException e);
+    }
+
+    // 对外方式setOnCommitVerifyErrorListener
+    public void setOnCommitVerifyErrorListener(OnCommitVerifyErrorListener onCommitVerifyErrorListener) {
+        this.onCommitVerifyErrorListener = onCommitVerifyErrorListener;
+    }
+
+    // 封装方法commitVerifyErrorNext
+    private void commitVerifyErrorNext(AVException e) {
+        if (onCommitVerifyErrorListener != null) {
+            onCommitVerifyErrorListener.commitVerifyError(e);
+        }
+    }
+
+    private OnCommitVerifySuccessListener onCommitVerifySuccessListener;
+
+    // 接口OnCommitVerifySuccessListener
+    public interface OnCommitVerifySuccessListener {
+        void commitVerifySuccess();
+    }
+
+    // 对外方式setOnCommitVerifySuccessListener
+    public void setOnCommitVerifySuccessListener(OnCommitVerifySuccessListener onCommitVerifySuccessListener) {
+        this.onCommitVerifySuccessListener = onCommitVerifySuccessListener;
+    }
+
+    // 封装方法commitVerifySuccessNext
+    private void commitVerifySuccessNext() {
+        if (onCommitVerifySuccessListener != null) {
+            onCommitVerifySuccessListener.commitVerifySuccess();
         }
     }
 }

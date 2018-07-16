@@ -2,6 +2,7 @@ package xsda.xsda.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
@@ -9,12 +10,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import xsda.xsda.R;
 import xsda.xsda.helper.GetServerDateHelper;
-import xsda.xsda.helper.GetVerifyCodeHelper;
 import xsda.xsda.helper.TimerHelper;
+import xsda.xsda.helper.VerifyCodeHelper;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
@@ -55,12 +57,16 @@ public class RegisterWidget extends RelativeLayout {
     private int color_unchecked;
     private String text_timeout;
     private String text_frequently;
+    private String text_Verify_error;
+    private String text_Verify_success;
+
     private EditText[] ets;
     private View[] lines;
     private String text_success;
-    private GetVerifyCodeHelper getVerifyCodeHelper;
+    private VerifyCodeHelper verifyCodeHelper;
     private TimerHelper timer;
-    private long countdown = 120;// 默认间隔120秒才可重复获取验证码
+    private final long COUNTDOWN = 30;
+    private long countdown = COUNTDOWN;// 默认间隔120秒才可重复获取验证码
     private long currentServerDate;// 服务器当前时间
     private long limitVerify = countdown * 1000;// 限制2分钟以内不可再点击
 
@@ -117,10 +123,7 @@ public class RegisterWidget extends RelativeLayout {
      */
     private void getServerDate(Context context) {
         GetServerDateHelper getServerDateHelper = new GetServerDateHelper();
-        getServerDateHelper.setOnGetServerErrorListener(e -> {
-            // TODO: 2018/7/13 0013  回调到外部--> 让外部去处理错误的逻辑
-            Tgg.show(context, "注册出错了--> 回调", 2000);
-        });
+        getServerDateHelper.setOnGetServerErrorListener(this::netErrorNext);
         getServerDateHelper.setOnGetServerDateLongSuccessListener(currentServerDate -> {
             // 得到服务器当前时间
             this.currentServerDate = currentServerDate;
@@ -133,9 +136,9 @@ public class RegisterWidget extends RelativeLayout {
 
     private void initHelper(Context context) {
         /* 获取验证码 */
-        getVerifyCodeHelper = new GetVerifyCodeHelper();
-        getVerifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(context, text_timeout, 2000));
-        getVerifyCodeHelper.setOnVerifyErrorListener(e -> {
+        verifyCodeHelper = new VerifyCodeHelper();
+        verifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(context, text_timeout, 2000));
+        verifyCodeHelper.setOnGetVerifyErrorListener(e -> {
             if (e.getCode() == Egg.CANT_SEND_SMS_TOO_FREQUENTLY) {
                 // 验证码获取频繁
                 Tgg.show(context, text_frequently, 2000);
@@ -143,11 +146,20 @@ public class RegisterWidget extends RelativeLayout {
                 Tgg.show(context, text_timeout, 2000);
             }
         });
-        getVerifyCodeHelper.setOnVerifySuccessListener(() -> {
+        verifyCodeHelper.setOnGetVerifySuccessListener(() -> {
             // 提示留意短信
             Tgg.show(context, text_success, 2000);
             // 显示倒计时
+            Lgg.t(Cons.TAG).ii("begin to countdown 120s");
             countDown(context);
+        });
+        
+        /* 提交验证码 */
+        verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(context, text_Verify_error, 2000));
+        verifyCodeHelper.setOnCommitVerifySuccessListener(() -> {
+            // TODO: 2018/7/16 0016 把成功的状态写入到UserVerify的自定义class中
+            Tgg.show(context, text_Verify_success, 2000);
+            // TODO: 2018/7/16 0016  跳转exit()
         });
     }
 
@@ -170,6 +182,7 @@ public class RegisterWidget extends RelativeLayout {
                             tvRegisterGetVerifyCode.setClickable(true);
                             tvRegisterGetVerifyCode.setTextColor(context.getResources().getColor(R.color.colorCompanyDark));
                             tvRegisterGetVerifyCode.setText(context.getString(R.string.register_get_verifycode));
+                            countdown = COUNTDOWN;
                             timer.stop();
                         }
                     });
@@ -189,7 +202,7 @@ public class RegisterWidget extends RelativeLayout {
         if (currentServerDate > lastServerDate) {
             // 2分钟已过
             if (currentServerDate - lastServerDate > limitVerify) {
-                countdown = 120;
+                countdown = COUNTDOWN;
                 tvRegisterGetVerifyCode.setClickable(true);
             } else {// 2分钟没过
                 tvRegisterGetVerifyCode.setClickable(false);
@@ -201,7 +214,7 @@ public class RegisterWidget extends RelativeLayout {
         } else {// 时间不正常(当前服务器时间 < 上次记录的时间)
             tvRegisterGetVerifyCode.setClickable(false);
             exit();
-            Tgg.show(context, context.getString(R.string.register_time_error), 2000);
+            Tgg.show(context, context.getString(R.string.register_time_error), 3000);
         }
     }
 
@@ -218,29 +231,35 @@ public class RegisterWidget extends RelativeLayout {
         // E.获取验证码
         tvRegisterGetVerifyCode.setOnClickListener(v -> {
             // 校验手机号和密码
-            if (matchEdittext(context)) {
+            if (matchEdittext(context, false)) {
                 // 符合规则的开始请求验证码
                 String phoneNum = etRegisterInputUsername.getText().toString();
                 String password = etRegisterInputPassword.getText().toString();
                 Tgg.show(context, context.getString(R.string.register_begin2getverify_tip), 2000);
-                getVerifyCodeHelper.get(phoneNum, password);
+                verifyCodeHelper.getVerifyCode(phoneNum, password);
             }
         });
 
         // E.提交注册
         tvRegisterCommit.setOnClickListener(v -> {
+            Lgg.t(Cons.TAG).ii("点击提交验证码");
             // TODO: 2018/7/8 0008  提交注册
             // 校验手机号密码验证码等等
+            String verifyCode = etRegisterInputVerifyCode.getText().toString();
+            if (matchEdittext(context, true)) {
+                verifyCodeHelper.commitVerifyCode(verifyCode);
+            }
         });
     }
 
     /**
      * 校验手机号密码规则
      *
-     * @param context 环境
+     * @param context  环境
+     * @param isVerify 是否检查验证码框
      * @return true:符合规则
      */
-    private boolean matchEdittext(Context context) {
+    private boolean matchEdittext(Context context, boolean isVerify) {
         // 手机号是否匹配正则
         if (!Ogg.matchPhoneReg(etRegisterInputUsername.getText().toString())) {
             etRegisterInputUsername.requestFocus();
@@ -261,6 +280,10 @@ public class RegisterWidget extends RelativeLayout {
             etRegisterInputConfirmPassword.requestFocus();
             Tgg.show(context, context.getString(R.string.register_passwordnotsame_tip), 2000);
             return false;
+        } else if (TextUtils.isEmpty(etRegisterInputVerifyCode.getText().toString()) & isVerify) {
+            etRegisterInputVerifyCode.requestFocus();
+            Tgg.show(context, context.getString(R.string.register_not_verify_empty), 2000);
+            return false;
         } else {
             return true;
         }
@@ -272,6 +295,8 @@ public class RegisterWidget extends RelativeLayout {
         text_timeout = context.getString(R.string.register_timeout);
         text_frequently = context.getString(R.string.register_frequently_tip);
         text_success = context.getString(R.string.register_success);
+        text_Verify_error = context.getString(R.string.register_commit_verify_failed);
+        text_Verify_success = context.getString(R.string.register_commit_verify_success);
     }
 
     /**
@@ -282,6 +307,25 @@ public class RegisterWidget extends RelativeLayout {
         if (timer != null) {
             timer.stop();
             timer = null;
+        }
+    }
+
+    private OnNetErrorListener onNetErrorListener;
+
+    // 接口OnNetErrorListener
+    public interface OnNetErrorListener {
+        void netError(AVException e);
+    }
+
+    // 对外方式setOnNetErrorListener
+    public void setOnNetErrorListener(OnNetErrorListener onNetErrorListener) {
+        this.onNetErrorListener = onNetErrorListener;
+    }
+
+    // 封装方法netErrorNext
+    private void netErrorNext(AVException e) {
+        if (onNetErrorListener != null) {
+            onNetErrorListener.netError(e);
         }
     }
 }

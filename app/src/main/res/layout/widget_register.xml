@@ -251,7 +251,7 @@
                 android:background="@null"
                 android:gravity="bottom"
                 android:hint="@string/register_input_hint_verifycode"
-                android:inputType="textPassword"
+                android:inputType="text"
                 android:maxLength="10"
                 android:maxLines="1"
                 android:paddingEnd="5dp"

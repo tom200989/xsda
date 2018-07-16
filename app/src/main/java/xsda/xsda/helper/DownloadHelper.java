@@ -10,6 +10,7 @@ import com.avos.avoscloud.ProgressCallback;
 import java.io.File;
 
 import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 
@@ -40,7 +41,7 @@ public class DownloadHelper {
                     Lgg.t(Cons.TAG).ii("download new version finish");
                 } else {
                     downErrorNext(e);
-                    Lgg.t(Cons.TAG).ee("download error: " + e.getMessage());
+                    Egg.print(getClass().getSimpleName(), "download", e, null);
                 }
 
             }

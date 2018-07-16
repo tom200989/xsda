@@ -9,6 +9,7 @@ import com.avos.avoscloud.GetCallback;
 
 import xsda.xsda.bean.UpdateBean;
 import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 
@@ -48,7 +49,7 @@ public class GetUpdateHelper extends GetCallback<AVObject> {
             getUpdateNext(updateBean);
             Lgg.t(Cons.TAG).ii("GetUpdateHelper(): result\n" + JSONObject.toJSONString(updateBean));
         } else {
-            Lgg.t(Cons.TAG).ee("GetUpdateHelper(): error--> "+e.getMessage());
+            Egg.print(getClass().getSimpleName(), "getNewVersion", e,null);
             exceptionNext(e);
         }
     }
