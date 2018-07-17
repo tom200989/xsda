@@ -2,6 +2,7 @@ package xsda.xsda.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -52,6 +53,7 @@ public class RegisterWidget extends RelativeLayout {
     private EditText etRegisterInputVerifyCode;
     private View vRegisterVerifyCodeLine;
     private TextView tvRegisterCommit;
+    private WaitingWidget widget_waiting;
 
     private int color_checked;
     private int color_unchecked;
@@ -66,7 +68,7 @@ public class RegisterWidget extends RelativeLayout {
     private String text_success;
     private VerifyCodeHelper verifyCodeHelper;
     private TimerHelper timer;
-    private final long COUNTDOWN = 30;
+    private final long COUNTDOWN = 120;
     private long countdown = COUNTDOWN;// 默认间隔120秒才可重复获取验证码
     private long currentServerDate;// 服务器当前时间
     private long limitVerify = countdown * 1000;// 限制2分钟以内不可再点击
@@ -99,6 +101,8 @@ public class RegisterWidget extends RelativeLayout {
         etRegisterInputVerifyCode = findViewById(R.id.et_register_input_verifyCode);
         vRegisterVerifyCodeLine = findViewById(R.id.v_register_verifyCode_line);
         tvRegisterCommit = findViewById(R.id.tv_register_commit);
+        widget_waiting = findViewById(R.id.widget_waiting);
+
         ets = new EditText[]{etRegisterInputUsername, etRegisterInputPassword, etRegisterInputConfirmPassword, etRegisterInputVerifyCode};
         lines = new View[]{vRegisterUsernameLine, vRegisterPasswordLine, vRegisterConfirmPasswordLine, vRegisterVerifyCodeLine};
     }
@@ -131,6 +135,7 @@ public class RegisterWidget extends RelativeLayout {
             initViews(context);
             initEvent(context);
             initHelper(context);
+            initFinishNext();
         });
         getServerDateHelper.get();
     }
@@ -157,11 +162,13 @@ public class RegisterWidget extends RelativeLayout {
         });
         
         /* 提交验证码 */
+        verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widget_waiting.setVisibleByAnim());
+        verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widget_waiting.setGone());
         verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(context, text_Verify_error, 2000));
         verifyCodeHelper.setOnCommitVerifySuccessListener(() -> {
             // 提示验证成功
             Tgg.show(context, text_Verify_success, 2000);
-            // TODO: 2018/7/16 0016  跳转exit()
+            new Handler().postDelayed(this::exit, 1000);
         });
 
     }
@@ -229,7 +236,10 @@ public class RegisterWidget extends RelativeLayout {
         }
 
         // E.回退
-        ivRegisterBack.setOnClickListener(v -> setVisibility(GONE));
+        ivRegisterBack.setOnClickListener(v -> {
+            setVisibility(GONE);
+            clickbackNext();
+        });
 
         // E.获取验证码
         tvRegisterGetVerifyCode.setOnClickListener(v -> {
@@ -311,6 +321,44 @@ public class RegisterWidget extends RelativeLayout {
         if (timer != null) {
             timer.stop();
             timer = null;
+        }
+    }
+
+    private OnClickBackListener onClickBackListener;
+
+    // 接口OnClickBackListener
+    public interface OnClickBackListener {
+        void clickback( );
+    }
+
+    // 对外方式setOnClickBackListener
+    public void setOnClickBackListener(OnClickBackListener onClickBackListener) {
+        this.onClickBackListener = onClickBackListener;
+    }
+
+    // 封装方法clickbackNext
+    private void clickbackNext( ) {
+        if (onClickBackListener != null) {
+            onClickBackListener.clickback();
+        }
+    }
+
+    private OnInitFinishListener onInitFinishListener;
+
+    // 接口OnInitFinishListener
+    public interface OnInitFinishListener {
+        void initFinish();
+    }
+
+    // 对外方式setOnInitFinishListener
+    public void setOnInitFinishListener(OnInitFinishListener onInitFinishListener) {
+        this.onInitFinishListener = onInitFinishListener;
+    }
+
+    // 封装方法initFinishNext
+    private void initFinishNext() {
+        if (onInitFinishListener != null) {
+            onInitFinishListener.initFinish();
         }
     }
 

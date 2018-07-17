@@ -37,7 +37,7 @@ import xsda.xsda.widget.GuideWidget;
 import xsda.xsda.widget.NetErrorWidget;
 import xsda.xsda.widget.SplashWidget;
 import xsda.xsda.widget.TipWidget;
-import xsda.xsda.widget.WaitWidget;
+import xsda.xsda.widget.LoadingWidget;
 
 public class SplashActivity extends RootActivity {
 
@@ -47,7 +47,7 @@ public class SplashActivity extends RootActivity {
     @Bind(R.id.widget_neterror)
     NetErrorWidget widgetNeterror;// 网络异常
     @Bind(R.id.widget_wait)
-    WaitWidget widgetWait;// 等待界面
+    LoadingWidget widgetWait;// 等待界面
     @Bind(R.id.widget_update)
     TipWidget widgetUpdate;// 新版本界面
     @Bind(R.id.widget_download)

@@ -1,0 +1,130 @@
+package xsda.xsda.widget;
+
+import android.app.Activity;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.zhy.android.percent.support.PercentRelativeLayout;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import xsda.xsda.R;
+import xsda.xsda.helper.TimerHelper;
+import xsda.xsda.ui.XsdaApplication;
+
+/**
+ * Created by qianli.ma on 2018/7/17 0017.
+ */
+
+public class WaitingWidget extends RelativeLayout {
+
+    private PercentRelativeLayout rlWaitingAll;
+    private ImageView ivWaitingLogo;
+    private TextView tvWaitingDes;
+    private Context context;
+    private TimerHelper timerHelper;
+    int count = 0;
+    private String text;
+    private List<String> texts;
+
+    public WaitingWidget(Context context) {
+        this(context, null, 0);
+    }
+
+    public WaitingWidget(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public WaitingWidget(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        text = context.getString(R.string.waitting_text);
+        this.context = context;
+        View.inflate(context, R.layout.widget_waiting, this);
+        rlWaitingAll = findViewById(R.id.rl_waiting_all);
+        rlWaitingAll.setOnClickListener(null);
+        ivWaitingLogo = findViewById(R.id.iv_waiting_logo);
+        tvWaitingDes = findViewById(R.id.tv_waiting_des);
+        initRes();
+    }
+
+    /**
+     * 默认开启动画
+     */
+    private void initRes() {
+        // 准备资源
+        tvWaitingDes.setVisibility(INVISIBLE);
+        tvWaitingDes.setText(text);
+        if (texts != null) {
+            texts.clear();
+            texts = null;
+        }
+        texts = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            text += ".";
+            texts.add(text);
+        }
+    }
+
+    /**
+     * 设置有动画(默认文本)
+     */
+    public void setVisibleByAnim() {
+        count = 0;
+        setVisibility(VISIBLE);
+        tvWaitingDes.setVisibility(VISIBLE);
+        // 启动定时器
+        if (timerHelper != null) {
+            timerHelper.stop();
+        }
+        if (timerHelper == null) {
+            timerHelper = new TimerHelper(context) {
+                @Override
+                public void doSomething() {
+                    ((Activity) context).runOnUiThread(() -> {
+                        if (count > 5) {
+                            count = 0;
+                        }
+                        tvWaitingDes.setText(texts.get(count));
+                        count++;
+                    });
+                }
+            };
+        }
+        timerHelper.start(400);
+    }
+
+    /**
+     * 设置没有动画(默认文本)
+     */
+    public void setVisibleByNoAnim() {
+        setVisibility(VISIBLE);
+        tvWaitingDes.setText(XsdaApplication.getApp().getString(R.string.waitting_text));
+    }
+
+    /**
+     * 自定义描述文本
+     *
+     * @param text 文本
+     */
+    public void setVisibleText(String text) {
+        setVisibility(VISIBLE);
+        tvWaitingDes.setText(text);
+    }
+
+    /**
+     * 设置消失
+     */
+    public void setGone() {
+        count = 0;
+        if (timerHelper != null) {
+            timerHelper.stop();
+            timerHelper = null;
+        }
+        setVisibility(GONE);
+    }
+}

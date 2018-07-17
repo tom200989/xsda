@@ -1,16 +1,14 @@
 package xsda.xsda.helper;
 
+import android.os.Handler;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
-
-import java.util.List;
 
 import xsda.xsda.ui.XsdaApplication;
 import xsda.xsda.utils.Cons;
@@ -19,6 +17,8 @@ import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Sgg;
 
 public class VerifyCodeHelper {
+
+    /* -------------------------------------------- A.申请验证码 -------------------------------------------- */
 
     /**
      * A1.发起验证申请
@@ -32,8 +32,12 @@ public class VerifyCodeHelper {
         GetServerDateHelper getServerDateHelper = new GetServerDateHelper();
         getServerDateHelper.setOnGetServerErrorListener(this::getServerDateErrorNext);
         getServerDateHelper.setOnGetServerDateLongSuccessListener(millute -> {
-            // 1.2.判断用户是否存在
-            isUserExist(phoneNum, password, millute);
+            commitVerifyPrepareNext();
+            new Handler().postDelayed(() -> {
+                // 1.2.判断用户是否存在
+                isUserExist(phoneNum, password, millute);
+            }, 2000);
+
         });
         getServerDateHelper.get();
     }
@@ -47,49 +51,12 @@ public class VerifyCodeHelper {
      */
     private void isUserExist(String username, String password, long millute) {
         Lgg.t(Cons.TAG).ii("isUserExist");
-        AVQuery<AVObject> query = new AVQuery<>("UserVerify");
-        query.whereEqualTo("username", username);
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                Egg.print(getClass().getSimpleName(), "isUserExist", e, null);
-                if (list == null) {
-                    // 2.1.创建用户并调起注册请求
-                    Lgg.t(Cons.TAG).ii("isUserExist()--> list == null");
-                    createUserAndRequestVerify(username, password, millute);
-                    return;
-                }
-                if (list.size() <= 0) {
-                    Lgg.t(Cons.TAG).ii("isUserExist()--> list.size() <= 0");
-                    // 2.2.创建用户并调起注册请求
-                    createUserAndRequestVerify(username, password, millute);
-                    return;
-                }
-
-                // 2.3.判断同名
-                boolean isUserExist = false;
-                for (AVObject avObject : list) {
-                    String username_db = avObject.getString("username");
-                    boolean isPhoneVerify = avObject.getBoolean("isPhoneVerify");
-                    Lgg.t(Cons.TAG).ii("username_db: " + username_db + ";isPhoneVerify: " + isPhoneVerify);
-                    if (username.equals(username_db)) {
-                        Lgg.t(Cons.TAG).ii("isUserExist()--> isUserExist = true");
-                        isUserExist = true;
-                        break;
-                    }
-                }
-
-                // 2.4.回调用户存在
-                if (isUserExist) {
-                    Lgg.t(Cons.TAG).ii("userHadExistNext()");
-                    userHadExistNext();
-                } else {
-                    Lgg.t(Cons.TAG).ii("to createUserAndRequestVerify()");
-                    createUserAndRequestVerify(username, password, millute);
-                }
-
-            }
-        });
+        UserExistHelper userExistHelper = new UserExistHelper();
+        userExistHelper.setOnExceptionListener(this::requestVerifyErrorNext);
+        userExistHelper.setOnUserNotExistListener(() -> createUserAndRequestVerify(username, password, millute));
+        userExistHelper.setOnUserHadExistListener(this::userHadExistNext);
+        userExistHelper.setOnGetUserExistAfterListener(this::commitVerifyAfterNext);
+        userExistHelper.isExist(username);
     }
 
     /**
@@ -115,13 +82,15 @@ public class VerifyCodeHelper {
                         // 2.5.直接申请验证码
                         directToGetVerifyCode(phoneNum, millute);
                     } else {
-                        // 2.6.验证失败
-                        verifyErrorNext(e);
+                        // 2.6.申请失败
+                        requestVerifyErrorNext(e);
+                        commitVerifyAfterNext();
                     }
                     return;
                 }
-                // 2.7.验证成功
-                verifySuccess(millute);
+                // 2.7.申请成功
+                requestVerifySuccess(millute);
+                commitVerifyAfterNext();
             }
         });
     }
@@ -139,15 +108,19 @@ public class VerifyCodeHelper {
             public void done(AVException e) {
                 Egg.print(getClass().getSimpleName(), "directToGetVerifyCode", e, null);
                 if (e != null) {
-                    // 3.1.验证失败
-                    verifyErrorNext(e);
+                    // 3.1.申请失败
+                    requestVerifyErrorNext(e);
+                    commitVerifyAfterNext();
                     return;
                 }
                 // 3.2.申请验证码成功
-                verifySuccess(millute);
+                requestVerifySuccess(millute);
+                commitVerifyAfterNext();
             }
         });
     }
+
+    /* -------------------------------------------- B.提交验证码 -------------------------------------------- */
 
     /**
      * B1.提交验证码
@@ -157,50 +130,15 @@ public class VerifyCodeHelper {
      */
     public void commitVerifyCode(String username, String verifyCode) {
         Lgg.t(Cons.TAG).ii("commitVerifyCode");
-        // 先查询用户是否存在
-        AVQuery<AVObject> query = new AVQuery<>("UserVerify");
-        query.whereEqualTo("username", username);
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                Egg.print(getClass().getSimpleName(), "isUserExist", e, null);
-                if (list == null) {
-                    // 2.1.提交验证码
-                    Lgg.t(Cons.TAG).ii("isUserExist()--> list == null");
-                    verifyMobilePhone(username, verifyCode);
-                    return;
-                }
-                if (list.size() <= 0) {
-                    Lgg.t(Cons.TAG).ii("isUserExist()--> list.size() <= 0");
-                    // 2.2.提交验证码
-                    verifyMobilePhone(username, verifyCode);
-                    return;
-                }
-
-                // 2.3.判断同名
-                boolean isUserExist = false;
-                for (AVObject avObject : list) {
-                    String username_db = avObject.getString("username");
-                    boolean isPhoneVerify = avObject.getBoolean("isPhoneVerify");
-                    Lgg.t(Cons.TAG).ii("username_db: " + username_db + ";isPhoneVerify: " + isPhoneVerify);
-                    if (username.equals(username_db)) {
-                        Lgg.t(Cons.TAG).ii("isUserExist()--> isUserExist = true");
-                        isUserExist = true;
-                        break;
-                    }
-                }
-
-                // 2.4.回调用户存在
-                if (isUserExist) {
-                    Lgg.t(Cons.TAG).ii("userHadExistNext()");
-                    userHadExistNext();
-                } else {
-                    Lgg.t(Cons.TAG).ii("to createUserAndRequestVerify()");
-                    verifyMobilePhone(username, verifyCode);
-                }
-
-            }
-        });
+        commitVerifyPrepareNext();
+        new Handler().postDelayed(() -> {
+            UserExistHelper userExistHelper = new UserExistHelper();
+            userExistHelper.setOnExceptionListener(this::requestVerifyErrorNext);
+            userExistHelper.setOnUserNotExistListener(() -> verifyMobilePhone(username, verifyCode));
+            userExistHelper.setOnUserHadExistListener(this::userHadExistNext);
+            userExistHelper.setOnGetUserExistAfterListener(this::commitVerifyAfterNext);
+            userExistHelper.isExist(username);
+        }, 2000);
 
     }
 
@@ -222,6 +160,7 @@ public class VerifyCodeHelper {
                     // 1.2.成功后提交验证成功信息
                     putVerifyUserInfo(username, true);
                 }
+                commitVerifyAfterNext();
             }
         });
     }
@@ -255,6 +194,46 @@ public class VerifyCodeHelper {
             }
         });
     }
+    
+    /* -------------------------------------------- 回调 -------------------------------------------- */
+
+    private OnCommitVerifyPrepareListener onCommitVerifyPrepareListener;
+
+    // 接口OnCommitVerifyPrepareListener
+    public interface OnCommitVerifyPrepareListener {
+        void commitVerifyPrepare();
+    }
+
+    // 对外方式setOnCommitVerifyPrepareListener
+    public void setOnCommitVerifyPrepareListener(OnCommitVerifyPrepareListener onCommitVerifyPrepareListener) {
+        this.onCommitVerifyPrepareListener = onCommitVerifyPrepareListener;
+    }
+
+    // 封装方法commitVerifyPrepareNext
+    private void commitVerifyPrepareNext() {
+        if (onCommitVerifyPrepareListener != null) {
+            onCommitVerifyPrepareListener.commitVerifyPrepare();
+        }
+    }
+
+    private OnCommitVerifyAfterListener onCommitVerifyAfterListener;
+
+    // 接口OnCommitVerifyAfterListener
+    public interface OnCommitVerifyAfterListener {
+        void commitVerifyAfter();
+    }
+
+    // 对外方式setOnCommitVerifyAfterListener
+    public void setOnCommitVerifyAfterListener(OnCommitVerifyAfterListener onCommitVerifyAfterListener) {
+        this.onCommitVerifyAfterListener = onCommitVerifyAfterListener;
+    }
+
+    // 封装方法commitVerifyAfterNext
+    private void commitVerifyAfterNext() {
+        if (onCommitVerifyAfterListener != null) {
+            onCommitVerifyAfterListener.commitVerifyAfter();
+        }
+    }
 
     private OnUserHadExistListener onUserHadExistListener;
 
@@ -281,7 +260,7 @@ public class VerifyCodeHelper {
      *
      * @param millute 服务器时间
      */
-    private void verifySuccess(long millute) {
+    private void requestVerifySuccess(long millute) {
         // 5.1.得到时间存到sp中
         Sgg.getInstance(XsdaApplication.getApp()).putLong(Cons.SP_SERVER_DATE, millute);
         // 5.2.验证成功
@@ -320,7 +299,7 @@ public class VerifyCodeHelper {
     }
 
     // 封装方法verifyErrorNext
-    private void verifyErrorNext(AVException e) {
+    private void requestVerifyErrorNext(AVException e) {
         if (onVerifyErrorListener != null) {
             onVerifyErrorListener.verifyError(e);
         }

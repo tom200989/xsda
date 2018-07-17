@@ -11,21 +11,21 @@ import xsda.xsda.R;
  * Created by qianli.ma on 2018/6/22 0022.
  */
 
-public class WaitWidget extends RelativeLayout{
+public class LoadingWidget extends RelativeLayout{
 
     private RelativeLayout rlAll;
 
-    public WaitWidget(Context context) {
+    public LoadingWidget(Context context) {
         this(context, null,0);
     }
 
-    public WaitWidget(Context context, AttributeSet attrs) {
+    public LoadingWidget(Context context, AttributeSet attrs) {
         this(context, attrs,0);
     }
 
-    public WaitWidget(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LoadingWidget(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        View.inflate(context, R.layout.widget_wait,this);
+        View.inflate(context, R.layout.widget_loading,this);
         rlAll = findViewById(R.id.rl_loading_all);
         rlAll.setOnClickListener(v -> {});
     }

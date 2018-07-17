@@ -22,7 +22,7 @@
         android:visibility="gone" />
 
     <!-- 等待界面 -->
-    <xsda.xsda.widget.WaitWidget
+    <xsda.xsda.widget.LoadingWidget
         android:id="@+id/widget_wait"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

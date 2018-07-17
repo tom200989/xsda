@@ -43,4 +43,5 @@
     <string name="register_not_verify_empty">验证码不能为空</string>
     <string name="register_commit_verify_failed">无效的验证码\n请稍候重试</string>
     <string name="register_commit_verify_success">验证码校验成功</string>
+    <string name="waitting_text">请稍候</string>
 </resources>

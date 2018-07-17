@@ -63,17 +63,17 @@ public class LoginWidget extends RelativeLayout {
 
     private void initView(Context context) {
         View.inflate(context, R.layout.widget_login, this);
-        ivlogo = (ImageView) findViewById(R.id.iv_login_logo);
-        rlUserName = (PercentRelativeLayout) findViewById(R.id.rl_login_input_username);
-        etUserName = (EditText) findViewById(R.id.et_login_input_username);
+        ivlogo = findViewById(R.id.iv_login_logo);
+        rlUserName = findViewById(R.id.rl_login_input_username);
+        etUserName = findViewById(R.id.et_login_input_username);
         vUserNameLine = findViewById(R.id.v_login_input_username_line);
-        rlPassword = (PercentRelativeLayout) findViewById(R.id.rl_login_input_password);
-        etPassword = (EditText) findViewById(R.id.et_login_input_password);
-        ivEye = (ImageView) findViewById(R.id.iv_login_eye);
+        rlPassword = findViewById(R.id.rl_login_input_password);
+        etPassword = findViewById(R.id.et_login_input_password);
+        ivEye = findViewById(R.id.iv_login_eye);
         vPasswordLine = findViewById(R.id.v_login_input_password_line);
         ivWechat = findViewById(R.id.iv_login_wechat);
-        wvLogin = (WaveView) findViewById(R.id.wv_login);
-        tvLoginClick = (TextView) findViewById(R.id.tv_login_click);
+        wvLogin = findViewById(R.id.wv_login);
+        tvLoginClick = findViewById(R.id.tv_login_click);
         tvRegisterClick = findViewById(R.id.tv_login_register);
         tvForgot = findViewById(R.id.tv_login_forgot);
     }
@@ -102,7 +102,7 @@ public class LoginWidget extends RelativeLayout {
      * 注册
      */
     private void register() {
-        // TODO: 2018/7/6 0006  注册逻辑
+        clickRegisterNext();
     }
 
     /**
@@ -122,8 +122,27 @@ public class LoginWidget extends RelativeLayout {
     /**
      * 忘记密码
      */
-    public void forgotPassword( ) {
+    public void forgotPassword() {
         // TODO: 2018/7/8 0008  忘记密码逻辑
+    }
+
+    private OnClickRegisterListener onClickRegisterListener;
+
+    // 接口OnClickRegisterListener
+    public interface OnClickRegisterListener {
+        void clickRegister();
+    }
+
+    // 对外方式setOnClickRegisterListener
+    public void setOnClickRegisterListener(OnClickRegisterListener onClickRegisterListener) {
+        this.onClickRegisterListener = onClickRegisterListener;
+    }
+
+    // 封装方法clickRegisterNext
+    private void clickRegisterNext() {
+        if (onClickRegisterListener != null) {
+            onClickRegisterListener.clickRegister();
+        }
     }
 
 }
