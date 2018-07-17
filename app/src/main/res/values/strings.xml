@@ -36,6 +36,7 @@
     <string name="register_passwordnotsame_tip">两次输入的密码不一致</string>
     <string name="register_begin2getverify_tip">发送成功</string>
     <string name="register_frequently_tip">发送验证码过于频繁\n请稍候再试</string>
+    <string name="register_user_exist_tip">该号码已经注册过\n请直接登录</string>
     <string name="register_timeout">网络超时\n请稍候再试试</string>
     <string name="register_success">短信已发送\n请注意查收</string>
     <string name="register_time_error">你改过时间了 哼哼~</string>

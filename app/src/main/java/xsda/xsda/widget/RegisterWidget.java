@@ -57,6 +57,7 @@ public class RegisterWidget extends RelativeLayout {
     private int color_unchecked;
     private String text_timeout;
     private String text_frequently;
+    private String text_user_exist;
     private String text_Verify_error;
     private String text_Verify_success;
 
@@ -138,6 +139,7 @@ public class RegisterWidget extends RelativeLayout {
         /* 获取验证码 */
         verifyCodeHelper = new VerifyCodeHelper();
         verifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(context, text_timeout, 2000));
+        verifyCodeHelper.setOnUserHadExistListener(() -> Tgg.show(context, text_user_exist, 2000));
         verifyCodeHelper.setOnGetVerifyErrorListener(e -> {
             if (e.getCode() == Egg.CANT_SEND_SMS_TOO_FREQUENTLY) {
                 // 验证码获取频繁
@@ -157,10 +159,11 @@ public class RegisterWidget extends RelativeLayout {
         /* 提交验证码 */
         verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(context, text_Verify_error, 2000));
         verifyCodeHelper.setOnCommitVerifySuccessListener(() -> {
-            // TODO: 2018/7/16 0016 把成功的状态写入到UserVerify的自定义class中
+            // 提示验证成功
             Tgg.show(context, text_Verify_success, 2000);
             // TODO: 2018/7/16 0016  跳转exit()
         });
+
     }
 
     /**
@@ -243,11 +246,11 @@ public class RegisterWidget extends RelativeLayout {
         // E.提交注册
         tvRegisterCommit.setOnClickListener(v -> {
             Lgg.t(Cons.TAG).ii("点击提交验证码");
-            // TODO: 2018/7/8 0008  提交注册
             // 校验手机号密码验证码等等
-            String verifyCode = etRegisterInputVerifyCode.getText().toString();
             if (matchEdittext(context, true)) {
-                verifyCodeHelper.commitVerifyCode(verifyCode);
+                String phoneName = etRegisterInputUsername.getText().toString();
+                String verifyCode = etRegisterInputVerifyCode.getText().toString();
+                verifyCodeHelper.commitVerifyCode(phoneName, verifyCode);
             }
         });
     }
@@ -294,6 +297,7 @@ public class RegisterWidget extends RelativeLayout {
         color_unchecked = getResources().getColor(R.color.colorCompany);
         text_timeout = context.getString(R.string.register_timeout);
         text_frequently = context.getString(R.string.register_frequently_tip);
+        text_user_exist = context.getString(R.string.register_user_exist_tip);
         text_success = context.getString(R.string.register_success);
         text_Verify_error = context.getString(R.string.register_commit_verify_failed);
         text_Verify_success = context.getString(R.string.register_commit_verify_success);
