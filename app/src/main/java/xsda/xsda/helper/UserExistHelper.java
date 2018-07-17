@@ -7,6 +7,7 @@ import com.avos.avoscloud.FindCallback;
 
 import java.util.List;
 
+import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
@@ -19,8 +20,8 @@ public class UserExistHelper {
 
     public void isExist(String username) {
         Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":" + "isExist()");
-        AVQuery<AVObject> query = new AVQuery<>("UserVerify");
-        query.whereEqualTo("username", username);
+        AVQuery<AVObject> query = new AVQuery<>(Avfield.UserVerify.classname);
+        query.whereEqualTo(Avfield.UserVerify.username, username);
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
@@ -40,8 +41,8 @@ public class UserExistHelper {
                     // 判断同名
                     boolean isUserExist = false;
                     for (AVObject avObject : list) {
-                        String username_db = avObject.getString("username");
-                        boolean isPhoneVerify = avObject.getBoolean("isPhoneVerify");
+                        String username_db = avObject.getString(Avfield.UserVerify.username);
+                        boolean isPhoneVerify = avObject.getBoolean(Avfield.UserVerify.isPhoneVerify);
                         Lgg.t(Cons.TAG).ii("username_db: " + username_db + ";isPhoneVerify: " + isPhoneVerify);
                         if (username.equals(username_db)) {
                             Lgg.t(Cons.TAG).ii("isUserExist()--> isUserExist = true");

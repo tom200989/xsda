@@ -11,6 +11,7 @@ import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 
 import xsda.xsda.ui.XsdaApplication;
+import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
@@ -72,7 +73,7 @@ public class VerifyCodeHelper {
         user.setUsername(phoneNum);
         user.setPassword(password);
         // 2.3.其他属性可以像其他AVObject对象一样使用put方法添加
-        user.put("mobilePhoneNumber", phoneNum);
+        user.put(Avfield.User.mobilePhoneNumber, phoneNum);
         user.signUpInBackground(new SignUpCallback() {
             public void done(AVException e) {
                 Egg.print(getClass().getSimpleName(), "createUserAndRequestVerify", e, null);
@@ -174,11 +175,11 @@ public class VerifyCodeHelper {
     private void putVerifyUserInfo(String username, boolean isVerify) {
         Lgg.t(Cons.TAG).ii("putVerifyUserInfo");
         // 2.1.form: UserVerify
-        AVObject userVerify = new AVObject("UserVerify");
+        AVObject userVerify = new AVObject(Avfield.UserVerify.classname);
         // 2.2.用户名(手机号)
-        userVerify.put("username", username);
+        userVerify.put(Avfield.UserVerify.username, username);
         // 2.3.是否已经验证
-        userVerify.put("isPhoneVerify", isVerify);
+        userVerify.put(Avfield.UserVerify.isPhoneVerify, isVerify);
         // 2.4.执行上传
         userVerify.saveInBackground(new SaveCallback() {
             @Override

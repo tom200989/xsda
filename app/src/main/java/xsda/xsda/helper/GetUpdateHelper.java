@@ -8,6 +8,8 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.GetCallback;
 
 import xsda.xsda.bean.UpdateBean;
+import xsda.xsda.utils.AvValue;
+import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
@@ -23,8 +25,8 @@ public class GetUpdateHelper extends GetCallback<AVObject> {
      * 获取新的版本
      */
     public void getNewVersion() {
-        AVQuery<AVObject> avQuery = new AVQuery<>(Cons.LeanClound.CLASS_UPDATE_NAME);
-        avQuery.getInBackground(Cons.LeanClound.CLASS_UPDATE_OBJECTID, this);
+        AVQuery<AVObject> avQuery = new AVQuery<>(Avfield.update.classname);
+        avQuery.getInBackground(AvValue.update.objectId, this);
     }
 
     @Override
@@ -32,11 +34,11 @@ public class GetUpdateHelper extends GetCallback<AVObject> {
         if (e == null) {
 
             String updatedAt = Ogg.turnDateToString(avObject.getUpdatedAt());// 更新日期
-            String newVersionCode = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_CODE);// 新版本号
-            String newVersionFix = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_FIX);// 更新内容
-            AVFile avFile = avObject.getAVFile(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_FILE);// 更新文件
+            String newVersionCode = avObject.getString(Avfield.update.newVersionCode);// 新版本号
+            String newVersionFix = avObject.getString(Avfield.update.newVersionFix);// 更新内容
+            AVFile avFile = avObject.getAVFile(Avfield.update.newVersionFile);// 更新文件
             String newVersionFileUrl = avFile.getUrl();// 文件地址
-            String newVersionSize = avObject.getString(Cons.LeanClound.CLASS_UPDATE_FIELD_NEW_VERSION_SIZE);// 文件大小
+            String newVersionSize = avObject.getString(Avfield.update.newVersionSize);// 文件大小
 
             UpdateBean updateBean = new UpdateBean();
             updateBean.setUpdatedAt(updatedAt);
@@ -49,7 +51,7 @@ public class GetUpdateHelper extends GetCallback<AVObject> {
             getUpdateNext(updateBean);
             Lgg.t(Cons.TAG).ii("GetUpdateHelper(): result\n" + JSONObject.toJSONString(updateBean));
         } else {
-            Egg.print(getClass().getSimpleName(), "getNewVersion", e,null);
+            Egg.print(getClass().getSimpleName(), "getNewVersion", e, null);
             exceptionNext(e);
         }
     }
