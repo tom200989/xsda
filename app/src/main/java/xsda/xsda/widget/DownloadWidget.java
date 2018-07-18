@@ -46,7 +46,7 @@ public class DownloadWidget extends RelativeLayout {
         initView();
         clickEvent();
     }
-
+    
     private void initView() {
         rlDownloadAll = (RelativeLayout) findViewById(R.id.rl_download_all);
         ivDownloadLogo = (ImageView) findViewById(R.id.iv_download_logo);

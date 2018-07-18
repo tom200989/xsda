@@ -53,12 +53,14 @@ public class LoginActivity extends RootActivity {
             widgetWaiting.setVisibleByAnim();
             new Handler().postDelayed(() -> toView(widegetRegister), 1000);
         });
+        
         // 注册界面初始化完成
         widegetRegister.setOnInitFinishListener(() -> widgetWaiting.setGone());
         // 注册界面回退
         widegetRegister.setOnClickBackListener(() -> toView(widgetLogin));
         // 注册界面断网
         widegetRegister.setOnNetErrorListener(e -> toView(widgetNeterror));
+        
         // 断网界面点击重试
         widgetNeterror.setOnNetErrorRetryListener(() -> toView(widgetLogin));
         // 断网界面点击回退

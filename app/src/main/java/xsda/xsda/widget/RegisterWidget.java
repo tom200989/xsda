@@ -3,6 +3,7 @@ package xsda.xsda.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -97,7 +98,6 @@ public class RegisterWidget extends RelativeLayout {
         ivRegisterVerifyCodeLogo = findViewById(R.id.iv_register_verifyCode_logo);
         tvRegisterGetVerifyCode = findViewById(R.id.tv_register_getVerifyCode);// 验证码按钮
         tvRegisterGetVerifyCode.setClickable(false);// 验证码设置默认不可点
-        toGetVerifyInit(context);// 获取验证码按钮的初始状态
         etRegisterInputVerifyCode = findViewById(R.id.et_register_input_verifyCode);
         vRegisterVerifyCodeLine = findViewById(R.id.v_register_verifyCode_line);
         tvRegisterCommit = findViewById(R.id.tv_register_commit);
@@ -117,8 +117,17 @@ public class RegisterWidget extends RelativeLayout {
 
     public RegisterWidget(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initRes(context);
-        getServerDate(context);
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility == VISIBLE) {
+            initRes(changedView.getContext());
+            getServerDate(changedView.getContext());
+        } else {
+            initViews(changedView.getContext());
+        }
     }
 
     /**
@@ -229,10 +238,15 @@ public class RegisterWidget extends RelativeLayout {
     }
 
     private void initEvent(Context context) {
+        // 获取验证码按钮的初始状态
+        toGetVerifyInit(context);
         // E.设定焦点监听
         for (int i = 0; i < ets.length; i++) {
             int finalI = i;
-            ets[i].setOnFocusChangeListener((v, hasFocus) -> lines[finalI].setBackgroundColor(hasFocus ? color_checked : color_unchecked));
+            ets[i].setOnFocusChangeListener((v, hasFocus) -> {
+                Lgg.t(Cons.TAG).ii("position: " + finalI + ";hasfocus: " + hasFocus);
+                lines[finalI].setBackgroundColor(hasFocus ? color_checked : color_unchecked);
+            });
         }
 
         // E.回退
@@ -328,7 +342,7 @@ public class RegisterWidget extends RelativeLayout {
 
     // 接口OnClickBackListener
     public interface OnClickBackListener {
-        void clickback( );
+        void clickback();
     }
 
     // 对外方式setOnClickBackListener
@@ -337,7 +351,7 @@ public class RegisterWidget extends RelativeLayout {
     }
 
     // 封装方法clickbackNext
-    private void clickbackNext( ) {
+    private void clickbackNext() {
         if (onClickBackListener != null) {
             onClickBackListener.clickback();
         }
