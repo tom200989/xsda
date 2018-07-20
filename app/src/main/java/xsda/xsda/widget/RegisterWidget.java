@@ -3,7 +3,6 @@ package xsda.xsda.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -71,9 +70,36 @@ public class RegisterWidget extends RelativeLayout {
     private TimerHelper timer;
     private final long COUNTDOWN = 120;
     private long countdown = COUNTDOWN;// 默认间隔120秒才可重复获取验证码
-    private long currentServerDate;// 服务器当前时间
+    private long currentServerDate = -1;// 服务器当前时间
     private long limitVerify = countdown * 1000;// 限制2分钟以内不可再点击
 
+    public RegisterWidget(Context context) {
+        this(context, null, 0);
+        initRes(context);
+        initViews(context);
+        initEvent(context);
+        initHelper(context);
+        getServerDate(context);
+    }
+
+    public RegisterWidget(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public RegisterWidget(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    // @Override
+    // protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+    //     super.onVisibilityChanged(changedView, visibility);
+    //     if (visibility == VISIBLE) {
+    //         initRes(changedView.getContext());
+    //         getServerDate(changedView.getContext());
+    //     } else {
+    //         initViews(changedView.getContext());
+    //     }
+    // }
 
     private void initViews(Context context) {
         View.inflate(context, R.layout.widget_register, this);
@@ -107,29 +133,6 @@ public class RegisterWidget extends RelativeLayout {
         lines = new View[]{vRegisterUsernameLine, vRegisterPasswordLine, vRegisterConfirmPasswordLine, vRegisterVerifyCodeLine};
     }
 
-    public RegisterWidget(Context context) {
-        this(context, null, 0);
-    }
-
-    public RegisterWidget(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public RegisterWidget(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-        if (visibility == VISIBLE) {
-            initRes(changedView.getContext());
-            getServerDate(changedView.getContext());
-        } else {
-            initViews(changedView.getContext());
-        }
-    }
-
     /**
      * 获取服务器时间
      *
@@ -141,9 +144,6 @@ public class RegisterWidget extends RelativeLayout {
         getServerDateHelper.setOnGetServerDateLongSuccessListener(currentServerDate -> {
             // 得到服务器当前时间
             this.currentServerDate = currentServerDate;
-            initViews(context);
-            initEvent(context);
-            initHelper(context);
             initFinishNext();
         });
         getServerDateHelper.get();
@@ -263,7 +263,9 @@ public class RegisterWidget extends RelativeLayout {
                 String phoneNum = etRegisterInputUsername.getText().toString();
                 String password = etRegisterInputPassword.getText().toString();
                 Tgg.show(context, context.getString(R.string.register_begin2getverify_tip), 2000);
-                verifyCodeHelper.getVerifyCode(phoneNum, password);
+                if (currentServerDate != -1) {
+                    verifyCodeHelper.getVerifyCode(phoneNum, password);
+                }
             }
         });
 
@@ -274,7 +276,9 @@ public class RegisterWidget extends RelativeLayout {
             if (matchEdittext(context, true)) {
                 String phoneName = etRegisterInputUsername.getText().toString();
                 String verifyCode = etRegisterInputVerifyCode.getText().toString();
-                verifyCodeHelper.commitVerifyCode(phoneName, verifyCode);
+                if (currentServerDate != -1) {
+                    verifyCodeHelper.commitVerifyCode(phoneName, verifyCode);
+                }
             }
         });
     }

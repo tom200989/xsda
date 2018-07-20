@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="cn.leancloud.android:avoscloud-feedback-v4.6.4">
+    <CLASSES>
+      <root url="file://D:/Android/AVD/.android/build-cache/4a869dd27df4349f30e3bb5a39a19c4830322726/output/res" />
+      <root url="jar://D:/Android/AVD/.android/build-cache/4a869dd27df4349f30e3bb5a39a19c4830322726/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

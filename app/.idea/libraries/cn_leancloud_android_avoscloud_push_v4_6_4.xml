@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="cn.leancloud.android:avoscloud-push-v4.6.4">
+    <CLASSES>
+      <root url="jar://D:/Android/AVD/.android/build-cache/08514a7960c67e7b5307456f07a3c7b85a9b478f/output/jars/classes.jar!/" />
+      <root url="file://D:/Android/AVD/.android/build-cache/08514a7960c67e7b5307456f07a3c7b85a9b478f/output/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.android.support:design-25.4.0">
+    <CLASSES>
+      <root url="file://D:/Android/AVD/.android/build-cache/ece867a971a5bf79bd016c2f4c1a818ce1fd3ecb/output/res" />
+      <root url="jar://D:/Android/AVD/.android/build-cache/ece867a971a5bf79bd016c2f4c1a818ce1fd3ecb/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-3.3-all/55gk2rcmfc6p2dg9u9ohc3hw9/wrapper/dists/gradle-3.3-all/55gk2rcmfc6p2dg9u9ohc3hw9/wrapper/dists/gradle-3.3-all/55gk2rcmfc6p2dg9u9ohc3hw9/caches/modules-2/files-2.1/com.android.support/design/25.4.0/a2e7ef895fd2463263a7294fff24b86b5461ede8/design-25.4.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

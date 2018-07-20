@@ -6,34 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:id="@+id/rl_login_activity"
     tools:context="xsda.xsda.ui.LoginActivity">
 
-    <!-- 登陆界面 -->
-    <xsda.xsda.widget.LoginWidget
-        android:id="@+id/widget_login"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
+    <!--&lt;!&ndash; 登陆界面 &ndash;&gt;-->
+    <!--<xsda.xsda.widget.LoginWidget-->
+        <!--android:id="@+id/widget_login"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="visible" />-->
 
-    <!-- 注册界面 -->
-    <xsda.xsda.widget.RegisterWidget
-        android:id="@+id/wideget_register"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+    <!--&lt;!&ndash; 注册界面 &ndash;&gt;-->
+    <!--<xsda.xsda.widget.RegisterWidget-->
+        <!--android:id="@+id/wideget_register"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="gone" />-->
 
-    <!-- 出错界面 -->
-    <xsda.xsda.widget.NetErrorWidget
-        android:id="@+id/widget_neterror"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-    
-    <!-- 等待界面 -->
-    <xsda.xsda.widget.WaitingWidget
-        android:layout_width="match_parent"
-        android:id="@+id/widget_waiting"
-        android:visibility="gone"
-        android:layout_height="match_parent"/>
+    <!--&lt;!&ndash; 出错界面 &ndash;&gt;-->
+    <!--<xsda.xsda.widget.NetErrorWidget-->
+        <!--android:id="@+id/widget_neterror"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="gone" />-->
+    <!---->
+    <!--&lt;!&ndash; 等待界面 &ndash;&gt;-->
+    <!--<xsda.xsda.widget.WaitingWidget-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:id="@+id/widget_waiting"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_height="match_parent"/>-->
 
 </com.zhy.android.percent.support.PercentRelativeLayout>
