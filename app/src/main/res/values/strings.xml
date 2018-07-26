@@ -19,6 +19,9 @@
     <string name="downloading">正在更新: %d%%</string>
     <string name="download_retry">重新下载</string>
     <string name="download_install">安装</string>
+    <string name="download_neterror">貌似断网了T_T</string>
+    <string name="download_apk_error">安装包异常\n请重新下载噢~</string>
+    <string name="download_update_error">更新异常\n请退出重试哦~</string>
     <string name="guide_click">立即体验</string>
     <string name="login_bottom_text">立即登陆</string>
     <string name="login_input_hint_username">请输入您的手机号(仅限中国大陆)</string>

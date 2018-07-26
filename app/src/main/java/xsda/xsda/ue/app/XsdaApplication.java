@@ -1,4 +1,4 @@
-package xsda.xsda.ui;
+package xsda.xsda.ue.app;
 
 import android.support.multidex.MultiDexApplication;
 

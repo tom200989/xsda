@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,7 +18,7 @@ import java.util.List;
 
 import xsda.xsda.R;
 import xsda.xsda.helper.TimerHelper;
-import xsda.xsda.ui.XsdaApplication;
+import xsda.xsda.ue.app.XsdaApplication;
 
 /**
  * Created by qianli.ma on 2018/7/17 0017.
@@ -24,7 +27,8 @@ import xsda.xsda.ui.XsdaApplication;
 public class WaitingWidget extends RelativeLayout {
 
     private PercentRelativeLayout rlWaitingAll;
-    private ImageView ivWaitingLogo;
+    private ImageView ivWaitingPin1;
+    private ImageView ivWaitingPin2;
     private TextView tvWaitingDes;
     private Context context;
     private TimerHelper timerHelper;
@@ -47,9 +51,31 @@ public class WaitingWidget extends RelativeLayout {
         View.inflate(context, R.layout.widget_waiting, this);
         rlWaitingAll = findViewById(R.id.rl_waiting_all);
         rlWaitingAll.setOnClickListener(null);
-        ivWaitingLogo = findViewById(R.id.iv_waiting_logo);
+        ivWaitingPin1 = findViewById(R.id.iv_waiting_pin1);
+        ivWaitingPin2 = findViewById(R.id.iv_waiting_pin2);
         tvWaitingDes = findViewById(R.id.tv_waiting_des);
         initRes();
+        initPinAnim();
+    }
+
+    private void initPinAnim() {
+        RotateAnimation ra1 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
+        ra1.setDuration(1000);
+        ra1.setRepeatCount(Animation.INFINITE);
+        ra1.setRepeatMode(Animation.INFINITE);
+        ra1.setInterpolator(new LinearInterpolator());
+        ivWaitingPin1.setAnimation(ra1);
+        ivWaitingPin1.startAnimation(ra1);
+        ra1.startNow();
+
+        RotateAnimation ra2 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
+        ra2.setDuration(2500);
+        ra2.setRepeatCount(Animation.INFINITE);
+        ra2.setRepeatMode(Animation.INFINITE);
+        ra2.setInterpolator(new LinearInterpolator());
+        ivWaitingPin2.setAnimation(ra2);
+        ivWaitingPin2.startAnimation(ra2);
+        ra2.startNow();
     }
 
     /**

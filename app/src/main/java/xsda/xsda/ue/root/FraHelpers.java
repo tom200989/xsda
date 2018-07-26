@@ -1,4 +1,4 @@
-package xsda.xsda.helper;
+package xsda.xsda.ue.root;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -52,7 +52,8 @@ public class FraHelpers {
         try {
             FragmentTransaction ft = fm.beginTransaction();// 开启事务
             Fragment fragment = (Fragment) clazz.newInstance();// 通过字节码创建碎片
-            ft.replace(contain, fragment, clazz.getSimpleName()).commit();// 以类名为tag--> 提交事务
+            ft.replace(contain, fragment, clazz.getSimpleName());
+            ft.commit();// 以类名为tag--> 提交事务
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -64,7 +65,7 @@ public class FraHelpers {
      *
      * @param initClass 需要显示的首屏fragment
      */
-    public void reload(Class initClass) {
+    public void reloadAll(Class initClass) {
         try {
             Map<String, Fragment> fragmentMap = new HashMap<>();
             Fragment showFragment = null;// 需要显示的fragment
@@ -104,42 +105,60 @@ public class FraHelpers {
         }
     }
 
-
     /**
      * 切换fragment
      *
-     * @param clazz 需要切换的fragment class
+     * @param clazz    需要切换的fragment class
+     * @param isReload 是否强制重载
      */
-    public void transfer(Class clazz) {
+    public void transfer(Class clazz, boolean isReload) {
 
-        Fragment fragment;
-        FragmentTransaction ft = fm.beginTransaction();// 开启事务
+        try {
+            // 1.开启事务
+            Fragment fragment;
+            FragmentTransaction ft = fm.beginTransaction();
 
-        // 隐藏全部的fragment
-        for (String tag : tags) {
-            Fragment fragment_temp = fm.findFragmentByTag(tag);
-            if (fragment_temp != null) {
-                ft.hide(fragment_temp);
+            // 2.隐藏全部的fragment
+            for (String tag : tags) {
+                Fragment fragment_temp = fm.findFragmentByTag(tag);
+                if (fragment_temp != null) {
+                    ft.hide(fragment_temp);
+                }
             }
-        }
 
-        // 以类名为tag, 查找对应的fragment
-        String tag = clazz.getSimpleName();
-        fragment = fm.findFragmentByTag(tag);
-        if (fragment == null) {
-            try {
-                // 创建fragment
+            // 3.以类名为tag, 查找对应的fragment
+            String tag = clazz.getSimpleName();
+            fragment = fm.findFragmentByTag(tag);
+            if (fragment == null) {
+                // 3.1.创建fragment
                 fragment = (Fragment) clazz.newInstance();
-                // 添加到容器, 以类名为tag
+                // 3.2.添加到容器, 以类名为tag
                 ft.add(contain, fragment, tag);
-            } catch (Exception e) {
-                e.printStackTrace();
+                ft.show(fragment);
+            } else {
+                
+                /* 3.1.是否强制刷新重载 */
+                if (isReload) {
+                    // 3.2.移除当前
+                    ft.remove(fragment);
+                    // 3.3.集合中找到字节码文件
+                    Fragment newFragment = (Fragment) clazz.newInstance();
+                    // 3.4.重新添加到transation
+                    ft.add(contain, newFragment, tag);
+                    // 3.5.显示
+                    ft.show(newFragment);
+                    
+                } else {
+                    // 显示fragment
+                    ft.show(fragment);
+                }
+
             }
-        } else {
-            // 直接显示fragment
-            ft.show(fragment);
+
+            ft.commitAllowingStateLoss();// 提交事务
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        ft.commit();// 提交事务
     }
 
     /**

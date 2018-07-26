@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda' // 使用lamda表达式
+apply plugin: 'com.jakewharton.butterknife'
 
 android {
     signingConfigs {
@@ -59,7 +60,11 @@ dependencies {
     // 方法数超过65535分包(注: 1.0.1版本最稳定)
     compile 'com.android.support:multidex:1.0.1'
     // 该版本最稳定
-    compile 'com.jakewharton:butterknife:7.0.1'
+   // compile 'com.jakewharton:butterknife:7.0.1'
+    // TOAT:测试新版的butterknife
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    
     // 设置系统状态栏颜色
     compile 'com.githang:status-bar-compat:0.3'
     // 布局不能预览则一定要添加以下三行依赖
@@ -94,4 +99,8 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.1.2'
     // 波浪条
     compile 'com.github.john990:WaveView:v0.9'
+    // eventbus
+    compile 'org.greenrobot:eventbus:3.1.1'
+    // fragment监听返回键
+    compile 'com.github.ikidou:FragmentBackHandler:2.1'
 }

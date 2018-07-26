@@ -103,7 +103,7 @@
             <View
                 android:id="@+id/v_register_username_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1.5dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/colorCompanyDark" />
 
@@ -154,7 +154,7 @@
             <View
                 android:id="@+id/v_register_password_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1.5dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/colorCompany" />
 
@@ -203,7 +203,7 @@
             <View
                 android:id="@+id/v_register_confirmPassword_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1.5dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/colorCompany" />
 
@@ -265,7 +265,7 @@
             <View
                 android:id="@+id/v_register_verifyCode_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1.5dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/colorCompany" />
 

@@ -75,9 +75,9 @@ public class RegisterWidget extends RelativeLayout {
 
     public RegisterWidget(Context context) {
         this(context, null, 0);
-        initRes(context);
-        initViews(context);
-        initEvent(context);
+        initRes(context);//
+        initViews(context);//
+        initEvent(context);//
         initHelper(context);
         getServerDate(context);
     }

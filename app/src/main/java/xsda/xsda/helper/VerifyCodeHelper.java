@@ -10,7 +10,7 @@ import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 
-import xsda.xsda.ui.XsdaApplication;
+import xsda.xsda.ue.app.XsdaApplication;
 import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;

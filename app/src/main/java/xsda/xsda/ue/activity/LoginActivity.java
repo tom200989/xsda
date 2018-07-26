@@ -1,4 +1,4 @@
-package xsda.xsda.ui;
+package xsda.xsda.ue.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +11,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
+import xsda.xsda.ue.root.RootActivity;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.widget.LoginWidget;
@@ -30,12 +31,32 @@ public class LoginActivity extends RootActivity {
     private WaitingWidget widgetWaiting;
 
     @Override
+    public int onCreateLayout() {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    public String NoSaveInstanceStateActivityName() {
+        return null;
+    }
+
+    @Override
+    public int onCreateContain() {
+        return 0;
+    }
+
+    @Override
+    public Class onCreateFirstFragment() {
+        return null;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        initViews();
-        initEvent();
+        // initViews();
+        // initEvent();
     }
 
     private void initViews() {
@@ -115,18 +136,18 @@ public class LoginActivity extends RootActivity {
         // }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (widgetLogin.getVisibility() == View.VISIBLE) {
-            super.onBackPressed();
-        } else if (widegetRegister.getVisibility() == View.VISIBLE) {
-            toView(widgetLogin);
-        } else if (widgetNeterror.getVisibility() == View.VISIBLE) {
-            toView(widgetLogin);
-        } else if (widgetWaiting.getVisibility() == View.VISIBLE) {
-            Lgg.t(Cons.TAG).ii("waiting view showing");
-        } else {
-            super.onBackPressed();
-        }
-    }
+    // @Override
+    // public void onBackPressed() {
+    //     if (widgetLogin.getVisibility() == View.VISIBLE) {
+    //         super.onBackPressed();
+    //     } else if (widegetRegister.getVisibility() == View.VISIBLE) {
+    //         toView(widgetLogin);
+    //     } else if (widgetNeterror.getVisibility() == View.VISIBLE) {
+    //         toView(widgetLogin);
+    //     } else if (widgetWaiting.getVisibility() == View.VISIBLE) {
+    //         Lgg.t(Cons.TAG).ii("waiting view showing");
+    //     } else {
+    //         super.onBackPressed();
+    //     }
+    // }
 }

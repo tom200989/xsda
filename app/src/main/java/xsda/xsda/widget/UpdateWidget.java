@@ -13,7 +13,7 @@ import xsda.xsda.R;
  * Created by qianli.ma on 2018/6/26 0026.
  */
 
-public class TipWidget extends RelativeLayout {
+public class UpdateWidget extends RelativeLayout {
 
     private ImageView ivUpdateBg;
     private RelativeLayout rlUpdateContent;
@@ -22,17 +22,17 @@ public class TipWidget extends RelativeLayout {
     private TextView tvUpdateCancel;
     private TextView tvUpdateOk;
 
-    public TipWidget(Context context) {
+    public UpdateWidget(Context context) {
         this(context, null, 0);
     }
 
-    public TipWidget(Context context, AttributeSet attrs) {
+    public UpdateWidget(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TipWidget(Context context, AttributeSet attrs, int defStyleAttr) {
+    public UpdateWidget(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        View.inflate(context, R.layout.widget_tip, this);
+        View.inflate(context, R.layout.widget_update, this);
         ivUpdateBg = (ImageView) findViewById(R.id.iv_update_bg);
         rlUpdateContent = (RelativeLayout) findViewById(R.id.rl_update_content);
         tvUpdateTitle = (TextView) findViewById(R.id.tv_update_title);

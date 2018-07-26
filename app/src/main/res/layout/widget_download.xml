@@ -136,5 +136,6 @@
             app:layout_widthPercent="30%w" />
 
     </com.zhy.android.percent.support.PercentRelativeLayout>
+    
 
 </com.zhy.android.percent.support.PercentRelativeLayout>

@@ -30,6 +30,7 @@ public class DownloadHelper {
         File installDir = getInstallDir();
         createDir(installDir);
         preDownloadNext();
+        file.clearCachedFile();
         // 请求下载
         file.getDataInBackground(new GetDataCallback() {
             @Override
@@ -49,7 +50,7 @@ public class DownloadHelper {
             @Override
             public void done(Integer progress) {
                 getProgressNext(progress);
-                if (progress % 10 == 0) {
+                if (progress % 20 == 0) {
                     Lgg.t(Cons.TAG).ii("current progress: " + progress);
                 }
             }

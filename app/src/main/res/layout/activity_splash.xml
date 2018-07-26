@@ -5,48 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="xsda.xsda.ui.SplashActivity">
+    tools:context="xsda.xsda.ue.activity.SplashActivity">
 
-    <!-- 启动界面 -->
-    <xsda.xsda.widget.SplashWidget
-        android:id="@+id/widget_splash"
+    <FrameLayout
+        android:id="@+id/fl_splash_contain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <!-- 网络出错 -->
-    <xsda.xsda.widget.NetErrorWidget
-        android:id="@+id/widget_neterror"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <!-- 等待界面 -->
-    <xsda.xsda.widget.LoadingWidget
-        android:id="@+id/widget_wait"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <!-- 新版本升级界面 -->
-    <xsda.xsda.widget.TipWidget
-        android:id="@+id/widget_update"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <!-- 下载界面 -->
-    <xsda.xsda.widget.DownloadWidget
-        android:id="@+id/widget_download"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <!-- 引导页 -->
-    <xsda.xsda.widget.GuideWidget
-        android:id="@+id/widget_guide"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_height="match_parent" />
 
 </com.zhy.android.percent.support.PercentRelativeLayout>

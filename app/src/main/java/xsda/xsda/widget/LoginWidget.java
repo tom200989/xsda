@@ -20,7 +20,6 @@ import xsda.xsda.R;
 
 public class LoginWidget extends RelativeLayout {
 
-    private ImageView ivlogo;
     private PercentRelativeLayout rlUserName;
     private EditText etUserName;
     private View vUserNameLine;
@@ -63,7 +62,6 @@ public class LoginWidget extends RelativeLayout {
 
     private void initView(Context context) {
         View.inflate(context, R.layout.widget_login, this);
-        ivlogo = findViewById(R.id.iv_login_logo);
         rlUserName = findViewById(R.id.rl_login_input_username);
         etUserName = findViewById(R.id.et_login_input_username);
         vUserNameLine = findViewById(R.id.v_login_input_username_line);

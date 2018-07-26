@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
-        android:name=".ui.XsdaApplication"
+        android:name=".ue.app.XsdaApplication"
         android:allowBackup="true"
         android:configChanges="orientation|keyboardHidden"
         android:icon="@drawable/ic_launcher"
@@ -27,24 +27,24 @@
 
         <!-- 启动界面 -->
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".ue.activity.SplashActivity"
             android:screenOrientation="portrait">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <!-- 登陆界面 -->
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".ue.activity.LoginActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
