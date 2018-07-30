@@ -1,5 +1,6 @@
 package xsda.xsda.ue.root;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,24 +26,12 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
 
     private View inflateView;
     private int layoutId;
-    public FragmentActivity activityAttach;
+    public FragmentActivity activity;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        activityAttach = getActivity();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // 4.注册订阅
-        EventBus.getDefault().register(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void transferFrag(FragBean bean) {
-        onCreates(bean);
+        activity = getActivity();
     }
 
     @Nullable
@@ -52,25 +41,40 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
         // 1.填入layoutId
         layoutId = onInflateLayout();
         // 2.填充视图
-        inflateView = View.inflate(getActivity(), layoutId, null);
+        inflateView = View.inflate(activity, layoutId, null);
         // 3.绑定butterknife
         ButterKnife.bind(this, inflateView);
-        onCreatViews(inflateView);
-        // 5.点击事件、焦点处理等
-        onClickEvent();
+        // 4.初始化
+        firstInitNext();
         return inflateView;
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
+    public void onResume() {
+        super.onResume();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            // 4.注册订阅
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void getData(FragBean bean) {
+        Object attach = bean.getAttach();
+        String whichFragmentStart = bean.getCurrentFragmentClass().getSimpleName();
+        String targetFragment = bean.getTargetFragmentClass().getSimpleName();
+        // 确保现在运行的是目标fragment
+        if (getClass().getSimpleName().equalsIgnoreCase(targetFragment)) {
+            onNexts(attach, inflateView, whichFragmentStart);
+        }
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
+    public void onPause() {
+        super.onPause();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
@@ -81,9 +85,13 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
     /* -------------------------------------------- abstract -------------------------------------------- */
 
     /**
-     * @param bean 1.eventbus接收订阅
+     * 1.你的业务逻辑
+     *
+     * @param yourBean           你的自定义附带对象(请执行强转)
+     * @param view               填充视图
+     * @param whichFragmentStart 由哪个fragment发起的跳转
      */
-    public abstract void onCreates(FragBean bean);
+    public abstract void onNexts(Object yourBean, View view, String whichFragmentStart);
 
     /**
      * @return 2.填入layoutId
@@ -91,17 +99,7 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
     public abstract int onInflateLayout();
 
     /**
-     * @param inflate 3.填充视图
-     */
-    public abstract void onCreatViews(View inflate);
-
-    /**
-     * 4.点击事件,焦点事件等
-     */
-    public abstract void onClickEvent();
-
-    /**
-     * @return 5.点击返回键
+     * @return 3.点击返回键
      */
     public abstract boolean onBackPresss();
     
@@ -110,13 +108,20 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
     /**
      * 跳转到别的fragment
      *
-     * @param current  当前
-     * @param target   目标
-     * @param object   附带
-     * @param isReload 是否重载视图
+     * @param current        当前
+     * @param target         目标
+     * @param object         附带
+     * @param isTargetReload 是否重载视图
      */
-    public void toFrag(Class current, Class target, Object object, boolean isReload) {
-        ((RootActivity) getActivity()).toFrag(current, target, object, isReload);
+    public void toFrag(Class current, Class target, Object object, boolean isTargetReload) {
+        ((RootActivity) getActivity()).toFrag(current, target, object, isTargetReload);
+    }
+
+    /**
+     * @param target 移除某个fragment
+     */
+    public void removeFrag(Class target) {
+        ((RootActivity) getActivity()).removeFrag(target);
     }
 
     /**
@@ -150,7 +155,35 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
      * @param clazz     目标
      * @param isDefault 是否默认方式
      */
-    public void toActivity(Context context, Class<?> clazz, boolean isDefault) {
-        RootHelper.to(context, clazz, true, true, false, 0);
+    public void toActivity(Activity context, Class<?> clazz, boolean isDefault) {
+        RootHelper.toActivity(context, clazz, true, true, false, 0);
+    }
+
+    /**
+     * @return 获取attach Activity
+     */
+    public FragmentActivity getActivitys() {
+        return activity;
+    }
+    
+    /* -------------------------------------------- impl -------------------------------------------- */
+
+    private OnFirstInitListener onFirstInitListener;
+
+    // 接口OnFirstInitListener
+    public interface OnFirstInitListener {
+        void firstInit();
+    }
+
+    // 对外方式setOnFirstInitListener
+    public void setOnFirstInitListener(OnFirstInitListener onFirstInitListener) {
+        this.onFirstInitListener = onFirstInitListener;
+    }
+
+    // 封装方法firstInitNext
+    private void firstInitNext() {
+        if (onFirstInitListener != null) {
+            onFirstInitListener.firstInit();
+        }
     }
 }

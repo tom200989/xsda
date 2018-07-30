@@ -286,12 +286,12 @@
             app:layout_marginTopPercent="10%h"
             app:layout_widthPercent="70%w" />
 
-        <!-- waiting -->
-        <xsda.xsda.widget.WaitingWidget
-            android:id="@+id/widget_waiting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
     </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <!-- waiting -->
+    <xsda.xsda.widget.WaitingWidget
+        android:id="@+id/widget_waiting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </com.zhy.android.percent.support.PercentRelativeLayout>

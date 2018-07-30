@@ -12,7 +12,6 @@ import com.zhy.android.percent.support.PercentRelativeLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
-import xsda.xsda.ue.root.FragBean;
 import xsda.xsda.ue.root.RootFrag;
 
 /**
@@ -55,20 +54,16 @@ public class LoginFrag extends RootFrag {
 
     @Override
     public int onInflateLayout() {
-        return R.layout.widget_login;
+        return R.layout.frag_login;
     }
 
     @Override
-    public void onCreatViews(View inflate) {
+    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         initRes();
+        onClickEvent();
     }
 
-    @Override
-    public void onCreates(FragBean bean) {
 
-    }
-
-    @Override
     public void onClickEvent() {
         // 设置焦点控制底线颜色
         etUserName.setOnFocusChangeListener((v, hasFocus) -> vUserNameLine.setBackgroundColor(hasFocus ? colorFocus : colorUnFocus));

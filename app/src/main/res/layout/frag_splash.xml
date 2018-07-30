@@ -18,15 +18,15 @@
         app:layout_widthPercent="20%w" />
 
     <TextView
-        app:layout_textSizePercent="2.8%h"
-        android:textColor="@color/colorCompany"
-        android:text="更懂你的心"
-        app:layout_marginTopPercent="5%h"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/iv_splash_logo"
         android:id="@+id/iv_splash_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_splash_logo"
+        android:layout_centerHorizontal="true"
+        android:text="更懂你的心"
+        android:textColor="@color/colorCompany"
+        app:layout_marginTopPercent="5%h"
+        app:layout_textSizePercent="2.8%h" />
 
     <!-- copyright -->
     <TextView

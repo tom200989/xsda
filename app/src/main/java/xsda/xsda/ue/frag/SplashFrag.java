@@ -13,8 +13,6 @@ import xsda.xsda.R;
 import xsda.xsda.bean.UpdateBean;
 import xsda.xsda.helper.GetUpdateHelper;
 import xsda.xsda.helper.PingHelper;
-import xsda.xsda.ue.activity.SplashActivity;
-import xsda.xsda.ue.root.FragBean;
 import xsda.xsda.ue.root.RootFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
@@ -44,30 +42,23 @@ public class SplashFrag extends RootFrag {
     private String loading_text;
     private String loading_success;
     private UpdateBean updateBean;
-    private SplashActivity activity;
     private Handler handler;
 
 
     @Override
     public int onInflateLayout() {
         handler = new Handler();
-        activity = (SplashActivity) getActivity();
-        return R.layout.widget_splash;
+        /* 设置初始化入口 */
+        setOnFirstInitListener(() -> {
+            initRes();
+            handler.postDelayed(this::ping, 2000);
+        });
+        return R.layout.frag_splash;
     }
 
-    @Override
-    public void onCreatViews(View inflate) {
-        initRes();
-        handler.postDelayed(this::ping, 2000);
-    }
 
     @Override
-    public void onCreates(FragBean bean) {
-
-    }
-
-    @Override
-    public void onClickEvent() {
+    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
 
     }
 
@@ -107,10 +98,8 @@ public class SplashFrag extends RootFrag {
             setProgress(progress);
         });
 
-        pingHelper.setOnPingFailedListener(msg -> {
-            showErrorNet();
-        });
-        pingHelper.ping(getActivity(), getString(R.string.ping_address_backup));
+        pingHelper.setOnPingFailedListener(msg -> showErrorNet());
+        pingHelper.ping(activity, getString(R.string.ping_address_backup));
     }
 
     /**
@@ -119,7 +108,7 @@ public class SplashFrag extends RootFrag {
     private void checkUpdate() {
 
         // 1.获取当前运行APP的版本号
-        int runVersion = Ogg.getLocalVersion(getActivity());
+        int runVersion = Ogg.getLocalVersion(activity);
         // 2.请求LeanClound最新版本
         GetUpdateHelper getUpdateHelper = new GetUpdateHelper();
         getUpdateHelper.setOnGetUpdateListener(updateBean -> {
@@ -154,7 +143,7 @@ public class SplashFrag extends RootFrag {
      * 向导页or登录页
      */
     private void toGuideOrLogin() {
-        if (Sgg.getInstance(getActivity()).getBoolean(Cons.SP_GUIDE, false)) {
+        if (Sgg.getInstance(activity).getBoolean(Cons.SP_GUIDE, false)) {
             // 进入登录页 
             toFrag(getClass(), LoginFrag.class, null, false);
         } else {

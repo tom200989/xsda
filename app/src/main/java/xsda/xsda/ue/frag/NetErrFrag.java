@@ -6,8 +6,6 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import xsda.xsda.R;
-import xsda.xsda.ue.activity.SplashActivity;
-import xsda.xsda.ue.root.FragBean;
 import xsda.xsda.ue.root.RootFrag;
 
 /**
@@ -27,26 +25,14 @@ public class NetErrFrag extends RootFrag {
     @Bind(R.id.tv_neterror_back)
     TextView tvNeterrorBack;// 退出
 
-    private SplashActivity activity;
 
     @Override
     public int onInflateLayout() {
-        activity = (SplashActivity) getActivity();
-        return R.layout.widget_neterror;
+        return R.layout.frag_neterror;
     }
 
     @Override
-    public void onCreatViews(View inflate) {
-
-    }
-
-    @Override
-    public void onCreates(FragBean bean) {
-
-    }
-
-    @Override
-    public void onClickEvent() {
+    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         rlNeterrorAll.setOnClickListener(v -> {
         });
         tvNeterrorRetry.setOnClickListener(v -> {

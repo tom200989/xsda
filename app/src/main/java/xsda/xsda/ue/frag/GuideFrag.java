@@ -18,7 +18,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
-import xsda.xsda.ue.root.FragBean;
 import xsda.xsda.ue.root.RootFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Sgg;
@@ -44,25 +43,20 @@ public class GuideFrag extends RootFrag {
 
     @Override
     public int onInflateLayout() {
-        return R.layout.widget_guide;
+        return R.layout.frag_guide;
     }
 
     @Override
-    public void onCreatViews(View inflate) {
+    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         prepareResource();// 准备资源
         setGuideAdapter();// 设置适配器
+        onClickEvent();
     }
 
-    @Override
-    public void onCreates(FragBean bean) {
-
-    }
-
-    @Override
     public void onClickEvent() {
         // 点击「立即体验」
         tvGuideClick.setOnClickListener(v -> {
-            Sgg.getInstance(getActivity()).putBoolean(Cons.SP_GUIDE, true);
+            Sgg.getInstance(activity).putBoolean(Cons.SP_GUIDE, true);
             toFrag(getClass(), LoginFrag.class, null, false);
         });
     }
@@ -88,7 +82,7 @@ public class GuideFrag extends RootFrag {
 
         // 引导页
         for (int draw : res_bgs) {
-            ImageView ivBg = new ImageView(getActivity());
+            ImageView ivBg = new ImageView(activity);
             ivBg.setImageDrawable(getResources().getDrawable(draw));
             ivBg.setLayoutParams(new RecyclerView.LayoutParams(-1, -1));
             ivBg.setBackgroundColor(Color.WHITE);
@@ -97,7 +91,7 @@ public class GuideFrag extends RootFrag {
 
         // 圆点
         for (int i = 0; i < res_bgs.length; i++) {
-            ImageView ivDot = new ImageView(getActivity());
+            ImageView ivDot = new ImageView(activity);
             ivDot.setImageDrawable(i == 0 ? getResources().getDrawable(res_dots[0]) : getResources().getDrawable(res_dots[1]));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
             lp.setMargins(i == 0 ? 0 : size * 2, 0, 0, 0);

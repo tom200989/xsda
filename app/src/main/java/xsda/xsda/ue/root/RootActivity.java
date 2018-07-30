@@ -2,7 +2,7 @@ package xsda.xsda.ue.root;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Window;
 
 import com.githang.statusbar.StatusBarCompat;
+import com.github.ikidou.fragmentBackHandler.BackHandlerHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,7 +33,6 @@ import xsda.xsda.ue.frag.RegisterFrag;
 import xsda.xsda.ue.frag.SplashFrag;
 import xsda.xsda.ue.frag.UpdateFrag;
 import xsda.xsda.utils.Cons;
-import xsda.xsda.utils.Lgg;
 
 /*
  * Created by qianli.ma on 2018/6/20 0020.
@@ -68,26 +68,6 @@ public abstract class RootActivity extends FragmentActivity {
     };
     public FraHelpers fraHelpers;
 
-    /**
-     * @return layoutId
-     */
-    public abstract int onCreateLayout();
-
-    /**
-     * 不需要保存状态的Activity类名
-     */
-    public abstract String NoSaveInstanceStateActivityName();
-
-    /**
-     * @return containId
-     */
-    public abstract int onCreateContain();
-
-    /**
-     * @return first fragment class
-     */
-    public abstract Class onCreateFirstFragment();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 设置无标题栏(必须位于 super.onCreate(savedInstanceState) 之上)
@@ -104,25 +84,30 @@ public abstract class RootActivity extends FragmentActivity {
     protected void onSaveInstanceState(Bundle outState) {
         
         /* 
+         * 重写这个方法是为了解决: 用户点击权限允许后界面无法继续加载的bug.
          * NoSaveInstanceStateActivityName(): 一般由第一个Activity进行实现
          * onSaveInstanceState()方法在获取权限时, 导致fragment初始化失败
          * 如果当前的Activity没有必要保存状态 (默认是: Activity被后台杀死后,系统会保存Activity状态)
          * 则不需要调用 「super.onSaveInstanceState(outState)」这个方法
          */
-        
-        Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":onSaveInstanceState() begin");
+
         String noSaveInstanceStateActivityName = NoSaveInstanceStateActivityName();
         if (!TextUtils.isEmpty(noSaveInstanceStateActivityName)) {
             if (!getClass().getSimpleName().equalsIgnoreCase(noSaveInstanceStateActivityName)) {
-                Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":onSaveInstanceState() still work");
                 super.onSaveInstanceState(outState);
-            } else {
-                Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":onSaveInstanceState() had comment");
             }
-        } else {
-            Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":onSaveInstanceState() NoSaveInstanceStateActivityName is null");
         }
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (!BackHandlerHelper.handleBackPress(this)) {
+            boolean isDispatcher = onBackClick();
+            if (!isDispatcher) {
+                // 如果fragment没有处理--> 则直接退出
+                super.onBackPressed();
+            }
+        }
     }
 
     /**
@@ -219,6 +204,8 @@ public abstract class RootActivity extends FragmentActivity {
                     Log.i(TAG, getClass().getSimpleName() + ":new FraHelpers()");
                 }
             }
+        } else {
+            onNexts();
         }
     }
 
@@ -237,6 +224,39 @@ public abstract class RootActivity extends FragmentActivity {
         return installDir;
     }
     
+    /* -------------------------------------------- abstract -------------------------------------------- */
+    /**
+     * @return layoutId
+     */
+    public abstract int onCreateLayout();
+
+    /**
+     * 不需要保存状态的Activity类名
+     */
+    public abstract String NoSaveInstanceStateActivityName();
+
+    /**
+     * @return containId
+     */
+    public abstract int onCreateContain();
+
+    /**
+     * @return first fragment class
+     */
+    public abstract Class onCreateFirstFragment();
+
+    /**
+     * 你的业务逻辑
+     */
+    public abstract void onNexts();
+
+    /**
+     * 回退键的点击事件
+     *
+     * @return true:自定义逻辑 false:super.onBackPress()
+     */
+    public abstract boolean onBackClick();
+    
     /* -------------------------------------------- helper -------------------------------------------- */
 
     /**
@@ -245,15 +265,25 @@ public abstract class RootActivity extends FragmentActivity {
      * @param classWhichFragmentStart 当前
      * @param targetFragmentClass     目标
      * @param attach                  额外附带数据对象
-     * @param isReload                是否重载视图
+     * @param isTargetReload          是否重载视图
      */
-    public void toFrag(Class classWhichFragmentStart, Class targetFragmentClass, Object attach, boolean isReload) {
-        Log.i(TAG, getClass().getSimpleName() + ":toFrag()--> " + targetFragmentClass.getSimpleName() + "isReload: " + isReload);
+    public void toFrag(Class classWhichFragmentStart, Class targetFragmentClass, Object attach, boolean isTargetReload) {
+        Log.i(TAG, getClass().getSimpleName() + ":toFrag()--> " + targetFragmentClass.getSimpleName() + "isReload: " + isTargetReload);
         FragBean fragBean = new FragBean();
         fragBean.setCurrentFragmentClass(classWhichFragmentStart);
+        fragBean.setTargetFragmentClass(targetFragmentClass);
         fragBean.setAttach(attach == null ? "" : attach);
+        // 1.先跳转
+        fraHelpers.transfer(targetFragmentClass, isTargetReload);
+        // 2.在传输(否则会出现nullPointException)
         EventBus.getDefault().postSticky(fragBean);
-        fraHelpers.transfer(targetFragmentClass, isReload);
+    }
+
+    /**
+     * @param target 移除指定的fragment
+     */
+    public void removeFrag(Class target) {
+        fraHelpers.remove(target);
     }
 
     /**
@@ -287,7 +317,7 @@ public abstract class RootActivity extends FragmentActivity {
      * @param clazz     目标
      * @param isDefault 是否默认方式
      */
-    public void toActivity(Context context, Class<?> clazz, boolean isDefault) {
-        RootHelper.to(context, clazz, true, true, false, 0);
+    public void toActivity(Activity context, Class<?> clazz, boolean isDefault) {
+        RootHelper.toActivity(context, clazz, true, true, false, 0);
     }
 }

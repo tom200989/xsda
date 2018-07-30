@@ -6,7 +6,16 @@ package xsda.xsda.ue.root;
 
 public class FragBean {
     public Class currentFragmentClass;// 是哪个fragment发起的跳转
+    public Class targetFragmentClass;// 将前往那个fragment
     public Object attach;// 附件(额外自定义数据对象)
+
+    public Class getTargetFragmentClass() {
+        return targetFragmentClass;
+    }
+
+    public void setTargetFragmentClass(Class targetFragmentClass) {
+        this.targetFragmentClass = targetFragmentClass;
+    }
 
     public Class getCurrentFragmentClass() {
         return currentFragmentClass;

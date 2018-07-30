@@ -4,6 +4,8 @@ import android.support.multidex.MultiDexApplication;
 
 import com.avos.avoscloud.AVOSCloud;
 
+import org.xutils.x;
+
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
@@ -37,6 +39,9 @@ public class XsdaApplication extends MultiDexApplication {
         AVOSCloud.initialize(this, appid, appkey);
         // 开启LeanClound调试
         AVOSCloud.setDebugLogEnabled(true);
+        // 初始化xutils框架
+        x.Ext.init(this);
+        x.Ext.setDebug(true); // 是否输出debug日志, 开启debug会影响性能.
     }
 
 }

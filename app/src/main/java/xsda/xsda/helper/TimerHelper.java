@@ -1,6 +1,6 @@
 package xsda.xsda.helper;
 
-import android.content.Context;
+import android.app.Activity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,11 +12,11 @@ import java.util.TimerTask;
 public abstract class TimerHelper {
 
     private TimerTask timerTask;
-    private Context context;
+    private Activity activity;
     private Timer timer;
 
-    public TimerHelper(Context context) {
-        this.context = context;
+    public TimerHelper(Activity activity) {
+        this.activity = activity;
     }
 
     /**
@@ -29,7 +29,7 @@ public abstract class TimerHelper {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                doSomething();
+                activity.runOnUiThread(() -> doSomething());
             }
         };
         timer.schedule(timerTask, 0, period);
@@ -37,6 +37,7 @@ public abstract class TimerHelper {
 
     /**
      * 延迟启动
+     *
      * @param delay 单位毫秒
      */
     public void startDelay(int delay) {
@@ -44,7 +45,7 @@ public abstract class TimerHelper {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                doSomething();
+                activity.runOnUiThread(() -> doSomething());
             }
         };
         timer.schedule(timerTask, delay);
@@ -59,7 +60,7 @@ public abstract class TimerHelper {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                doSomething();
+                activity.runOnUiThread(() -> doSomething());
             }
         };
         timer.schedule(timerTask, delay, period);

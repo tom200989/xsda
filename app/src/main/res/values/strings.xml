@@ -8,8 +8,8 @@
     <string name="check_net">正在检测网络…</string>
     <string name="loading_text">数据加载中…</string>
     <string name="loading_success">正在跳转…</string>
-    <string name="ping_address">"edvbrq20.api.lncld.net"</string>
-    <string name="ping_address_backup">www.baidu.com</string>
+    <!--<string name="ping_address">"edvbrq20.api.lncld.net"</string>-->
+    <string name="ping_address_backup">https://www.baidu.com/</string>
     <string name="check_update_title">检测到新版本</string>
     <string name="check_update_default_des">本次修复的bug:\n修复一些已知的bug</string>
     <string name="check_update_cancel">下次再说</string>

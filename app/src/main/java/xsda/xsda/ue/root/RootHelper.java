@@ -17,6 +17,7 @@ public class RootHelper {
 
     /**
      * 结束当前activity
+     *
      * @param activity 当前activity
      */
     public static void finishOver(Activity activity) {
@@ -62,12 +63,12 @@ public class RootHelper {
     /**
      * 跳转(默认方式)
      *
-     * @param context   当前环境
-     * @param clazz     目标
-     * @param isDefault 是否默认方式
+     * @param activity 当前环境
+     * @param clazz    目标
+     * @param isFinish 是否结束当前
      */
-    public static void to(Context context, Class<?> clazz, boolean isDefault) {
-        to(context, clazz, true, true, false, 0);
+    public static void toActivity(Activity activity, Class<?> clazz, boolean isFinish) {
+        toActivity(activity, clazz, true, isFinish, false, 0);
     }
 
     /**
@@ -80,25 +81,24 @@ public class RootHelper {
      * @param overridepedding 转场
      * @param delay           延迟
      */
-    public static void to(final Context context,// 上下文
-                          final Class<?> clazz,// 目标
-                          final boolean isSingleTop,// 独立任务栈
-                          final boolean isFinish,// 结束当前
-                          boolean overridepedding, // 转场
-                          final int delay) {// 延迟
-        final Activity activity = (Activity) context;
+    public static void toActivity(final Activity activity,// 上下文
+                                  final Class<?> clazz,// 目标
+                                  final boolean isSingleTop,// 独立任务栈
+                                  final boolean isFinish,// 结束当前
+                                  boolean overridepedding, // 转场
+                                  final int delay) {// 延迟
         new Thread(() -> {
             try {
                 Thread.sleep(delay);
                 if (activity != null) {
                     activity.runOnUiThread(() -> {
-                        Intent intent = new Intent(context, clazz);
+                        Intent intent = new Intent(activity, clazz);
                         // 独立任务栈
                         if (isSingleTop) {
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         }
                         // 启动
-                        context.startActivity(intent);
+                        activity.startActivity(intent);
                         // 转场(务必在启动后才可调用)
                         if (!overridepedding) {
                             activity.overridePendingTransition(0, 0);
@@ -107,11 +107,11 @@ public class RootHelper {
                         if (isFinish) {
                             activity.finish();
                         }
-                        Lgg.t(Cons.TAG).ii("RootActivity:to(): " + clazz.getSimpleName());
+                        Lgg.t(Cons.TAG).ii("RootActivity:toActivity(): " + clazz.getSimpleName());
                     });
                 }
             } catch (Exception e) {
-                Lgg.t(Cons.TAG).ee("RootActivity:to():error: " + e.getMessage());
+                Lgg.t(Cons.TAG).ee("RootActivity:toActivity():error: " + e.getMessage());
                 e.printStackTrace();
             }
 

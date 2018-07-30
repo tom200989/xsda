@@ -1,10 +1,10 @@
 package xsda.xsda.helper;
 
 import android.app.Activity;
-import android.text.TextUtils;
 
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
@@ -15,7 +15,6 @@ import xsda.xsda.utils.Lgg;
 
 public class PingHelper {
 
-    private Thread pingThread;
     int i = 0;
 
     /**
@@ -24,48 +23,49 @@ public class PingHelper {
      * @param address
      */
     public void ping(Activity activity, String address) {
-        pingThread = new Thread(() -> {
-            try {
-                Lgg.t(Cons.TAG).ii("Pinging...");
-                Process process = Runtime.getRuntime().exec("ping " + address);
-                InputStreamReader r = new InputStreamReader(process.getInputStream());
-                LineNumberReader returnData = new LineNumberReader(r);
-                StringBuilder msg = new StringBuilder();
-                String line = "";
-                i = 0;
-                while ((line = returnData.readLine()) != null & !TextUtils.isEmpty(line)) {
-                    Lgg.t(Cons.TAG).dd("checking: " + line);
-                    if (i <= 4) {
-                        Lgg.t(Cons.TAG).ii(line);
-                        msg.append(line).append("\n");
-                        activity.runOnUiThread(() -> progressNext(i * 25));
-                        i++;
-                    } else {
-                        i = 0;
-                        break;
-                    }
-                }
-
-                // 主线程操作
+        RequestParams params = new RequestParams(address);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                // 记住主线程
                 activity.runOnUiThread(() -> {
-                    if (msg.toString().contains("100% loss")) {
-                        Lgg.t(Cons.TAG).ii("连接失败");
-                        pingFailedNext(msg.toString());
-                    } else if (TextUtils.isEmpty(msg.toString())) {
-                        Lgg.t(Cons.TAG).ii("有网络但没有数据");
-                        pingFailedNext(msg.toString());
+                    if (i <= 4) {
+                        Lgg.t(Cons.TAG).ii("ping : " + i * 25 + "%");
+                        progressNext(i * 25);
+                        i++;
+                        ping(activity, address);
                     } else {
-                        Lgg.t(Cons.TAG).ii("连接畅通");
-                        pingSuccessNext(msg.toString());
+                        Lgg.t(Cons.TAG).ii("ping success");
+                        pingSuccessNext("连接成功");
                     }
                 });
+            }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                pingFailedNext(e.getMessage());
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                // 记住主线程
+                activity.runOnUiThread(() -> {
+                    Lgg.t(Cons.TAG).ii("ping failed: " + ex.getMessage());
+                    pingFailedNext(ex.getMessage());
+                });
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                // 记住主线程
+                activity.runOnUiThread(() -> {
+                    Lgg.t(Cons.TAG).ii("ping cancel: " + cex.getMessage());
+                    pingFailedNext(cex.getMessage());
+                });
+            }
+
+            @Override
+            public void onFinished() {
+                activity.runOnUiThread(() -> {
+
+                });
             }
         });
-        pingThread.start();
     }
 
     private OnProgressListener onProgressListener;

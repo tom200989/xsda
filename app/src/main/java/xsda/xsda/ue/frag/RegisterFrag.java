@@ -4,7 +4,6 @@ package xsda.xsda.ue.frag;
  */
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,12 +14,10 @@ import android.widget.TextView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import xsda.xsda.R;
 import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.TimerHelper;
 import xsda.xsda.helper.VerifyCodeHelper;
-import xsda.xsda.ue.root.FragBean;
 import xsda.xsda.ue.root.RootFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
@@ -86,8 +83,6 @@ public class RegisterFrag extends RootFrag {
 
     @Bind(R.id.widget_waiting)
     WaitingWidget widgetWaiting;
-    
-    
 
     private int color_checked;
     private int color_unchecked;
@@ -106,87 +101,28 @@ public class RegisterFrag extends RootFrag {
     private long currentServerDate = -1;// 服务器当前时间
     private long limitVerify = countdown * 1000;// 限制2分钟以内不可再点击
 
-    // private PercentRelativeLayout rlRegisterAll;
-    // private PercentRelativeLayout rlRegisterBanner;
-    // private ImageView ivRegisterBack;
-    // private ImageView ivRegisterLogo;
-    // private PercentRelativeLayout rlRegisterUsername;
-    // private ImageView ivRegisterUsernameLogo;
-    // private EditText etRegisterInputUsername;
-    // private View vRegisterUsernameLine;
-    // private PercentRelativeLayout rlRegisterPassword;
-    // private ImageView ivRegisterPasswordLogo;
-    // private EditText etRegisterInputPassword;
-    // private View vRegisterPasswordLine;
-    // private PercentRelativeLayout rlRegisterConfirmPassword;
-    // private ImageView ivRegisterConfirmPasswordLogo;
-    // private EditText etRegisterInputConfirmPassword;
-    // private View vRegisterConfirmPasswordLine;
-    // private PercentRelativeLayout rlRegisterVerifyCode;
-    // private ImageView ivRegisterVerifyCodeLogo;
-    // private TextView tvRegisterGetVerifyCode;
-    // private EditText etRegisterInputVerifyCode;
-    // private View vRegisterVerifyCodeLine;
-    // private TextView tvRegisterCommit;
-    // private WaitingWidget widgetWaiting;
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // super.onSaveInstanceState(outState);
-        Lgg.t(Cons.TAG).ii(getClass().getSimpleName()+ ":onSaveInstanceState()");
-    }
-
-    @Override
-    public void onCreates(FragBean bean) {
-
-    }
 
     @Override
     public int onInflateLayout() {
         initRes();
-        return R.layout.widget_register;
+        return R.layout.frag_register;
     }
 
     @Override
-    public void onCreatViews(View inflate) {
-        // rlRegisterAll = (PercentRelativeLayout) inflate.findViewById(R.id.rl_register_all);
-        // rlRegisterBanner = (PercentRelativeLayout) inflate.findViewById(R.id.rl_register_banner);
-        // ivRegisterBack = (ImageView) inflate.findViewById(R.id.iv_register_back);
-        // ivRegisterLogo = (ImageView) inflate.findViewById(R.id.iv_register_logo);
-        // rlRegisterUsername = (PercentRelativeLayout) inflate.findViewById(R.id.rl_register_username);
-        // ivRegisterUsernameLogo = (ImageView) inflate.findViewById(R.id.iv_register_username_logo);
-        // etRegisterInputUsername = (EditText) inflate.findViewById(R.id.et_register_input_username);
-        // vRegisterUsernameLine = inflate.findViewById(R.id.v_register_username_line);
-        // rlRegisterPassword = (PercentRelativeLayout) inflate.findViewById(R.id.rl_register_password);
-        // ivRegisterPasswordLogo = (ImageView) inflate.findViewById(R.id.iv_register_password_logo);
-        // etRegisterInputPassword = (EditText) inflate.findViewById(R.id.et_register_input_password);
-        // vRegisterPasswordLine = inflate.findViewById(R.id.v_register_password_line);
-        // rlRegisterConfirmPassword = (PercentRelativeLayout) inflate.findViewById(R.id.rl_register_confirmPassword);
-        // ivRegisterConfirmPasswordLogo = (ImageView) inflate.findViewById(R.id.iv_register_confirmPassword_logo);
-        // etRegisterInputConfirmPassword = (EditText) inflate.findViewById(R.id.et_register_input_confirmPassword);
-        // vRegisterConfirmPasswordLine = inflate.findViewById(R.id.v_register_confirmPassword_line);
-        // rlRegisterVerifyCode = (PercentRelativeLayout) inflate.findViewById(R.id.rl_register_verifyCode);
-        // ivRegisterVerifyCodeLogo = (ImageView) inflate.findViewById(R.id.iv_register_verifyCode_logo);
-        // tvRegisterGetVerifyCode = (TextView) inflate.findViewById(R.id.tv_register_getVerifyCode);
-        // etRegisterInputVerifyCode = (EditText) inflate.findViewById(R.id.et_register_input_verifyCode);
-        // vRegisterVerifyCodeLine = inflate.findViewById(R.id.v_register_verifyCode_line);
-        // tvRegisterCommit = (TextView) inflate.findViewById(R.id.tv_register_commit);
-        // widgetWaiting = (WaitingWidget) inflate.findViewById(R.id.widget_waiting);
+    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         // 封装控件
         ets = new EditText[]{etRegisterInputUsername, etRegisterInputPassword, etRegisterInputConfirmPassword, etRegisterInputVerifyCode};
         lines = new View[]{vRegisterUsernameLine, vRegisterPasswordLine, vRegisterConfirmPasswordLine, vRegisterVerifyCodeLine};
+        onClickEvent();
         // 获取服务器时间
         getServerDate();
     }
 
-
-    @Override
     public void onClickEvent() {
         // E.设定焦点切换监听
         for (int i = 0; i < ets.length; i++) {
             int finalI = i;
             ets[i].setOnFocusChangeListener((v, hasFocus) -> {
-                Lgg.t(Cons.TAG).ii("position: " + finalI + ";hasfocus: " + hasFocus);
                 lines[finalI].setBackgroundColor(hasFocus ? color_checked : color_unchecked);
             });
         }
@@ -198,11 +134,11 @@ public class RegisterFrag extends RootFrag {
         // E.获取验证码
         tvRegisterGetVerifyCode.setOnClickListener(v -> {
             // 校验手机号和密码
-            if (matchEdittext(activityAttach, false)) {
+            if (matchEdittext(activity, false)) {
                 // 符合规则的开始请求验证码
                 String phoneNum = etRegisterInputUsername.getText().toString();
                 String password = etRegisterInputPassword.getText().toString();
-                Tgg.show(activityAttach, getString(R.string.register_begin2getverify_tip), 2000);
+                Tgg.show(activity, getString(R.string.register_begin2getverify_tip), 2000);
                 if (currentServerDate != -1) {
                     getVerifyCode(phoneNum, password);
                 }
@@ -213,7 +149,7 @@ public class RegisterFrag extends RootFrag {
         tvRegisterCommit.setOnClickListener(v -> {
             Lgg.t(Cons.TAG).ii("点击提交验证码");
             // 校验手机号密码验证码等等
-            if (matchEdittext(activityAttach, true)) {
+            if (matchEdittext(activity, true)) {
                 String phoneName = etRegisterInputUsername.getText().toString();
                 String verifyCode = etRegisterInputVerifyCode.getText().toString();
                 if (currentServerDate != -1) {
@@ -221,10 +157,10 @@ public class RegisterFrag extends RootFrag {
                     VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper();
                     verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setVisibleByAnim());
                     verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
-                    verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(activityAttach, text_Verify_error, 2000));
+                    verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(activity, text_Verify_error, 2000));
                     verifyCodeHelper.setOnCommitVerifySuccessListener(() -> {
                         // 提示验证成功
-                        Tgg.show(activityAttach, text_Verify_success, 2000);
+                        Tgg.show(activity, text_Verify_success, 2000);
                         new Handler().postDelayed(this::exit, 1500);
                     });
                     verifyCodeHelper.commitVerifyCode(phoneName, verifyCode);
@@ -253,9 +189,7 @@ public class RegisterFrag extends RootFrag {
      */
     private void toGetVerifyInit() {
         // 获取上次获取验证码成功的时间
-        long lastServerDate = Sgg.getInstance(activityAttach).getLong(Cons.SP_SERVER_DATE, 0);
-        // TODO: 2018/7/25 0025  暂时测试
-        lastServerDate = currentServerDate - 1;
+        long lastServerDate = Sgg.getInstance(getActivitys()).getLong(Cons.SP_SERVER_DATE, 0);
 
         // 时间正常
         if (currentServerDate > lastServerDate) {
@@ -273,7 +207,7 @@ public class RegisterFrag extends RootFrag {
         } else {// 时间不正常(当前服务器时间 < 上次记录的时间)
             tvRegisterGetVerifyCode.setClickable(false);
             exit();
-            Tgg.show(activityAttach, getString(R.string.register_time_error), 3000);
+            Tgg.show(activity, getString(R.string.register_time_error), 3000);
         }
     }
 
@@ -283,15 +217,9 @@ public class RegisterFrag extends RootFrag {
         return true;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
-
     private void initRes() {
-        color_checked = activityAttach.getResources().getColor(R.color.colorCompanyDark);
-        color_unchecked = activityAttach.getResources().getColor(R.color.colorCompany);
+        color_checked = getResources().getColor(R.color.colorCompanyDark);
+        color_unchecked = getResources().getColor(R.color.colorCompany);
         text_timeout = getString(R.string.register_timeout);
         text_frequently = getString(R.string.register_frequently_tip);
         text_user_exist = getString(R.string.register_user_exist_tip);
@@ -358,25 +286,31 @@ public class RegisterFrag extends RootFrag {
         }
 
         // 后创建
-        timer = new TimerHelper(activityAttach) {
+        timer = new TimerHelper(activity) {
             @Override
             public void doSomething() {
-                activityAttach.runOnUiThread(() -> {
-                    if (countdown >= 1) {
-                        tvRegisterGetVerifyCode.setClickable(false);
-                        tvRegisterGetVerifyCode.setTextColor(activityAttach.getResources().getColor(R.color.colorGrayDark));
-                        tvRegisterGetVerifyCode.setText(String.valueOf(countdown-- + "s"));
-                    } else {
-                        tvRegisterGetVerifyCode.setClickable(true);
-                        tvRegisterGetVerifyCode.setTextColor(activityAttach.getResources().getColor(R.color.colorCompanyDark));
-                        tvRegisterGetVerifyCode.setText(getString(R.string.register_get_verifycode));
-                        countdown = COUNTDOWN;
-                        timer.stop();
-                    }
-                });
+                if (countdown >= 1) {
+                    tvRegisterGetVerifyCode.setClickable(false);
+                    tvRegisterGetVerifyCode.setTextColor(getResources().getColor(R.color.colorGrayDark));
+                    tvRegisterGetVerifyCode.setText(String.valueOf(countdown-- + "s"));
+                } else {
+                    tvRegisterGetVerifyCode.setClickable(true);
+                    tvRegisterGetVerifyCode.setTextColor(getResources().getColor(R.color.colorCompanyDark));
+                    tvRegisterGetVerifyCode.setText(getString(R.string.register_get_verifycode));
+                    countdown = COUNTDOWN;
+                    timer.stop();
+                }
             }
         };
         timer.start(0, 1000);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (timer != null) {
+            timer.stop();
+        }
     }
 
     /**
@@ -389,19 +323,19 @@ public class RegisterFrag extends RootFrag {
         
         /* 申请获取验证码 */
         VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper();
-        verifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(activityAttach, text_timeout, 2000));
-        verifyCodeHelper.setOnUserHadExistListener(() -> Tgg.show(activityAttach, text_user_exist, 2000));
+        verifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(activity, text_timeout, 2000));
+        verifyCodeHelper.setOnUserHadExistListener(() -> Tgg.show(activity, text_user_exist, 2000));
         verifyCodeHelper.setOnGetVerifyErrorListener(e -> {
             if (e.getCode() == Egg.CANT_SEND_SMS_TOO_FREQUENTLY) {
                 // 验证码获取频繁
-                Tgg.show(activityAttach, text_frequently, 2000);
+                Tgg.show(activity, text_frequently, 2000);
             } else {
-                Tgg.show(activityAttach, text_timeout, 2000);
+                Tgg.show(activity, text_timeout, 2000);
             }
         });
         verifyCodeHelper.setOnGetVerifySuccessListener(() -> {
             // 提示留意短信
-            Tgg.show(activityAttach, text_success, 2000);
+            Tgg.show(activity, text_success, 2000);
             // 显示倒计时
             Lgg.t(Cons.TAG).ii("begin to countdown 120s");
             countDown();

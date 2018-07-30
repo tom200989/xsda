@@ -19,7 +19,6 @@ import xsda.xsda.bean.UpdateBean;
 import xsda.xsda.helper.DownloadHelper;
 import xsda.xsda.helper.InstallApkHelper;
 import xsda.xsda.helper.SDHelper;
-import xsda.xsda.ue.root.FragBean;
 import xsda.xsda.ue.root.RootFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
@@ -57,8 +56,6 @@ public class DownFrag extends RootFrag {
     @Bind(R.id.tv_download_install)
     TextView tvDownloadInstall;// 安装
 
-    
-
     private View inflate;
     private UpdateBean updateBean;
     private int STATE = -1;
@@ -69,21 +66,17 @@ public class DownFrag extends RootFrag {
     private File apk;
 
     @Override
-    public void onCreates(FragBean bean) {
-        updateBean = (UpdateBean) bean.getAttach();
-    }
-
-    @Override
     public int onInflateLayout() {
-        return R.layout.widget_download;
+        return R.layout.frag_download;
     }
 
     @Override
-    public void onCreatViews(View inflate) {
+    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
+        updateBean = (UpdateBean) yourBean;
         checkSDCard();// 主程序入口
+        onClickEvent();
     }
 
-    @Override
     public void onClickEvent() {
         
         /* 返回按钮:下次再说 */
@@ -92,7 +85,7 @@ public class DownFrag extends RootFrag {
         /* 重试按钮:出错后为重试按钮设置监听 */
         tvDownloadRetry.setOnClickListener(v -> {
             showLoadingUi();
-            setProgress(0);
+            setProgresss(0);
             downloadHelper.download(updateBean.getFile());
         });
         
@@ -105,9 +98,9 @@ public class DownFrag extends RootFrag {
             InstallApkHelper installApkHelper = new InstallApkHelper();
             installApkHelper.setOnInstallErrorListener(e -> {
                 showDownErrorUi();
-                Tgg.show(getActivity(), R.string.download_apk_error, 2500);
+                Tgg.show(activity, R.string.download_apk_error, 2500);
             });
-            installApkHelper.install(getActivity(), apkName);
+            installApkHelper.install(activity, apkName);
         });
     }
 
@@ -119,7 +112,7 @@ public class DownFrag extends RootFrag {
         } else if (STATE == STATE_INSTALL) {
             toGuideOrLogin();
         } else if (STATE == STATE_LOADING) {
-            Tgg.show(getActivity(), "正在下载\n请勿退出", 3000);
+            Tgg.show(activity, "正在下载\n请勿退出", 3000);
         } else {
             return false;
         }
@@ -134,7 +127,7 @@ public class DownFrag extends RootFrag {
         // 4.2.空间不足--> 继续切换到下个界面
         sdHelper.setOnSdErrorListener(() -> {
             toGuideOrLogin();
-            Tgg.show(getActivity(), R.string.sdcard_no_mounted, 2000);
+            Tgg.show(activity, R.string.sdcard_no_mounted, 2000);
         });
 
         // 4.2.空间正常--> 切换到下载界面
@@ -147,7 +140,7 @@ public class DownFrag extends RootFrag {
             ToInstallOrDownload(updateBean);
         });
         // 执行
-        sdHelper.getRemindMemory(getActivity(), updateBean.getNewVersionSize());
+        sdHelper.getRemindMemory(activity, updateBean.getNewVersionSize());
     }
 
     /**
@@ -155,7 +148,7 @@ public class DownFrag extends RootFrag {
      */
     private void toGuideOrLogin() {
         // 向导页|登录页
-        if (Sgg.getInstance(getActivity()).getBoolean(Cons.SP_GUIDE, false)) {
+        if (Sgg.getInstance(activity).getBoolean(Cons.SP_GUIDE, false)) {
             // 进入登录页
             toFrag(getClass(), LoginFrag.class, null, false);
             Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":toGuideOrLogin()--> to login");
@@ -179,14 +172,14 @@ public class DownFrag extends RootFrag {
             toDownload();
         } else {
             // 2.获取本地包信息
-            PackageInfo packageInfo = Ogg.checkApkVersionInfo(getActivity(), localApkPath);
+            PackageInfo packageInfo = Ogg.checkApkVersionInfo(activity, localApkPath);
             String localPackageName = packageInfo.packageName;
             String localSharedUserId = packageInfo.sharedUserId;
             int localVersionCode = packageInfo.versionCode;
             Lgg.t(Cons.TAG).ii("ToInstallOrDownload():\nlocalPackageName: " + localPackageName + "\nlocalSharedUserId: " + localSharedUserId + "\nlocalVersionCode: " + localVersionCode);
 
             // 3.包名是否与当前运行的APP的包名一致
-            if (localPackageName.contains(getActivity().getPackageName()) & localSharedUserId.contains(getString(R.string.app_sui))) {
+            if (localPackageName.contains(activity.getPackageName()) & localSharedUserId.contains(getString(R.string.app_sui))) {
                 Lgg.t(Cons.TAG).ii("packageName and shareUserId is same");
                 // 4.安装包版本号是否和网络存档的版本号一致
                 if (localVersionCode == Integer.valueOf(updateBean.getNewVersionCode())) {
@@ -212,7 +205,7 @@ public class DownFrag extends RootFrag {
     private void toDownload() {
 
         showLoadingUi();
-        setProgress(0);
+        setProgresss(0);
         downloadHelper = new DownloadHelper();
 
         /* 准备下载 */
@@ -220,7 +213,7 @@ public class DownFrag extends RootFrag {
             // 显示下载中
             showLoadingUi();
             // 显示进度
-            setProgress(0);
+            setProgresss(0);
         });
 
         /* 下载过程 */
@@ -228,14 +221,14 @@ public class DownFrag extends RootFrag {
             // 显示下载中
             showLoadingUi();
             // 显示进度
-            setProgress(progress);
+            setProgresss(progress);
         });
 
         /* 下载出错 */
         downloadHelper.setOnDownErrorListener(e -> {
             // 显示出错
             showDownErrorUi();
-            Tgg.show(getActivity(), getString(R.string.download_neterror), 2500);
+            Tgg.show(activity, getString(R.string.download_neterror), 2500);
         });
 
         /* 下载完毕 */
@@ -253,7 +246,7 @@ public class DownFrag extends RootFrag {
      */
     public void showDownErrorUi() {
         STATE = STATE_ERROR;
-        setProgress(0);
+        setProgresss(0);
         tvDownloadInstall.setVisibility(GONE);// 安装
         tvDownloadPercent.setVisibility(GONE);// 百分比
         tvDownloadRetry.setVisibility(VISIBLE);// 重试
@@ -290,7 +283,7 @@ public class DownFrag extends RootFrag {
      *
      * @param progress 进度(max:100)
      */
-    public void setProgress(int progress) {
+    public void setProgresss(int progress) {
         progress = progress < 5 ? 5 : progress;
         pgDownloadLoagding.setProgress(progress);
         tvDownloadPercent.setText(String.format(getResources().getString(R.string.downloading), progress));

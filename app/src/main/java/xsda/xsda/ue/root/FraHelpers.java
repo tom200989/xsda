@@ -16,13 +16,44 @@ import java.util.Map;
  */
 public class FraHelpers {
 
-    private Class initClass;
-    private int contain;
+    /**
+     * 一定要传FragmentActivity类型的对象
+     */
     private FragmentActivity activity;
-    private Class[] clazzs;// fragment类集合
-    private Map<String, Class> tagMap;// TAG对应的class
-    private Map<Class, String> classMap;// class对应的tag
-    private List<String> tags;// TAG集合
+
+    /**
+     * 初始化显示的第一个fragment字节码
+     */
+    private Class initClass;
+
+    /**
+     * 容器,如: R.id.framelayoutId
+     */
+    private int contain;
+
+    /**
+     * fragment字节码集合
+     */
+    private Class[] clazzs;
+
+    /**
+     * TAG对应的class
+     */
+    private Map<String, Class> tagMap;
+
+    /**
+     * class对应的tag
+     */
+    private Map<Class, String> classMap;
+
+    /**
+     * tag集合
+     */
+    private List<String> tags;
+
+    /**
+     * fragment调度器
+     */
     private FragmentManager fm;
 
     /**
@@ -50,10 +81,15 @@ public class FraHelpers {
      */
     private void init(Class clazz) {
         try {
-            FragmentTransaction ft = fm.beginTransaction();// 开启事务
-            Fragment fragment = (Fragment) clazz.newInstance();// 通过字节码创建碎片
+            // 开启事务
+            FragmentTransaction ft = fm.beginTransaction();
+            // 通过字节码创建碎片
+            Fragment fragment = (Fragment) clazz.newInstance();
             ft.replace(contain, fragment, clazz.getSimpleName());
-            ft.commit();// 以类名为tag--> 提交事务
+            // 以类名为tag--> 提交事务
+            ft.commit();
+            /* 这一句一定要有, 即commit()后要求FT立刻执行, 否则是异步执行 */
+            fm.executePendingTransactions();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -61,7 +97,108 @@ public class FraHelpers {
     }
 
     /**
-     * 重新加载
+     * 移除指定的fragment
+     *
+     * @param target 移除指定的fragment
+     */
+    public void remove(Class target) {
+        // 1.开启事务
+        Fragment fragment;
+        FragmentTransaction ft = fm.beginTransaction();
+        // 3.以类名为tag, 查找对应的fragment
+        String tag = target.getSimpleName();
+        fragment = fm.findFragmentByTag(tag);
+        if (fragment != null) {
+            // 3.2.移除当前
+            ft.remove(fragment);
+            ft.commit();
+            /* 这一句一定要有, 即commit()后要求FT立刻执行, 否则是异步执行 */
+            fm.executePendingTransactions();
+        }
+    }
+
+    /**
+     * 切换fragment
+     *
+     * @param clazz    需要切换的fragment class
+     * @param isReload 是否强制重载
+     */
+    public void transfer(Class clazz, boolean isReload) {
+
+        try {
+            // 1.开启事务
+            Fragment fragment;
+
+            // 2.隐藏全部的fragment
+            for (String tag : tags) {
+                FragmentTransaction ft = fm.beginTransaction();
+                Fragment fragment_temp = fm.findFragmentByTag(tag);
+                if (fragment_temp != null) {
+                    ft.hide(fragment_temp);
+                    ft.commit();
+                    fm.executePendingTransactions();
+                }
+            }
+
+            // 3.以类名为tag, 查找对应的fragment
+            String tag = clazz.getSimpleName();
+            fragment = fm.findFragmentByTag(tag);
+            if (fragment == null) {
+                FragmentTransaction ft = fm.beginTransaction();
+                // 3.1.创建fragment
+                fragment = (Fragment) clazz.newInstance();
+                // 3.2.添加到容器, 以类名为tag
+                ft.add(contain, fragment, tag);
+                ft.show(fragment);
+                ft.commit();
+                fm.executePendingTransactions();
+            } else {
+                
+                /* 如果收到重载指令--> 执行reload(clazz) */
+                if (isReload) {
+                    reload(clazz);
+                } else {// 否则正常显示
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.show(fragment);
+                    ft.commit();
+                    fm.executePendingTransactions();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 重载指定fragment
+     *
+     * @param clazz 目标
+     */
+    private void reload(Class clazz) {
+        try {
+            // 1.先删除
+            String tag = clazz.getSimpleName();
+            FragmentTransaction ft1 = fm.beginTransaction();
+            ft1.remove(fm.findFragmentByTag(tag));
+            ft1.commit();
+            fm.executePendingTransactions();
+            
+            // 2.再添加
+            FragmentTransaction ft2 = fm.beginTransaction();
+            Fragment newFragment = (Fragment) clazz.newInstance();
+            ft2.add(contain, newFragment, tag);
+            ft2.show(newFragment);
+            ft2.commit();
+            /* 这一句一定要有, 即commit()后要求FT立刻执行, 否则是异步执行 */
+            fm.executePendingTransactions();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 重新加载所有的fragment
      *
      * @param initClass 需要显示的首屏fragment
      */
@@ -100,62 +237,8 @@ public class FraHelpers {
             // 4.提交
             ft.show(showFragment);
             ft.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 切换fragment
-     *
-     * @param clazz    需要切换的fragment class
-     * @param isReload 是否强制重载
-     */
-    public void transfer(Class clazz, boolean isReload) {
-
-        try {
-            // 1.开启事务
-            Fragment fragment;
-            FragmentTransaction ft = fm.beginTransaction();
-
-            // 2.隐藏全部的fragment
-            for (String tag : tags) {
-                Fragment fragment_temp = fm.findFragmentByTag(tag);
-                if (fragment_temp != null) {
-                    ft.hide(fragment_temp);
-                }
-            }
-
-            // 3.以类名为tag, 查找对应的fragment
-            String tag = clazz.getSimpleName();
-            fragment = fm.findFragmentByTag(tag);
-            if (fragment == null) {
-                // 3.1.创建fragment
-                fragment = (Fragment) clazz.newInstance();
-                // 3.2.添加到容器, 以类名为tag
-                ft.add(contain, fragment, tag);
-                ft.show(fragment);
-            } else {
-                
-                /* 3.1.是否强制刷新重载 */
-                if (isReload) {
-                    // 3.2.移除当前
-                    ft.remove(fragment);
-                    // 3.3.集合中找到字节码文件
-                    Fragment newFragment = (Fragment) clazz.newInstance();
-                    // 3.4.重新添加到transation
-                    ft.add(contain, newFragment, tag);
-                    // 3.5.显示
-                    ft.show(newFragment);
-                    
-                } else {
-                    // 显示fragment
-                    ft.show(fragment);
-                }
-
-            }
-
-            ft.commitAllowingStateLoss();// 提交事务
+            /* 这一句一定要有, 即commit()后要求FT立刻执行, 否则是异步执行 */
+            fm.executePendingTransactions();
         } catch (Exception e) {
             e.printStackTrace();
         }

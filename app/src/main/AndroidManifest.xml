@@ -25,32 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <!-- 启动界面 -->
-        <activity
-            android:name=".ue.activity.SplashActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <!-- 登陆界面 -->
-        <activity
-            android:name=".ue.activity.LoginActivity"
-            android:screenOrientation="portrait">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
-
-        <!-- 实时通信模块、推送（均需要加入以下声明） START -->
-        <!-- 实时通信模块、推送都要使用 PushService -->
+        <!-- ************************ LeanCloud SDK ************************ -->
         <service android:name="com.avos.avoscloud.PushService" />
-
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -58,16 +34,10 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <!-- 实时通信模块、推送 END -->
-
-        <!-- 反馈组件（需要加入以下声明）START -->
         <activity
             android:name="com.avos.avoscloud.feedback.ThreadActivity"
             android:screenOrientation="portrait">
         </activity>
-        <!-- 反馈组件 END -->
-
-        <!-- android 7.0 以上安装APK包(必须) -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="xsda.xsda"
@@ -77,7 +47,20 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/apk_path" />
         </provider>
+        <!-- ************************ LeanCloud SDK ************************ -->
 
+        <!-- 启动界面 -->
+
+        <!-- 启动2界面 -->
+        <activity
+            android:name=".ue.activity.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 

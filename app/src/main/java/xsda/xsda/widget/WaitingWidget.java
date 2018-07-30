@@ -108,16 +108,14 @@ public class WaitingWidget extends RelativeLayout {
             timerHelper.stop();
         }
         if (timerHelper == null) {
-            timerHelper = new TimerHelper(context) {
+            timerHelper = new TimerHelper((Activity) context) {
                 @Override
                 public void doSomething() {
-                    ((Activity) context).runOnUiThread(() -> {
-                        if (count > 5) {
-                            count = 0;
-                        }
-                        tvWaitingDes.setText(texts.get(count));
-                        count++;
-                    });
+                    if (count > 5) {
+                        count = 0;
+                    }
+                    tvWaitingDes.setText(texts.get(count));
+                    count++;
                 }
             };
         }

@@ -7,10 +7,8 @@ import android.widget.TextView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import xsda.xsda.R;
 import xsda.xsda.bean.UpdateBean;
-import xsda.xsda.ue.root.FragBean;
 import xsda.xsda.ue.root.RootFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
@@ -41,21 +39,14 @@ public class UpdateFrag extends RootFrag {
 
     @Override
     public int onInflateLayout() {
-        return R.layout.widget_update;
+        return R.layout.frag_update;
     }
 
     @Override
-    public void onCreatViews(View inflate) {
-        this.inflate = inflate;
-    }
+    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
+        this.inflate = view;
+        this.updateBean = (UpdateBean) yourBean;
 
-    @Override
-    public void onCreates(FragBean bean) {
-        this.updateBean = (UpdateBean) bean.getAttach();
-    }
-
-    @Override
-    public void onClickEvent() {
         // 设置描述
         tvUpdateDes.setText(updateBean.getNewVersionFix());
         // 设置点击事件
@@ -81,7 +72,7 @@ public class UpdateFrag extends RootFrag {
      */
     private void toGuideOrLogin() {
         // 向导页|登录页
-        if (Sgg.getInstance(getActivity()).getBoolean(Cons.SP_GUIDE, false)) {
+        if (Sgg.getInstance(activity).getBoolean(Cons.SP_GUIDE, false)) {
             // 进入登录页
             toFrag(getClass(), LoginFrag.class, null, false);
             Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":toGuideOrLogin()" + "to login fragment");
@@ -92,9 +83,4 @@ public class UpdateFrag extends RootFrag {
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
 }
