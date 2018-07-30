@@ -84,19 +84,20 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
 
     /* -------------------------------------------- abstract -------------------------------------------- */
 
+
     /**
-     * 1.你的业务逻辑
+     * @return 1.填入layoutId
+     */
+    public abstract int onInflateLayout();
+
+    /**
+     * 2.你的业务逻辑
      *
      * @param yourBean           你的自定义附带对象(请执行强转)
      * @param view               填充视图
      * @param whichFragmentStart 由哪个fragment发起的跳转
      */
     public abstract void onNexts(Object yourBean, View view, String whichFragmentStart);
-
-    /**
-     * @return 2.填入layoutId
-     */
-    public abstract int onInflateLayout();
 
     /**
      * @return 3.点击返回键

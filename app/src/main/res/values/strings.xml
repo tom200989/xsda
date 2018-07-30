@@ -47,4 +47,8 @@
     <string name="register_commit_verify_failed">无效的验证码\n请稍候重试</string>
     <string name="register_commit_verify_success">验证码校验成功</string>
     <string name="waitting_text">请稍候</string>
+    <string name="forgot_input_hint_password">请输入您的新密码(8~16位)</string>
+    <string name="forgot_input_hint_confirmpassword">请确认您的新密码(8~16位)</string>
+    <string name="forgot_commit">确认重置</string>
+    
 </resources>
