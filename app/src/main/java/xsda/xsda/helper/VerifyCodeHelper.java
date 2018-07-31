@@ -1,5 +1,6 @@
 package xsda.xsda.helper;
 
+import android.app.Activity;
 import android.os.Handler;
 
 import com.avos.avoscloud.AVException;
@@ -18,7 +19,12 @@ import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Sgg;
 
 public class VerifyCodeHelper {
+    private Activity activity;
 
+    public VerifyCodeHelper(Activity activity) {
+        this.activity = activity;
+    }
+    
     /* -------------------------------------------- A.申请验证码 -------------------------------------------- */
 
     /**
@@ -52,7 +58,7 @@ public class VerifyCodeHelper {
      */
     private void isUserExist(String username, String password, long millute) {
         Lgg.t(Cons.TAG).ii("isUserExist");
-        UserExistHelper userExistHelper = new UserExistHelper();
+        UserExistHelper userExistHelper = new UserExistHelper(activity);
         userExistHelper.setOnExceptionListener(this::requestVerifyErrorNext);
         userExistHelper.setOnUserNotExistListener(() -> createUserAndRequestVerify(username, password, millute));
         userExistHelper.setOnUserHadExistListener(this::userHadExistNext);
@@ -133,7 +139,7 @@ public class VerifyCodeHelper {
         Lgg.t(Cons.TAG).ii("commitVerifyCode");
         commitVerifyPrepareNext();
         new Handler().postDelayed(() -> {
-            UserExistHelper userExistHelper = new UserExistHelper();
+            UserExistHelper userExistHelper = new UserExistHelper(activity);
             userExistHelper.setOnExceptionListener(this::requestVerifyErrorNext);
             userExistHelper.setOnUserNotExistListener(() -> verifyMobilePhone(username, verifyCode));
             userExistHelper.setOnUserHadExistListener(this::userHadExistNext);
@@ -154,7 +160,7 @@ public class VerifyCodeHelper {
         AVUser.verifyMobilePhoneInBackground(verifyCode, new AVMobilePhoneVerifyCallback() {
             @Override
             public void done(AVException e) {
-                Egg.print(getClass().getSimpleName(), "commitVerifyCode", e, "校验验证码失败");
+                Egg.print(getClass().getSimpleName(), "verifyMobilePhone", e, "校验验证码失败");
                 if (e != null) {
                     commitVerifyErrorNext(e);
                 } else {
@@ -282,9 +288,11 @@ public class VerifyCodeHelper {
 
     // 封装方法getServerDateErrorNext
     private void getServerDateErrorNext(Exception e) {
-        if (onGetServerDateErrorListener != null) {
-            onGetServerDateErrorListener.getServerDateError(e);
-        }
+        activity.runOnUiThread(() -> {
+            if (onGetServerDateErrorListener != null) {
+                onGetServerDateErrorListener.getServerDateError(e);
+            }
+        });
     }
 
     private OnVerifyErrorListener onVerifyErrorListener;
@@ -301,9 +309,11 @@ public class VerifyCodeHelper {
 
     // 封装方法verifyErrorNext
     private void requestVerifyErrorNext(AVException e) {
-        if (onVerifyErrorListener != null) {
-            onVerifyErrorListener.verifyError(e);
-        }
+        activity.runOnUiThread(() -> {
+            if (onVerifyErrorListener != null) {
+                onVerifyErrorListener.verifyError(e);
+            }
+        });
     }
 
     private OnVerifySuccessListener onVerifySuccessListener;
@@ -320,9 +330,11 @@ public class VerifyCodeHelper {
 
     // 封装方法verifySuccessNext
     private void verifySuccessNext() {
-        if (onVerifySuccessListener != null) {
-            onVerifySuccessListener.verifySuccess();
-        }
+        activity.runOnUiThread(() -> {
+            if (onVerifySuccessListener != null) {
+                onVerifySuccessListener.verifySuccess();
+            }
+        });
     }
 
     private OnCommitVerifyErrorListener onCommitVerifyErrorListener;
@@ -339,9 +351,11 @@ public class VerifyCodeHelper {
 
     // 封装方法commitVerifyErrorNext
     private void commitVerifyErrorNext(AVException e) {
-        if (onCommitVerifyErrorListener != null) {
-            onCommitVerifyErrorListener.commitVerifyError(e);
-        }
+        activity.runOnUiThread(() -> {
+            if (onCommitVerifyErrorListener != null) {
+                onCommitVerifyErrorListener.commitVerifyError(e);
+            }
+        });
     }
 
     private OnCommitVerifySuccessListener onCommitVerifySuccessListener;
@@ -358,8 +372,10 @@ public class VerifyCodeHelper {
 
     // 封装方法commitVerifySuccessNext
     private void commitVerifySuccessNext() {
-        if (onCommitVerifySuccessListener != null) {
-            onCommitVerifySuccessListener.commitVerifySuccess();
-        }
+        activity.runOnUiThread(() -> {
+            if (onCommitVerifySuccessListener != null) {
+                onCommitVerifySuccessListener.commitVerifySuccess();
+            }
+        });
     }
 }

@@ -5,9 +5,10 @@ package xsda.xsda.utils;
  */
 
 public class Cons {
-    public final static String TAG = "ma_xsda";
-    public final static String INSTALL_FILEPATH = "xsdaApk";
-    public final static String SP_PRIVACY_READ = "SP_PRIVACY_READ";
-    public final static String SP_GUIDE = "SP_GUIDE";
-    public final static String SP_SERVER_DATE = "SP_SERVER_DATE";
+    public final static String TAG = "ma_xsda";// LOG标记
+    public final static String INSTALL_FILEPATH = "xsdaApk";// APK包目录名
+    public final static String SP_PRIVACY_READ = "SP_PRIVACY_READ";// 隐私已读标记
+    public final static String SP_GUIDE = "SP_GUIDE";// 向导已读标记
+    public final static String SP_SERVER_DATE = "SP_SERVER_DATE";// 注册时的服务器时间标记
+    public final static String SP_RESET_SERVER_DATE = "SP_RESET_SERVER_DATE";// 重置密码时的服务器时间标记
 }

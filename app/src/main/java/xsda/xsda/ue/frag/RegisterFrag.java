@@ -154,7 +154,7 @@ public class RegisterFrag extends RootFrag {
                 String verifyCode = etRegisterInputVerifyCode.getText().toString();
                 if (currentServerDate != -1) {
                     /* 提交验证码 */
-                    VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper();
+                    VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
                     verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setVisibleByAnim());
                     verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
                     verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(activity, text_Verify_error, 2000));
@@ -322,7 +322,7 @@ public class RegisterFrag extends RootFrag {
     private void getVerifyCode(String phoneNum, String password) {
         
         /* 申请获取验证码 */
-        VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper();
+        VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
         verifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(activity, text_timeout, 2000));
         verifyCodeHelper.setOnUserHadExistListener(() -> Tgg.show(activity, text_user_exist, 2000));
         verifyCodeHelper.setOnGetVerifyErrorListener(e -> {

@@ -50,5 +50,7 @@
     <string name="forgot_input_hint_password">请输入您的新密码(8~16位)</string>
     <string name="forgot_input_hint_confirmpassword">请确认您的新密码(8~16位)</string>
     <string name="forgot_commit">确认重置</string>
+    <string name="forgot_user_not_exist">用户不存在\n请先注册</string>
+    <string name="forgot_user_reset_psd_success">密码重置成功</string>
     
 </resources>

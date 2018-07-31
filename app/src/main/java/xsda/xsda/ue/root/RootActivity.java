@@ -26,6 +26,7 @@ import java.util.List;
 
 import xsda.xsda.R;
 import xsda.xsda.ue.frag.DownFrag;
+import xsda.xsda.ue.frag.ForgotPsdFrag;
 import xsda.xsda.ue.frag.GuideFrag;
 import xsda.xsda.ue.frag.LoginFrag;
 import xsda.xsda.ue.frag.NetErrFrag;
@@ -64,6 +65,7 @@ public abstract class RootActivity extends FragmentActivity {
             DownFrag.class, // 下载
             GuideFrag.class,// 引导
             RegisterFrag.class,// 注册
+            ForgotPsdFrag.class,// 重置密码
             LoginFrag.class// 登陆
     };
     public FraHelpers fraHelpers;

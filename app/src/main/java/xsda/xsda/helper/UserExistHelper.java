@@ -1,5 +1,7 @@
 package xsda.xsda.helper;
 
+import android.app.Activity;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
@@ -18,6 +20,12 @@ import xsda.xsda.utils.Lgg;
 
 public class UserExistHelper {
 
+    private Activity activity;
+
+    public UserExistHelper(Activity activity) {
+        this.activity = activity;
+    }
+
     public void isExist(String username) {
         Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":" + "isExist()");
         AVQuery<AVObject> query = new AVQuery<>(Avfield.UserVerify.classname);
@@ -25,47 +33,49 @@ public class UserExistHelper {
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-                Egg.print(getClass().getSimpleName(), "isExist", e, null);
-                if (e == null) {
-                    if (list == null) {// 用户不存在
-                        Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":" + "isExist()--> list == null");
-                        userNotExistNext();
-                        return;
-                    }
-                    if (list.size() <= 0) {// 用户不存在
-                        Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":" + "isExist()--> list.size() <= 0");
-                        userNotExistNext();
-                        return;
-                    }
-
-                    // 判断同名
-                    boolean isUserExist = false;
-                    for (AVObject avObject : list) {
-                        String username_db = avObject.getString(Avfield.UserVerify.username);
-                        boolean isPhoneVerify = avObject.getBoolean(Avfield.UserVerify.isPhoneVerify);
-                        Lgg.t(Cons.TAG).ii("username_db: " + username_db + ";isPhoneVerify: " + isPhoneVerify);
-                        if (username.equals(username_db)) {
-                            Lgg.t(Cons.TAG).ii("isUserExist()--> isUserExist = true");
-                            isUserExist = true;
-                            break;
+                activity.runOnUiThread(() -> {
+                    Egg.print(getClass().getSimpleName(), "isExist", e, null);
+                    if (e == null) {
+                        if (list == null) {// 用户不存在
+                            Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":" + "isExist()--> list == null");
+                            userNotExistNext();
+                            return;
                         }
-                    }
+                        if (list.size() <= 0) {// 用户不存在
+                            Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":" + "isExist()--> list.size() <= 0");
+                            userNotExistNext();
+                            return;
+                        }
 
-                    // 回调用户存在
-                    if (isUserExist) {
-                        // 用户存在
-                        Lgg.t(Cons.TAG).ii("userHadExistNext()");
-                        userHadExistNext();
+                        // 判断同名
+                        boolean isUserExist = false;
+                        for (AVObject avObject : list) {
+                            String username_db = avObject.getString(Avfield.UserVerify.username);
+                            boolean isPhoneVerify = avObject.getBoolean(Avfield.UserVerify.isPhoneVerify);
+                            Lgg.t(Cons.TAG).ii("username_db: " + username_db + ";isPhoneVerify: " + isPhoneVerify);
+                            if (username.equals(username_db)) {
+                                Lgg.t(Cons.TAG).ii("isUserExist()--> isUserExist = true");
+                                isUserExist = true;
+                                break;
+                            }
+                        }
+
+                        // 回调用户存在
+                        if (isUserExist) {
+                            // 用户存在
+                            Lgg.t(Cons.TAG).ii("userHadExistNext()");
+                            userHadExistNext();
+                        } else {
+                            // 用户不存在
+                            Lgg.t(Cons.TAG).ii("userNotExistNext()");
+                            userNotExistNext();
+                        }
                     } else {
-                        // 用户不存在
-                        Lgg.t(Cons.TAG).ii("userNotExistNext()");
-                        userNotExistNext();
+                        // 出错
+                        exceptionNext(e);
                     }
-                } else {
-                    // 出错
-                    exceptionNext(e);
-                }
-                getUserExistAfterNext();
+                    getUserExistAfterNext();
+                });
             }
         });
     }

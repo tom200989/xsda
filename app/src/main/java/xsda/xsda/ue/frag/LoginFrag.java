@@ -82,6 +82,8 @@ public class LoginFrag extends RootFrag {
         tvLoginClick.setOnClickListener(v -> normalLogin());
         // 注册
         tvRegisterClick.setOnClickListener(v -> register());
+        // 忘记密码
+        tvForgot.setOnClickListener(v -> forgotPassword());
     }
 
     @Override
@@ -117,7 +119,8 @@ public class LoginFrag extends RootFrag {
      * 忘记密码
      */
     public void forgotPassword() {
-        // TODO: 2018/7/8 0008  忘记密码逻辑
+        // 忘记密码
+        toFrag(getClass(), ForgotPsdFrag.class, null, true);
     }
 
     /**
