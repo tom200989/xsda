@@ -44,18 +44,17 @@ public class SplashFrag extends RootFrag {
     private UpdateBean updateBean;
     private Handler handler;
 
-
     @Override
     public int onInflateLayout() {
         handler = new Handler();
-        /* 设置初始化入口 */
-        setOnFirstInitListener(() -> {
-            initRes();
-            handler.postDelayed(this::ping, 2000);
-        });
         return R.layout.frag_splash;
     }
 
+    @Override
+    public void initViewFinish() {
+        initRes();
+        handler.postDelayed(this::ping, 2000);
+    }
 
     @Override
     public void onNexts(Object yourBean, View view, String whichFragmentStart) {

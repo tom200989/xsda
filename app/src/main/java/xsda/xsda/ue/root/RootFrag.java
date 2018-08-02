@@ -45,7 +45,7 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
         // 3.绑定butterknife
         ButterKnife.bind(this, inflateView);
         // 4.初始化
-        firstInitNext();
+        initViewFinish();
         return inflateView;
     }
 
@@ -80,6 +80,11 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
     @Override
     public boolean onBackPressed() {
         return onBackPresss();
+    }
+
+    /* -------------------------------------------- impl -------------------------------------------- */
+    public void initViewFinish() {
+        // 由子类重写
     }
 
     /* -------------------------------------------- abstract -------------------------------------------- */
@@ -165,26 +170,5 @@ public abstract class RootFrag extends Fragment implements FragmentBackHandler {
      */
     public FragmentActivity getActivitys() {
         return activity;
-    }
-    
-    /* -------------------------------------------- impl -------------------------------------------- */
-
-    private OnFirstInitListener onFirstInitListener;
-
-    // 接口OnFirstInitListener
-    public interface OnFirstInitListener {
-        void firstInit();
-    }
-
-    // 对外方式setOnFirstInitListener
-    public void setOnFirstInitListener(OnFirstInitListener onFirstInitListener) {
-        this.onFirstInitListener = onFirstInitListener;
-    }
-
-    // 封装方法firstInitNext
-    private void firstInitNext() {
-        if (onFirstInitListener != null) {
-            onFirstInitListener.firstInit();
-        }
     }
 }

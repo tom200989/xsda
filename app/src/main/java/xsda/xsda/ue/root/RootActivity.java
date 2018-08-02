@@ -75,9 +75,9 @@ public abstract class RootActivity extends FragmentActivity {
         // 设置无标题栏(必须位于 super.onCreate(savedInstanceState) 之上)
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        StatusBarCompat.setStatusBarColor(this, getResources().getColor(colorRoot), false);
         // 填充视图
         setContentView(onCreateLayout());
+        StatusBarCompat.setStatusBarColor(this, getResources().getColor(colorRoot), false);
         // 初始化权限
         initPermission();
     }
