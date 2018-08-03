@@ -44,7 +44,7 @@ public class SplashActivity extends RootMAActivity {
 
     @Override
     public void onNexts() {
-
+        
     }
 
     @Override
