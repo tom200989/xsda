@@ -6,13 +6,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hiber.hiber.RootFrag;
 import com.john.waveview.WaveView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
-import xsda.xsda.ue.root.RootFrag;
 
 /**
  * Created by qianli.ma on 2018/7/23 0023.

@@ -42,6 +42,8 @@ public class XsdaApplication extends MultiDexApplication {
         // 初始化xutils框架
         x.Ext.init(this);
         x.Ext.setDebug(true); // 是否输出debug日志, 开启debug会影响性能.
+        // 初始化框架SDK
+        com.jiagu.sdk.roothiberProtected.install(this);
     }
 
 }

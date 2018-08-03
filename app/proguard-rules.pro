@@ -11,7 +11,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
+-keep @com.qihoo.SdkProtected.(sdkName).Keep class **(*;)
+-keep,allowobfuscation @interface com.qihoo.SdkProtected.(sdkName).Keep
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

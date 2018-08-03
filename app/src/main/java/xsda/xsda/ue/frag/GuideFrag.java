@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hiber.hiber.RootFrag;
 import com.zhy.android.percent.support.PercentLinearLayout;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
-import xsda.xsda.ue.root.RootFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Sgg;
 

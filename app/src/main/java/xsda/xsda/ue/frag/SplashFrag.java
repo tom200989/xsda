@@ -7,13 +7,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.hiber.hiber.RootFrag;
 
 import butterknife.Bind;
 import xsda.xsda.R;
 import xsda.xsda.bean.UpdateBean;
 import xsda.xsda.helper.GetUpdateHelper;
 import xsda.xsda.helper.PingHelper;
-import xsda.xsda.ue.root.RootFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;

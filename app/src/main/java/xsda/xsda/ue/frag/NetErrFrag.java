@@ -4,9 +4,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hiber.hiber.RootFrag;
+
 import butterknife.Bind;
 import xsda.xsda.R;
-import xsda.xsda.ue.root.RootFrag;
 
 /**
  * Created by qianli.ma on 2018/7/23 0023.

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hiber.hiber.RootFrag;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import butterknife.Bind;
@@ -18,7 +19,6 @@ import xsda.xsda.R;
 import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.TimerHelper;
 import xsda.xsda.helper.VerifyCodeHelper;
-import xsda.xsda.ue.root.RootFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;

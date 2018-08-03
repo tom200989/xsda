@@ -2,6 +2,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="xsda.xsda"
+    xmlns:tools="http://schemas.android.com/tools"
     android:sharedUserId="@string/app_sui">
 
     <!-- Leanclound: 基础模块（必须加入以下声明）START -->
@@ -21,8 +22,8 @@
         android:configChanges="orientation|keyboardHidden"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
+        tools:replace="android:icon,android:label,android:theme"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <!-- ************************ LeanCloud SDK ************************ -->

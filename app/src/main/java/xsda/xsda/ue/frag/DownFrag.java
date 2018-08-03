@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.hiber.hiber.RootFrag;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import java.io.File;
@@ -19,7 +20,6 @@ import xsda.xsda.bean.UpdateBean;
 import xsda.xsda.helper.DownloadHelper;
 import xsda.xsda.helper.InstallApkHelper;
 import xsda.xsda.helper.SDHelper;
-import xsda.xsda.ue.root.RootFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;

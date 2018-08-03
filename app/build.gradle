@@ -51,6 +51,11 @@ android {
         preDexLibraries = false
         jumboMode = true
     }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
@@ -101,5 +106,6 @@ dependencies {
     compile 'com.github.ikidou:FragmentBackHandler:2.1'
     // xutils 网络框架
     compile 'org.xutils:xutils:3.5.0'
-    
+    // 布局架构
+    compile(name: 'roothiber', ext:'aar')
 }
