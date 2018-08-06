@@ -35,6 +35,8 @@ public class WaitingWidget extends RelativeLayout {
     int count = 0;
     private String text;
     private List<String> texts;
+    private RotateAnimation ra1;
+    private RotateAnimation ra2;
 
     public WaitingWidget(Context context) {
         this(context, null, 0);
@@ -59,7 +61,7 @@ public class WaitingWidget extends RelativeLayout {
     }
 
     private void initPinAnim() {
-        RotateAnimation ra1 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
+        ra1 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
         ra1.setDuration(1000);
         ra1.setRepeatCount(Animation.INFINITE);
         ra1.setRepeatMode(Animation.INFINITE);
@@ -68,7 +70,7 @@ public class WaitingWidget extends RelativeLayout {
         ivWaitingPin1.startAnimation(ra1);
         ra1.startNow();
 
-        RotateAnimation ra2 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
+        ra2 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
         ra2.setDuration(2500);
         ra2.setRepeatCount(Animation.INFINITE);
         ra2.setRepeatMode(Animation.INFINITE);

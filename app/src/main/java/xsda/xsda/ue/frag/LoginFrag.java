@@ -1,7 +1,10 @@
 package xsda.xsda.ue.frag;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +16,10 @@ import com.zhy.android.percent.support.PercentRelativeLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
+import xsda.xsda.helper.LoginHelper;
+import xsda.xsda.utils.Ogg;
+import xsda.xsda.utils.Tgg;
+import xsda.xsda.widget.WaitingWidget;
 
 /**
  * Created by qianli.ma on 2018/7/23 0023.
@@ -46,6 +53,9 @@ public class LoginFrag extends RootFrag {
     TextView tvRegisterClick;
     @Bind(R.id.tv_login_forgot)
     TextView tvForgot;
+
+    @Bind(R.id.widget_login_waitting)
+    WaitingWidget widgetLoginWaitting;
 
     private int colorFocus;
     private int colorUnFocus;
@@ -113,6 +123,36 @@ public class LoginFrag extends RootFrag {
      */
     public void normalLogin() {
         // TODO: 2018/7/6 0006  常规登陆逻辑
+        String phoneNum = etUserName.getText().toString();
+        String password = etPassword.getText().toString();
+        // 匹配规则
+        boolean isMatcher = matchRule(phoneNum, password);
+        if (isMatcher) {
+            LoginHelper loginHelper = new LoginHelper(getActivity());
+            loginHelper.setOnLoginPrepareListener(() -> widgetLoginWaitting.setVisibleText(getString(R.string.logining)));
+            loginHelper.setOnLoginAfterListener(() -> widgetLoginWaitting.setGone());
+            loginHelper.setOnLoginErrorListener(ex -> Tgg.show(getActivity(), R.string.login_failed, 2500));
+            loginHelper.setOnLoginUserNotExistListener(() -> );
+            loginHelper.login(phoneNum, password);
+        }
+    }
+
+    /**
+     * 匹配规则
+     *
+     * @param phoneNum 号码
+     * @param password 密码
+     * @return 是否匹配
+     */
+    private boolean matchRule(String phoneNum, String password) {
+        if (!Ogg.matchPhoneReg(phoneNum)) {
+            Tgg.show(getActivity(), getString(R.string.register_username_tip), 2500);
+            return false;
+        } else if (password.length() < 8 | password.length() > 16) {
+            Tgg.show(getActivity(), getString(R.string.register_password_tip), 2500);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -129,5 +169,13 @@ public class LoginFrag extends RootFrag {
     private void register() {
         // 前往登陆界面
         toFrag(getClass(), RegisterFrag.class, null, true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 }
