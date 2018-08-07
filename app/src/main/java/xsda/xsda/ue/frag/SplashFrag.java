@@ -12,6 +12,7 @@ import com.hiber.hiber.RootFrag;
 import butterknife.Bind;
 import xsda.xsda.R;
 import xsda.xsda.bean.UpdateBean;
+import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.GetUpdateHelper;
 import xsda.xsda.helper.PingHelper;
 import xsda.xsda.utils.Cons;
@@ -81,8 +82,20 @@ public class SplashFrag extends RootFrag {
         PingHelper pingHelper = new PingHelper();
         pingHelper.setOnPingSuccessListener(msg -> {
             setLoadingText(loading_success);
-            // 检测是否有新版本
-            checkUpdate();
+            // 获取上次用户点了取消的时间
+            GetServerDateHelper getServerDateHelper = new GetServerDateHelper();
+            getServerDateHelper.setOnGetServerErrorListener(e -> checkUpdate());
+            getServerDateHelper.setOnGetServerDateLongSuccessListener(currentTime -> {
+                long lastTime = Sgg.getInstance(getActivity()).getLong(Cons.SP_LAST_CANCEL_UPDATE_DATE, 0);
+                if (lastTime >= currentTime) {/* 时间被修改过 */
+                    checkUpdate();// 检测是否有新版本
+                } else if (currentTime - lastTime > 24 * 60 * 60 * 1000) {/* 距离上次点击取消超过24小时 */
+                    checkUpdate();// 检测是否有新版本
+                } else {
+                    toGuideOrLogin();
+                }
+            });
+            getServerDateHelper.get();
         });
 
         pingHelper.setOnProgressListener(progress -> {
@@ -107,7 +120,7 @@ public class SplashFrag extends RootFrag {
     private void checkUpdate() {
 
         // 1.获取当前运行APP的版本号
-        int runVersion = Ogg.getLocalVersion(activity);
+        int currentVersion = Ogg.getLocalVersion(activity);
         // 2.请求LeanClound最新版本
         GetUpdateHelper getUpdateHelper = new GetUpdateHelper();
         getUpdateHelper.setOnGetUpdateListener(updateBean -> {
@@ -116,9 +129,14 @@ public class SplashFrag extends RootFrag {
             // 2.1.获取到最新的版本号
             int newVersion = Integer.valueOf(updateBean.getNewVersionCode());
             // 3.有更新版本
-            if (newVersion > runVersion) {
-                // 切换到下载界面fragment
-                toFrag(getClass(), UpdateFrag.class, updateBean, false);
+            if (newVersion > currentVersion) {
+                if (newVersion - currentVersion <= 2) {/* 如果新版本与旧版本的差异在2个版本以内--> 则弹出界面让用户自由选择 */
+                    // 切换到下载界面fragment
+                    toFrag(getClass(), UpdateFrag.class, updateBean, false);
+                } else {/* 如果已经超出2个版本的差异--> 强制跳转到下载界面 */
+                    toFrag(getClass(), DownFrag.class, updateBean, true);
+                }
+
             } else {
                 // 3.没有新版本--> 切换到下个界面
                 toGuideOrLogin();

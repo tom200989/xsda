@@ -11,4 +11,5 @@ public class Cons {
     public final static String SP_GUIDE = "SP_GUIDE";// 向导已读标记
     public final static String SP_SERVER_DATE = "SP_SERVER_DATE";// 注册时的服务器时间标记
     public final static String SP_RESET_SERVER_DATE = "SP_RESET_SERVER_DATE";// 重置密码时的服务器时间标记
+    public final static String SP_LAST_CANCEL_UPDATE_DATE = "SP_LAST_CANCEL_UPDATE_DATE";// 用户上次点击取消更新的时间
 }

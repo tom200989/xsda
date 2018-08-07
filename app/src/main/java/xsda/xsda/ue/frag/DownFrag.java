@@ -18,6 +18,7 @@ import butterknife.Bind;
 import xsda.xsda.R;
 import xsda.xsda.bean.UpdateBean;
 import xsda.xsda.helper.DownloadHelper;
+import xsda.xsda.helper.GetUpdateHelper;
 import xsda.xsda.helper.InstallApkHelper;
 import xsda.xsda.helper.SDHelper;
 import xsda.xsda.utils.Cons;
@@ -108,9 +109,9 @@ public class DownFrag extends RootFrag {
     public boolean onBackPresss() {
         Lgg.t(Cons.TAG).ii("state: " + STATE);
         if (STATE == STATE_ERROR) {
-            toGuideOrLogin();
+            checkVersion();
         } else if (STATE == STATE_INSTALL) {
-            toGuideOrLogin();
+            checkVersion();
         } else if (STATE == STATE_LOADING) {
             Tgg.show(activity, "正在下载\n请勿退出", 3000);
         } else {
@@ -126,7 +127,7 @@ public class DownFrag extends RootFrag {
         SDHelper sdHelper = new SDHelper();
         // 4.2.空间不足--> 继续切换到下个界面
         sdHelper.setOnSdErrorListener(() -> {
-            toGuideOrLogin();
+            checkVersion();
             Tgg.show(activity, R.string.sdcard_no_mounted, 2000);
         });
 
@@ -146,16 +147,35 @@ public class DownFrag extends RootFrag {
     /**
      * 向导页|登录页
      */
+    private void checkVersion() {
+        GetUpdateHelper getUpdateHelper = new GetUpdateHelper();
+        getUpdateHelper.setOnExceptionListener(e -> toGuideOrLogin());
+        getUpdateHelper.setOnGetUpdateListener(updateBean -> {
+            int localVersion = Ogg.getLocalVersion(getActivity());
+            int newVersion = Integer.valueOf(updateBean.getNewVersionCode());
+            if (localVersion > newVersion) {
+                toGuideOrLogin();
+            } else if (newVersion - localVersion <= 2) {
+                toGuideOrLogin();
+            } else {
+                finish();
+                kill();
+            }
+        });
+        getUpdateHelper.getNewVersion();
+
+    }
+
     private void toGuideOrLogin() {
         // 向导页|登录页
         if (Sgg.getInstance(activity).getBoolean(Cons.SP_GUIDE, false)) {
             // 进入登录页
             toFrag(getClass(), LoginFrag.class, null, false);
-            Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":toGuideOrLogin()--> to login");
+            Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":checkVersion()--> to login");
         } else {
             // 进入向导页
             toFrag(getClass(), GuideFrag.class, null, false);
-            Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":toGuideOrLogin()--> to guide");
+            Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":checkVersion()--> to guide");
         }
     }
 
