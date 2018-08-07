@@ -31,6 +31,7 @@
     <string name="logining">登陆中…</string>
     <string name="login_failed">登陆失败\n请稍候再试试噢~</string>
     <string name="login_user_not_exist">用户不存在\n请先注册吧</string>
+    <string name="login_success">登陆成功</string>
     <string name="register_input_hint_password">请输入您的密码(8~16位)</string>
     <string name="register_input_hint_verifycode">请输入验证码</string>
     <string name="register_text">注册</string>

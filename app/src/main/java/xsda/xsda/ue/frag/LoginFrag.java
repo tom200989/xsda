@@ -1,10 +1,7 @@
 package xsda.xsda.ue.frag;
 
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,7 +13,11 @@ import com.zhy.android.percent.support.PercentRelativeLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
+import xsda.xsda.bean.UserClientBean;
 import xsda.xsda.helper.LoginHelper;
+import xsda.xsda.ue.activity.SplashActivity;
+import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.WaitingWidget;
@@ -122,7 +123,6 @@ public class LoginFrag extends RootFrag {
      * 普通登陆
      */
     public void normalLogin() {
-        // TODO: 2018/7/6 0006  常规登陆逻辑
         String phoneNum = etUserName.getText().toString();
         String password = etPassword.getText().toString();
         // 匹配规则
@@ -132,7 +132,18 @@ public class LoginFrag extends RootFrag {
             loginHelper.setOnLoginPrepareListener(() -> widgetLoginWaitting.setVisibleText(getString(R.string.logining)));
             loginHelper.setOnLoginAfterListener(() -> widgetLoginWaitting.setGone());
             loginHelper.setOnLoginErrorListener(ex -> Tgg.show(getActivity(), R.string.login_failed, 2500));
-            loginHelper.setOnLoginUserNotExistListener(() -> );
+            loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
+            loginHelper.setOnLoginSuccessListener((avUser, avClient) -> {
+                // 登陆成功--> 前往主页
+                ((SplashActivity) getActivity()).avUser = avUser;
+                ((SplashActivity) getActivity()).avimClient = avClient;
+                Tgg.show(getActivity(), R.string.login_success, 2500);
+                UserClientBean userClientBean = new UserClientBean();
+                userClientBean.setAvUser(avUser);
+                userClientBean.setAvimClient(avClient);
+                toFrag(getClass(), MainFrag.class, userClientBean, false);
+                Lgg.t(Cons.TAG).vv("login success to main fragment");
+            });
             loginHelper.login(phoneNum, password);
         }
     }
@@ -169,13 +180,5 @@ public class LoginFrag extends RootFrag {
     private void register() {
         // 前往登陆界面
         toFrag(getClass(), RegisterFrag.class, null, true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
     }
 }

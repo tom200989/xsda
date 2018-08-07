@@ -3,6 +3,7 @@ package xsda.xsda.ue.app;
 import android.support.multidex.MultiDexApplication;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.jiagu.sdk.roothiberProtected;
 
 import org.xutils.x;
 
@@ -43,7 +44,7 @@ public class XsdaApplication extends MultiDexApplication {
         x.Ext.init(this);
         x.Ext.setDebug(true); // 是否输出debug日志, 开启debug会影响性能.
         // 初始化框架SDK
-        com.jiagu.sdk.roothiberProtected.install(this);
+        roothiberProtected.install(this);
     }
 
 }

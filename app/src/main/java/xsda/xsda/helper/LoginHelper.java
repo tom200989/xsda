@@ -4,6 +4,7 @@ package xsda.xsda.helper;
  */
 
 import android.app.Activity;
+import android.os.Handler;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
@@ -23,17 +24,19 @@ public class LoginHelper {
 
     public void login(String phoneNum, String password) {
         loginPrepareNext();
-        UserExistHelper userExistHelper = new UserExistHelper(activity);
-        userExistHelper.setOnExceptionListener(e -> {
-            loginErrorNext(e);
-            loginAfterNext();
-        });
-        userExistHelper.setOnUserNotExistListener(() -> {
-            loginUserNotExistNext();
-            loginAfterNext();
-        });
-        userExistHelper.setOnUserHadExistListener(() -> toLogin(phoneNum, password));
-        userExistHelper.isExist(phoneNum);
+        new Handler().postDelayed(() -> {
+            UserExistHelper userExistHelper = new UserExistHelper(activity);
+            userExistHelper.setOnExceptionListener(e -> activity.runOnUiThread(() -> {
+                loginErrorNext(e);
+                loginAfterNext();
+            }));
+            userExistHelper.setOnUserNotExistListener(() -> activity.runOnUiThread(() -> {
+                loginUserNotExistNext();
+                loginAfterNext();
+            }));
+            userExistHelper.setOnUserHadExistListener(() -> toLogin(phoneNum, password));
+            userExistHelper.isExist(phoneNum);
+        }, 1000);
     }
 
     /**
@@ -47,13 +50,15 @@ public class LoginHelper {
         AVUser.loginByMobilePhoneNumberInBackground(phoneNum, password, new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
-                if (e == null) {
-                    // 2.连接聊天室
-                    connectClient(avUser);
-                } else {
-                    loginErrorNext(e);
-                    loginAfterNext();
-                }
+                activity.runOnUiThread(() -> {
+                    if (e == null) {
+                        // 2.连接聊天室
+                        connectClient(avUser);
+                    } else {
+                        loginErrorNext(e);
+                        loginAfterNext();
+                    }
+                });
             }
         });
     }
@@ -70,13 +75,15 @@ public class LoginHelper {
         client.open(option, new AVIMClientCallback() {
             @Override
             public void done(AVIMClient client, AVIMException e) {
-                if (e == null) {
-                    loginSuccessNext(avUser, client);
-                } else {
-                    AVUser.logOut();
-                    loginErrorNext(e);
-                }
-                loginAfterNext();
+                activity.runOnUiThread(() -> {
+                    if (e == null) {
+                        loginSuccessNext(avUser, client);
+                    } else {
+                        AVUser.logOut();
+                        loginErrorNext(e);
+                    }
+                    loginAfterNext();
+                });
             }
         });
     }
@@ -114,9 +121,11 @@ public class LoginHelper {
 
     // 封装方法loginPrepareNext
     private void loginPrepareNext() {
-        if (onLoginPrepareListener != null) {
-            onLoginPrepareListener.loginPrepare();
-        }
+        activity.runOnUiThread(() -> {
+            if (onLoginPrepareListener != null) {
+                onLoginPrepareListener.loginPrepare();
+            }
+        });
     }
 
     private OnLoginAfterListener onLoginAfterListener;
@@ -133,9 +142,11 @@ public class LoginHelper {
 
     // 封装方法loginAfterNext
     private void loginAfterNext() {
-        if (onLoginAfterListener != null) {
-            onLoginAfterListener.loginAfter();
-        }
+        activity.runOnUiThread(() -> {
+            if (onLoginAfterListener != null) {
+                onLoginAfterListener.loginAfter();
+            }
+        });
     }
 
     private OnLoginErrorListener onLoginErrorListener;

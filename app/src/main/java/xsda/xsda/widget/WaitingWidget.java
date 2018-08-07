@@ -116,7 +116,8 @@ public class WaitingWidget extends RelativeLayout {
                     if (count > 5) {
                         count = 0;
                     }
-                    tvWaitingDes.setText(texts.get(count));
+                    ((Activity) context).runOnUiThread(() -> tvWaitingDes.setText(texts.get(count)));
+
                     count++;
                 }
             };
@@ -129,7 +130,9 @@ public class WaitingWidget extends RelativeLayout {
      */
     public void setVisibleByNoAnim() {
         setVisibility(VISIBLE);
-        tvWaitingDes.setText(XsdaApplication.getApp().getString(R.string.waitting_text));
+        tvWaitingDes.setVisibility(VISIBLE);
+        ((Activity) context).runOnUiThread(() -> tvWaitingDes.setText(XsdaApplication.getApp().getString(R.string.waitting_text)));
+
     }
 
     /**
@@ -139,7 +142,9 @@ public class WaitingWidget extends RelativeLayout {
      */
     public void setVisibleText(String text) {
         setVisibility(VISIBLE);
-        tvWaitingDes.setText(text);
+        tvWaitingDes.setVisibility(VISIBLE);
+        ((Activity) context).runOnUiThread(() -> tvWaitingDes.setText(text));
+
     }
 
     /**
