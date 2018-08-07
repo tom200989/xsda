@@ -6,6 +6,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hiber.hiber.RootFrag;
 import com.john.waveview.WaveView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
@@ -134,10 +135,14 @@ public class LoginFrag extends RootFrag {
             loginHelper.setOnLoginErrorListener(ex -> Tgg.show(getActivity(), R.string.login_failed, 2500));
             loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
             loginHelper.setOnLoginSuccessListener((avUser, avClient) -> {
-                // 登陆成功--> 前往主页
+                // 保存用户对象以及即时通讯对象
                 ((SplashActivity) getActivity()).avUser = avUser;
                 ((SplashActivity) getActivity()).avimClient = avClient;
+                // 提示
                 Tgg.show(getActivity(), R.string.login_success, 2500);
+                // 保存用户信息到临时集合
+                JSONObject.toJSONString()
+                // 封装数据并跳转
                 UserClientBean userClientBean = new UserClientBean();
                 userClientBean.setAvUser(avUser);
                 userClientBean.setAvimClient(avClient);

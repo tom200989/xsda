@@ -92,7 +92,7 @@ dependencies {
     compile files('libs/rsa.jar')
     // 进度条
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
-    // json转换
+    // fastjson转换
     compile 'com.alibaba:fastjson:1.2.47'
     compile 'com.alibaba:fastjson:1.1.68.android'
     // 等待条
