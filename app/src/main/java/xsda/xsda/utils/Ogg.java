@@ -1,10 +1,12 @@
 package xsda.xsda.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.view.inputmethod.InputMethodManager;
 
 import com.liyi.liyiutils.main.LiyiEncryty;
 
@@ -212,6 +214,26 @@ public class Ogg {
     public static boolean matchPhoneReg(String phoneNum) {
         String reg = "^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\\d{8}$";
         return Pattern.compile(reg).matcher(phoneNum).matches();
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    public static void hideKeyBoard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+        }
+    }
+
+    /**
+     * 显示软键盘
+     */
+    public static void showKeyBoard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInputFromInputMethod(activity.getWindow().getDecorView().getWindowToken(), 0);
+        }
     }
 
 }

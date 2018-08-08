@@ -213,6 +213,7 @@ public class RegisterFrag extends RootFrag {
 
     @Override
     public boolean onBackPresss() {
+        Ogg.hideKeyBoard(getActivity());
         toFrag(getClass(), LoginFrag.class, null, false);
         return true;
     }

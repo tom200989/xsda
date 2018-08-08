@@ -332,6 +332,7 @@ public class ForgotPsdFrag extends RootFrag {
             timer.stop();
             timer = null;
         }
+        Ogg.hideKeyBoard(getActivity());
         toFrag(getClass(), LoginFrag.class, null, false);
         return true;
     }

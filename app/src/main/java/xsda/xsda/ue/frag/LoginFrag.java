@@ -182,6 +182,7 @@ public class LoginFrag extends RootFrag {
                 UserClientBean userClientBean = new UserClientBean();
                 userClientBean.setAvUser(avUser);
                 userClientBean.setAvimClient(avClient);
+                Ogg.hideKeyBoard(getActivity());
                 toFrag(getClass(), MainFrag.class, userClientBean, false);
                 Lgg.t(Cons.TAG).vv("login success to main fragment");
             });
@@ -212,6 +213,7 @@ public class LoginFrag extends RootFrag {
      */
     public void forgotPassword() {
         // 忘记密码
+        Ogg.hideKeyBoard(getActivity());
         toFrag(getClass(), ForgotPsdFrag.class, null, true);
     }
 
@@ -220,6 +222,7 @@ public class LoginFrag extends RootFrag {
      */
     private void register() {
         // 前往登陆界面
+        Ogg.hideKeyBoard(getActivity());
         toFrag(getClass(), RegisterFrag.class, null, true);
     }
 
