@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hiber.hiber.RootFrag;
+import com.hiber.tools.RootEncrypt;
 import com.john.waveview.WaveView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
@@ -170,9 +171,11 @@ public class LoginFrag extends RootFrag {
                     loginBean.setPassword(password);
                     loginBean.setRemember(ivLoginRememberCheckbox.getDrawable() == checked);
                     String loginJson = JSONObject.toJSONString(loginBean);
+                    loginJson = RootEncrypt.des_encrypt(loginJson);// 加密
                     Sgg.getInstance(getActivity()).putString(Cons.SP_LOGIN_INFO, loginJson);
                 } else {
                     String loginJson = JSONObject.toJSONString(new LoginBean());
+                    loginJson = RootEncrypt.des_encrypt(loginJson);// 加密
                     Sgg.getInstance(getActivity()).putString(Cons.SP_LOGIN_INFO, loginJson);
                 }
                 // 封装数据并跳转
@@ -227,6 +230,7 @@ public class LoginFrag extends RootFrag {
      */
     private LoginBean getLoginBeanFromShare() {
         String loginJson = Sgg.getInstance(getActivity()).getString(Cons.SP_LOGIN_INFO, "");
+        loginJson = RootEncrypt.des_descrypt(loginJson);// 解密
         LoginBean loginBean;
         if (TextUtils.isEmpty(loginJson)) {
             loginBean = new LoginBean();
