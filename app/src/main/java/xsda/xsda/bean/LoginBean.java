@@ -6,6 +6,7 @@ package xsda.xsda.bean;
 public class LoginBean {
     private String phoneNum;
     private String password;
+    private boolean isRemember;
 
     public String getPhoneNum() {
         return phoneNum;
@@ -23,11 +24,20 @@ public class LoginBean {
         this.password = password;
     }
 
+    public boolean isRemember() {
+        return isRemember;
+    }
+
+    public void setRemember(boolean remember) {
+        isRemember = remember;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("LoginBean{");
         sb.append("\n").append("\t").append("phoneNum ='").append(phoneNum).append('\'');
         sb.append("\n").append("\t").append("password ='").append(password).append('\'');
+        sb.append("\n").append("\t").append("isRemember =").append(isRemember);
         sb.append("\n}");
         return sb.toString();
     }

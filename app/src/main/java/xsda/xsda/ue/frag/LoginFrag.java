@@ -1,6 +1,7 @@
 package xsda.xsda.ue.frag;
 
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,12 +15,14 @@ import com.zhy.android.percent.support.PercentRelativeLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
+import xsda.xsda.bean.LoginBean;
 import xsda.xsda.bean.UserClientBean;
 import xsda.xsda.helper.LoginHelper;
 import xsda.xsda.ue.activity.SplashActivity;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
+import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.WaitingWidget;
 
@@ -59,10 +62,18 @@ public class LoginFrag extends RootFrag {
     @Bind(R.id.widget_login_waitting)
     WaitingWidget widgetLoginWaitting;
 
+    @Bind(R.id.rl_login_remember)
+    PercentRelativeLayout rlLoginRemember;
+    @Bind(R.id.iv_login_remember_checkbox)
+    ImageView ivLoginRememberCheckbox;
+
+
     private int colorFocus;
     private int colorUnFocus;
     private Drawable visibleEye;
     private Drawable unVisibleEye;
+    private Drawable checked;
+    private Drawable uncheck;
 
     @Override
     public int onInflateLayout() {
@@ -75,8 +86,25 @@ public class LoginFrag extends RootFrag {
         onClickEvent();
     }
 
+    private void initRes() {
+        colorFocus = getResources().getColor(R.color.colorCompanyDark);
+        colorUnFocus = getResources().getColor(R.color.colorCompany);
+        visibleEye = getResources().getDrawable(R.drawable.visible_eye);
+        unVisibleEye = getResources().getDrawable(R.drawable.unvisible_eye);
+        checked = getResources().getDrawable(R.drawable.privacy_checkbox_checked);
+        uncheck = getResources().getDrawable(R.drawable.privacy_checkbox_uncheck);
+    }
 
     public void onClickEvent() {
+        // 从shareprefrence获取登陆信息
+        LoginBean loginBean = getLoginBeanFromShare();
+        // 是否显示密码
+        if (loginBean.isRemember()) {
+            etUserName.setText(loginBean.getPhoneNum());
+            etPassword.setText(loginBean.getPassword());
+        }
+        // 记住密码图标
+        ivLoginRememberCheckbox.setImageDrawable(loginBean.isRemember() ? checked : uncheck);
         // 设置焦点控制底线颜色
         etUserName.setOnFocusChangeListener((v, hasFocus) -> vUserNameLine.setBackgroundColor(hasFocus ? colorFocus : colorUnFocus));
         etPassword.setOnFocusChangeListener((v, hasFocus) -> vPasswordLine.setBackgroundColor(hasFocus ? colorFocus : colorUnFocus));
@@ -96,18 +124,13 @@ public class LoginFrag extends RootFrag {
         tvRegisterClick.setOnClickListener(v -> register());
         // 忘记密码
         tvForgot.setOnClickListener(v -> forgotPassword());
+        // 记住密码
+        rlLoginRemember.setOnClickListener(v -> ivLoginRememberCheckbox.setImageDrawable(ivLoginRememberCheckbox.getDrawable() == checked ? uncheck : checked));
     }
 
     @Override
     public boolean onBackPresss() {
         return false;
-    }
-
-    private void initRes() {
-        colorFocus = getResources().getColor(R.color.colorCompanyDark);
-        colorUnFocus = getResources().getColor(R.color.colorCompany);
-        visibleEye = getResources().getDrawable(R.drawable.visible_eye);
-        unVisibleEye = getResources().getDrawable(R.drawable.unvisible_eye);
     }
 
     @Override
@@ -141,7 +164,17 @@ public class LoginFrag extends RootFrag {
                 // 提示
                 Tgg.show(getActivity(), R.string.login_success, 2500);
                 // 保存用户信息到临时集合
-                JSONObject.toJSONString()
+                if (ivLoginRememberCheckbox.getDrawable() == checked) {
+                    LoginBean loginBean = new LoginBean();
+                    loginBean.setPhoneNum(phoneNum);
+                    loginBean.setPassword(password);
+                    loginBean.setRemember(ivLoginRememberCheckbox.getDrawable() == checked);
+                    String loginJson = JSONObject.toJSONString(loginBean);
+                    Sgg.getInstance(getActivity()).putString(Cons.SP_LOGIN_INFO, loginJson);
+                } else {
+                    String loginJson = JSONObject.toJSONString(new LoginBean());
+                    Sgg.getInstance(getActivity()).putString(Cons.SP_LOGIN_INFO, loginJson);
+                }
                 // 封装数据并跳转
                 UserClientBean userClientBean = new UserClientBean();
                 userClientBean.setAvUser(avUser);
@@ -185,5 +218,21 @@ public class LoginFrag extends RootFrag {
     private void register() {
         // 前往登陆界面
         toFrag(getClass(), RegisterFrag.class, null, true);
+    }
+
+    /**
+     * 从shareprefrence获取登陆信息
+     *
+     * @return loginbean
+     */
+    private LoginBean getLoginBeanFromShare() {
+        String loginJson = Sgg.getInstance(getActivity()).getString(Cons.SP_LOGIN_INFO, "");
+        LoginBean loginBean;
+        if (TextUtils.isEmpty(loginJson)) {
+            loginBean = new LoginBean();
+        } else {
+            loginBean = JSONObject.parseObject(loginJson, LoginBean.class);
+        }
+        return loginBean;
     }
 }

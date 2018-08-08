@@ -28,6 +28,7 @@
     <string name="login_input_hint_password">请输入您的密码</string>
     <string name="login_input_hint_confirmpassword">请确认您的密码(8~16位)</string>
     <string name="login_forgot">忘记密码</string>
+    <string name="login_remember">记住密码</string>
     <string name="logining">登陆中…</string>
     <string name="login_failed">登陆失败\n请稍候再试试噢~</string>
     <string name="login_user_not_exist">用户不存在\n请先注册吧</string>

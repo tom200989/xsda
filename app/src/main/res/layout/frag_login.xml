@@ -125,6 +125,38 @@
             app:layout_widthPercent="90%h" />
     </com.zhy.android.percent.support.PercentRelativeLayout>
 
+    <!-- remember password -->
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:id="@+id/rl_login_remember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_login_input_password"
+        app:layout_heightPercent="5%h"
+        app:layout_marginLeftPercent="15%w"
+        app:layout_marginTopPercent="3%h"
+        app:layout_widthPercent="40%w">
+
+        <ImageView
+            android:id="@+id/iv_login_remember_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/privacy_checkbox_checked"
+            app:layout_heightPercent="80%h"
+            app:layout_widthPercent="80%h" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/iv_login_remember_checkbox"
+            android:gravity="center_vertical"
+            android:text="@string/login_remember"
+            android:textColor="@color/colorCompanyDark"
+            app:layout_textSizePercent="50%h" />
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
     <!-- forgot password -->
     <TextView
         android:id="@+id/tv_login_forgot"
@@ -138,7 +170,7 @@
         app:layout_heightPercent="5%h"
         app:layout_marginLeftPercent="15%w"
         app:layout_marginRightPercent="15%w"
-        app:layout_marginTopPercent="2%h"
+        app:layout_marginTopPercent="3%h"
         app:layout_textSizePercent="2.5%h"
         app:layout_widthPercent="20%w" />
 
@@ -154,7 +186,7 @@
         android:text="@string/login_bottom_text"
         android:textColor="@android:color/white"
         app:layout_heightPercent="6.5%h"
-        app:layout_marginTopPercent="3%h"
+        app:layout_marginTopPercent="4%h"
         app:layout_textSizePercent="2.5%h"
         app:layout_widthPercent="70%w" />
 
