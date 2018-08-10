@@ -184,7 +184,7 @@ public class LoginFrag extends RootFrag {
                 userClientBean.setAvimClient(avClient);
                 Ogg.hideKeyBoard(getActivity());
                 toFrag(getClass(), MainFrag.class, userClientBean, false);
-                Lgg.t(Cons.TAG).vv("login success to main fragment");
+                Lgg.t(Cons.TAG).ii("login success to main fragment");
             });
             loginHelper.login(phoneNum, password);
         }

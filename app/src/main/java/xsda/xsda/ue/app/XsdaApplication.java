@@ -46,5 +46,4 @@ public class XsdaApplication extends MultiDexApplication {
         // 初始化框架SDK
         roothiberProtected.install(this);
     }
-
 }

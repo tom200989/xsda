@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- bg -->
+        <ImageView
+            android:id="@+id/iv_offline_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.3"
+            android:background="@color/colorCompany" />
+
+        <!-- tip panel -->
+        <com.zhy.android.percent.support.PercentRelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_conner_8"
+            app:layout_heightPercent="30%h"
+            app:layout_widthPercent="80%w">
+
+            <!-- title -->
+            <TextView
+                android:id="@+id/tv_offline_widget_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/offline_title"
+                android:textColor="@color/colorCompanyDark"
+                app:layout_marginTopPercent="5%h"
+                app:layout_textSizePercent="10%h" />
+
+            <!-- des -->
+            <TextView
+                android:id="@+id/tv_offline_widget_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_offline_widget_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:text="@string/offline_des"
+                android:textColor="@color/colorCompanyDark"
+                app:layout_marginTopPercent="5%h"
+                app:layout_textSizePercent="8%h" />
+
+            <!-- button -->
+            <TextView
+                android:id="@+id/tv_offline_widget_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_conner_8_guide"
+                android:gravity="center"
+                android:text="@string/offline_ok"
+                android:textColor="@color/colorCompanyDark"
+                app:layout_heightPercent="20%h"
+                app:layout_marginBottomPercent="10%h"
+                app:layout_textSizePercent="8%h"
+                app:layout_widthPercent="30%w" />
+
+        </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+</com.zhy.android.percent.support.PercentRelativeLayout>

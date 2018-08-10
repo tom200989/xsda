@@ -14,6 +14,9 @@ import com.avos.avoscloud.im.v2.AVIMClientOpenOption;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 
+import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Lgg;
+
 public class LoginHelper {
 
     private Activity activity;
@@ -54,9 +57,11 @@ public class LoginHelper {
                     if (e == null) {
                         // 2.连接聊天室
                         connectClient(avUser);
+                        Lgg.t(Cons.TAG).ii("Method--> " + "LoginHelper: loginByMobilePhoneNumberInBackground" + "() success");
                     } else {
                         loginErrorNext(e);
                         loginAfterNext();
+                        Lgg.t(Cons.TAG).ii("Method--> " + "LoginHelper: loginByMobilePhoneNumberInBackground" + "() failed");
                     }
                 });
             }
@@ -69,18 +74,22 @@ public class LoginHelper {
      * @param avUser 用户对象
      */
     private void connectClient(AVUser avUser) {
+        Lgg.t(Cons.TAG).vv("Method--> " + getClass().getSimpleName() + ":connectClient()");
         AVIMClientOpenOption option = new AVIMClientOpenOption();
         option.setForceSingleLogin(true);// 设置强制登陆
-        AVIMClient client = AVIMClient.getInstance(avUser);
+        /* 注意: 一定要使用--> AVIMClient.getInstance(AVUser, Tag), 其他方法没用 */
+        AVIMClient client = AVIMClient.getInstance(avUser, avUser.getMobilePhoneNumber());
         client.open(option, new AVIMClientCallback() {
             @Override
             public void done(AVIMClient client, AVIMException e) {
                 activity.runOnUiThread(() -> {
                     if (e == null) {
                         loginSuccessNext(avUser, client);
+                        Lgg.t(Cons.TAG).ii("Method--> " + "LoginHelper: client connect success--> clientId: " + "" + client.getClientId());
                     } else {
                         AVUser.logOut();
                         loginErrorNext(e);
+                        Lgg.t(Cons.TAG).ii("Method--> " + "LoginHelper: client connect failed");
                     }
                     loginAfterNext();
                 });

@@ -10,4 +10,11 @@
         android:layout_height="wrap_content"
         android:text="这里是主页" />
 
+    <!-- 离线通知面板 -->
+    <xsda.xsda.widget.OfflineWidget
+        android:visibility="gone"
+        android:id="@+id/widget_offline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </com.zhy.android.percent.support.PercentRelativeLayout>

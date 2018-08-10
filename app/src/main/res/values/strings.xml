@@ -57,6 +57,7 @@
     <string name="forgot_commit">确认重置</string>
     <string name="forgot_user_not_exist">用户不存在\n请先注册</string>
     <string name="forgot_user_reset_psd_success">密码重置成功</string>
-
-    
+    <string name="offline_title">注意啦!!!</string>
+    <string name="offline_des">&#160;&#160;&#160;&#160;&#160;你的设备在别处登陆,如确认非本人操作,请立即切换到登陆界面重新登陆或者点击忘记密码选项以重新设定密码,谢谢!</string>
+    <string name="offline_ok">立即登陆</string>
 </resources>

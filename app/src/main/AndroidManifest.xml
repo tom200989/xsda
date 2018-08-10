@@ -51,8 +51,6 @@
         <!-- ************************ LeanCloud SDK ************************ -->
 
         <!-- 启动界面 -->
-
-        <!-- 启动2界面 -->
         <activity
             android:name=".ue.activity.SplashActivity"
             android:screenOrientation="portrait">
