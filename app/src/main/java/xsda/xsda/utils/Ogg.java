@@ -10,6 +10,8 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.liyi.liyiutils.main.LiyiEncryty;
 
+import org.xutils.common.util.MD5;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import xsda.xsda.R;
@@ -236,4 +239,15 @@ public class Ogg {
         }
     }
 
+    /**
+     * 获取设备唯一ID(可应对大部分设备, 除非设备被恢复出厂设置)
+     *
+     * @param context 环境
+     * @return 设备唯一ID
+     */
+    public static String getDeviceId(Context context) {
+        String id = MD5.md5(UUID.randomUUID().toString().replace("-", ""));
+        Lgg.t(Cons.TAG).vv("id:" + id);
+        return id;
+    }
 }

@@ -7,6 +7,7 @@ package xsda.xsda.utils;
 public class Cons {
     public final static String TAG = "ma_xsda";// LOG标记
     public final static String INSTALL_FILEPATH = "xsdaApk";// APK包目录名
+    public final static String SP_DEVICE_ID = "SP_DEVICE_ID";// LOG标记
     public final static String SP_PRIVACY_READ = "SP_PRIVACY_READ";// 隐私已读标记
     public final static String SP_GUIDE = "SP_GUIDE";// 向导已读标记
     public final static String SP_SERVER_DATE = "SP_SERVER_DATE";// 注册时的服务器时间标记

@@ -13,7 +13,7 @@ import xsda.xsda.R;
  * Created by qianli.ma on 2018/7/23 0023.
  */
 
-public class NetErrFrag extends RootFrag {
+public class NetErrFrag extends BaseFrag {
 
     @Bind(R.id.rl_neterror_all)
     RelativeLayout rlNeterrorAll;// 总布局

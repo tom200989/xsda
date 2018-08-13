@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hiber.hiber.RootFrag;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import butterknife.Bind;
@@ -18,7 +17,7 @@ import xsda.xsda.utils.Sgg;
  * Created by qianli.ma on 2018/7/23 0023.
  */
 
-public class UpdateFrag extends RootFrag {
+public class UpdateFrag extends BaseFrag {
 
     @Bind(R.id.iv_update_bg)
     ImageView ivUpdateBg;

@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hiber.hiber.RootFrag;
 import com.hiber.tools.RootEncrypt;
 import com.john.waveview.WaveView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
@@ -17,8 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
 import xsda.xsda.bean.LoginBean;
-import xsda.xsda.bean.UserClientBean;
-import xsda.xsda.helper.LoginHelper;
+import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.ue.activity.SplashActivity;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
@@ -31,7 +29,7 @@ import xsda.xsda.widget.WaitingWidget;
  * Created by qianli.ma on 2018/7/23 0023.
  */
 
-public class LoginFrag extends RootFrag {
+public class LoginFrag extends BaseFrag {
 
     @Bind(R.id.rl_login_input_username)
     PercentRelativeLayout rlUsername;
@@ -153,15 +151,14 @@ public class LoginFrag extends RootFrag {
         // 匹配规则
         boolean isMatcher = matchRule(phoneNum, password);
         if (isMatcher) {
-            LoginHelper loginHelper = new LoginHelper(getActivity());
+            LoginOrOutHelper loginHelper = new LoginOrOutHelper(getActivity());
             loginHelper.setOnLoginPrepareListener(() -> widgetLoginWaitting.setVisibleText(getString(R.string.logining)));
             loginHelper.setOnLoginAfterListener(() -> widgetLoginWaitting.setGone());
             loginHelper.setOnLoginErrorListener(ex -> Tgg.show(getActivity(), R.string.login_failed, 2500));
             loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
-            loginHelper.setOnLoginSuccessListener((avUser, avClient) -> {
+            loginHelper.setOnLoginSuccessListener(avUser -> {
                 // 保存用户对象以及即时通讯对象
                 ((SplashActivity) getActivity()).avUser = avUser;
-                ((SplashActivity) getActivity()).avimClient = avClient;
                 // 提示
                 Tgg.show(getActivity(), R.string.login_success, 2500);
                 // 保存用户信息到临时集合
@@ -179,11 +176,8 @@ public class LoginFrag extends RootFrag {
                     Sgg.getInstance(getActivity()).putString(Cons.SP_LOGIN_INFO, loginJson);
                 }
                 // 封装数据并跳转
-                UserClientBean userClientBean = new UserClientBean();
-                userClientBean.setAvUser(avUser);
-                userClientBean.setAvimClient(avClient);
                 Ogg.hideKeyBoard(getActivity());
-                toFrag(getClass(), MainFrag.class, userClientBean, false);
+                toFrag(getClass(), MainFrag.class, null, false);
                 Lgg.t(Cons.TAG).ii("login success to main fragment");
             });
             loginHelper.login(phoneNum, password);

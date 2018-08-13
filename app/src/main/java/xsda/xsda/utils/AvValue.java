@@ -5,7 +5,11 @@ package xsda.xsda.utils;
  */
 
 public class AvValue {
+
+    /**
+     * 更新
+     */
     public static class update{
-        public static String objectId = "5b2ccc11a22b9d003a7eaf85";
+        public static String objectId = "5b2ccc11a22b9d003a7eaf85";// 更新时的数据ID
     }
 }

@@ -7,8 +7,11 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.hiber.bean.RootProperty;
 import com.hiber.hiber.RootMAActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import xsda.xsda.R;
-import xsda.xsda.helper.AVClientHelper;
+import xsda.xsda.helper.TimerHelper;
 import xsda.xsda.ue.frag.DownFrag;
 import xsda.xsda.ue.frag.ForgotPsdFrag;
 import xsda.xsda.ue.frag.GuideFrag;
@@ -19,12 +22,12 @@ import xsda.xsda.ue.frag.RegisterFrag;
 import xsda.xsda.ue.frag.SplashFrag;
 import xsda.xsda.ue.frag.UpdateFrag;
 import xsda.xsda.utils.Cons;
-import xsda.xsda.utils.Lgg;
 
 public class SplashActivity extends RootMAActivity {
 
     public AVUser avUser;// 用户对象
     public AVIMClient avimClient;// 即时通讯对象
+    public List<TimerHelper> timerHelpers = new ArrayList<>();
 
     public Class[] frags = new Class[]{// 所有的fragment
             SplashFrag.class,// 启动
@@ -45,6 +48,8 @@ public class SplashActivity extends RootMAActivity {
             // .... 需要什么权限, 需要先声明 ....
             // 注意: 非危险权限不需要申请, 一定不能加进来, 否则影响业务逻辑
     };
+    
+    private TimerHelper timerHelper;
 
     @Override
     public RootProperty initProperty() {
@@ -53,7 +58,7 @@ public class SplashActivity extends RootMAActivity {
 
     @Override
     public void onNexts() {
-        
+
     }
 
     @Override
@@ -81,24 +86,6 @@ public class SplashActivity extends RootMAActivity {
 
     @Override
     protected void onDestroy() {
-        closeClient();
         super.onDestroy();
-    }
-
-    /**
-     * 关闭即时通讯
-     */
-    private void closeClient() {
-        AVClientHelper avClientHelper = new AVClientHelper(this);
-        avClientHelper.setOnCloseFailedListener((avimClient1, e) -> {
-            String errInfo = "--> error code: " + e.getCode() + ":" + e.getMessage();
-            Lgg.t(Cons.TAG).ee("Method--> " + getClass().getSimpleName() + ":onDestroy()" + errInfo);
-        });
-        avClientHelper.setOnCloseSuccessListener(client -> {
-            String tip = "--> clientId: " + client.getClientId() + " close success";
-            Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":onDestroy()" + tip);
-            kill();
-        });
-        avClientHelper.close(avimClient);
     }
 }

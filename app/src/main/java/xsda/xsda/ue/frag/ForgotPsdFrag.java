@@ -27,7 +27,7 @@ import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.WaitingWidget;
 
-public class ForgotPsdFrag extends RootFrag {
+public class ForgotPsdFrag extends BaseFrag {
 
     // 全体
     @Bind(R.id.rl_forgot_all)

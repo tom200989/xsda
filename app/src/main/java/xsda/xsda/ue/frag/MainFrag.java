@@ -1,17 +1,11 @@
 package xsda.xsda.ue.frag;
 
 import android.view.View;
-
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.hiber.hiber.RootFrag;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import xsda.xsda.R;
-import xsda.xsda.bean.UserClientBean;
-import xsda.xsda.helper.AVClientHelper;
-import xsda.xsda.utils.Cons;
-import xsda.xsda.utils.Lgg;
+import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.OfflineWidget;
 
@@ -19,10 +13,12 @@ import xsda.xsda.widget.OfflineWidget;
  * Created by qianli.ma on 2018/8/7 0007.
  */
 
-public class MainFrag extends RootFrag {
+public class MainFrag extends BaseFrag {
 
     @Bind(R.id.widget_offline)
     OfflineWidget widgetOffline;
+    @Bind(R.id.tv_test_main)
+    TextView tvTestMain;
 
     @Override
     public int onInflateLayout() {
@@ -31,26 +27,16 @@ public class MainFrag extends RootFrag {
 
     @Override
     public void onNexts(Object o, View view, String s) {
-        Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":onNexts()");
-        UserClientBean uBean = (UserClientBean) o;
-        AVUser avUser = uBean.getAvUser();
-        AVIMClient avimClient = uBean.getAvimClient();
-        Lgg.t(Cons.TAG).ii("username: " + avUser.getUsername());
-        Lgg.t(Cons.TAG).ii("phoneNum: " + avUser.getMobilePhoneNumber());
-        Lgg.t(Cons.TAG).ii("clientId: " + avimClient.getClientId());
-        AVClientHelper avClientHelper = new AVClientHelper(getActivity());
-        avClientHelper.setOnSetSinglePointLoginConnectionOfflineListener((client, code) -> {
-            // TODO: 2018/8/9 0009  离线的处理
-            widgetOffline.setVisibility(View.VISIBLE);
-            widgetOffline.setOnClickOfflineOkListener(() -> toFrag(getClass(), LoginFrag.class, null, false));
+        // TODO: 2018/8/13 0013 启动检测单点登陆机制
+        tvTestMain.setOnClickListener(v -> {
+            LoginOrOutHelper loginOrOutHelper = new LoginOrOutHelper(getActivity());
+            loginOrOutHelper.setOnLogOutSuccessListener(() -> {
+                toFrag(getClass(), LoginFrag.class, null, false);
+                Tgg.show(getActivity(), "登出成功", 2500);
+            });
+            loginOrOutHelper.setOnLogOutFailedListener(e -> Tgg.show(getActivity(), "登出失败", 2500));
+            loginOrOutHelper.logout();
         });
-        avClientHelper.setOnSetSinglePointLoginConnectionPausedListener(client -> {
-            Tgg.show(getActivity(), "即时通许断连", 2500);
-        });
-        avClientHelper.setOnSetSinglePointConnectionResumeListener(client -> {
-            Tgg.show(getActivity(), "即时通许重连", 2500);
-        });
-        avClientHelper.setSinglePointLoginManager();
     }
 
     @Override

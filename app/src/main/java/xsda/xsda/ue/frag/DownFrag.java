@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.github.ybq.android.spinkit.SpinKitView;
-import com.hiber.hiber.RootFrag;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import java.io.File;
@@ -34,7 +33,7 @@ import static android.view.View.VISIBLE;
  * Created by qianli.ma on 2018/7/23 0023.
  */
 
-public class DownFrag extends RootFrag {
+public class DownFrag extends BaseFrag {
 
     @Bind(R.id.rl_download_all)
     PercentRelativeLayout rlDownloadAll;// 总布局

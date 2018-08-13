@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hiber.hiber.RootFrag;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import butterknife.Bind;
@@ -27,7 +26,7 @@ import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.WaitingWidget;
 
-public class RegisterFrag extends RootFrag {
+public class RegisterFrag extends BaseFrag {
 
     @Bind(R.id.rl_register_all)
     PercentRelativeLayout rlRegisterAll;

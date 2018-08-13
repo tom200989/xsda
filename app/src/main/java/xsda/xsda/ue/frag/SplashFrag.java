@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
-import com.hiber.hiber.RootFrag;
 
 import butterknife.Bind;
 import xsda.xsda.R;
@@ -24,7 +23,7 @@ import xsda.xsda.utils.Sgg;
  * Created by qianli.ma on 2018/7/23 0023.
  */
 
-public class SplashFrag extends RootFrag {
+public class SplashFrag extends BaseFrag {
 
 
     @Bind(R.id.iv_splash_logo)
