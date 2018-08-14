@@ -3,6 +3,8 @@ package xsda.xsda.ue.frag;
 import android.view.View;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVObject;
+
 import butterknife.Bind;
 import xsda.xsda.R;
 import xsda.xsda.helper.LoginOrOutHelper;
@@ -22,14 +24,24 @@ public class MainFrag extends BaseFrag {
 
     @Override
     public int onInflateLayout() {
-        isNeedTimer = true;// 需要启动定时器
         return R.layout.frag_main;
     }
 
     @Override
+    public boolean isNeedTimer() {
+        return true;
+    }
+
+    @Override
     public void onNexts(Object o, View view, String s) {
-        super.onNexts(o, view, s);
+        super.onNexts(o, view, s);// super父类以启动定时器
         clickEvent();
+    }
+
+    @Override
+    public void otherDevicesLogin(AVObject avo) {
+        widgetOffline.setVisibility(View.VISIBLE);
+        widgetOffline.setOnClickOfflineOkListener(() -> toFrag(getClass(), LoginFrag.class, null, false));
     }
 
     private void clickEvent() {

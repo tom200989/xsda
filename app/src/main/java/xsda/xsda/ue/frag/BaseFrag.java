@@ -3,6 +3,7 @@ package xsda.xsda.ue.frag;
  * Created by qianli.ma on 2018/8/13 0013.
  */
 
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.avos.avoscloud.AVException;
@@ -18,13 +19,14 @@ import xsda.xsda.helper.TimerHelper;
 import xsda.xsda.ue.activity.SplashActivity;
 import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Egg;
+import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 
 public class BaseFrag extends RootFrag {
 
     private TimerHelper timerHelper;// 定时器
-    public boolean isNeedTimer;// 定时器启动标记(默认不需要)
     private int count = 0;// 计数器
     private int MAX_COUNT = 5;//  出错请求的最大次数
 
@@ -40,14 +42,14 @@ public class BaseFrag extends RootFrag {
 
     @Override
     public void onNexts(Object o, View view, String s) {
-        if (isNeedTimer) {
+        if (isNeedTimer()) {
             startTimer();
         }
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        if (!hidden & isNeedTimer) {// 显示
+        if (!hidden & isNeedTimer()) {// 显示
             startTimer();
         } else {// 隐藏
             stopTimer();
@@ -55,17 +57,29 @@ public class BaseFrag extends RootFrag {
     }
 
     /**
+     * 是否需要启动定时器
+     * <tr></tr>
+     * <b>该方法被子类重写,如不重写,则默认不启动定时器</b>
+     *
+     * @return true:需要
+     */
+    public boolean isNeedTimer() {
+        return false;
+    }
+
+    /**
      * 启动定时器
      */
     public void startTimer() {
-        if (timerHelper == null) {
-            timerHelper = new TimerHelper(getActivity()) {
-                @Override
-                public void doSomething() {
-                    checkLogin();
-                }
-            };
-        }
+        Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":startTimer()");
+        stopTimer();
+        Lgg.t(Cons.TAG).ii("Method-->" + getClass().getSimpleName() + " renew the timer");
+        timerHelper = new TimerHelper(getActivity()) {
+            @Override
+            public void doSomething() {
+                checkLogin();
+            }
+        };
         timerHelper.start(2000);
     }
 
@@ -73,6 +87,7 @@ public class BaseFrag extends RootFrag {
      * 检查登陆
      */
     private void checkLogin() {
+        Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":checkLogin()");
         // 1.获取手机号码
         String phoneNum = ((SplashActivity) getActivity()).avUser.getMobilePhoneNumber();
         // 2.建立查询对象
@@ -82,17 +97,17 @@ public class BaseFrag extends RootFrag {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
+                    count = 0;
                     if (list == null || list.size() <= 0) {
-                        checkLoginError();
+                        checkLoginError(null);
                     } else {
                         checkDeviceId(list.get(0));
                     }
                 } else {// 出错--> 重复请求5次
                     if (count > MAX_COUNT) {
-                        checkLoginError();
+                        checkLoginError(e);
                         count = 0;
                     } else {
-                        checkLogin();
                         count++;
                     }
                 }
@@ -109,18 +124,34 @@ public class BaseFrag extends RootFrag {
         // 获取服务器ID以及本地ID
         String deviceIdFromServer = avo.getString(Avfield.LoginStatus.deviceId);
         String deviceIdFromLocal = Sgg.getInstance(getActivity()).getString(Cons.SP_DEVICE_ID, "");
-        if (!deviceIdFromServer.equalsIgnoreCase(deviceIdFromLocal)) {
-            // 如果ID不相等--> 意味这其他设备登陆
-            otherDevicesLogin();
+        if (!deviceIdFromServer.equalsIgnoreCase(deviceIdFromLocal) ) {
+            /* 如果ID不相等 & 设备处于登陆状态--> 意味这其他设备登陆 */
+            otherDevicesLogin(avo);
         }
     }
 
     /**
      * 其他设备登陆
      */
-    public void otherDevicesLogin() {
+    public void otherDevicesLogin(AVObject avo) {
         Tgg.show(getActivity(), R.string.base_other_login, 2500);
         toFrag(getClass(), LoginFrag.class, null, false);
+        Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":otherDevicesLogin()");
+    }
+
+    /**
+     * 检查登陆接口出错(该方法由子类选择性实现)
+     */
+    private void checkLoginError(@Nullable AVException e) {
+        if (e != null && e.getCode() == 0) {
+            Tgg.show(getActivity(), R.string.base_network_login, 2500);
+            toFrag(getClass(), NetErrFrag.class, null, false);
+            Egg.print(getClass().getSimpleName(), ":checkLoginError()", e, null);
+        } else {
+            Tgg.show(getActivity(), R.string.base_login_error, 2500);
+            toFrag(getClass(), LoginFrag.class, null, false);
+            Egg.print(getClass().getSimpleName(), ":checkLoginError()", e, null);
+        }
     }
 
     /**
@@ -130,14 +161,7 @@ public class BaseFrag extends RootFrag {
         if (timerHelper != null) {
             timerHelper.stop();
             timerHelper = null;
+            Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":stopTimer()");
         }
-    }
-
-    /**
-     * 检查登陆接口出错(该方法由子类选择性实现)
-     */
-    private void checkLoginError() {
-        Tgg.show(getActivity(), R.string.base_network_error, 2500);
-        toFrag(getClass(), LoginFrag.class, null, false);
     }
 }
