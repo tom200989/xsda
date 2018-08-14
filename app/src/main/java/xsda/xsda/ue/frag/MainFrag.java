@@ -22,12 +22,17 @@ public class MainFrag extends BaseFrag {
 
     @Override
     public int onInflateLayout() {
+        isNeedTimer = true;// 需要启动定时器
         return R.layout.frag_main;
     }
 
     @Override
     public void onNexts(Object o, View view, String s) {
-        // TODO: 2018/8/13 0013 启动检测单点登陆机制
+        super.onNexts(o, view, s);
+        clickEvent();
+    }
+
+    private void clickEvent() {
         tvTestMain.setOnClickListener(v -> {
             LoginOrOutHelper loginOrOutHelper = new LoginOrOutHelper(getActivity());
             loginOrOutHelper.setOnLogOutSuccessListener(() -> {

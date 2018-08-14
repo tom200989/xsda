@@ -3,12 +3,8 @@ package xsda.xsda.ue.activity;
 import android.Manifest;
 
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.im.v2.AVIMClient;
 import com.hiber.bean.RootProperty;
 import com.hiber.hiber.RootMAActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import xsda.xsda.R;
 import xsda.xsda.helper.TimerHelper;
@@ -26,8 +22,6 @@ import xsda.xsda.utils.Cons;
 public class SplashActivity extends RootMAActivity {
 
     public AVUser avUser;// 用户对象
-    public AVIMClient avimClient;// 即时通讯对象
-    public List<TimerHelper> timerHelpers = new ArrayList<>();
 
     public Class[] frags = new Class[]{// 所有的fragment
             SplashFrag.class,// 启动
