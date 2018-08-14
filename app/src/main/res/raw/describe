@@ -1,5 +1,5 @@
 构建说明:
-1.本项目全部采用自定义view构建, 尽可能的少用fragment以及activity等带有生命周期的组件
+1.本项目全部采用封装好的roothiber.aar架构
 2.网络请求统一采用leanClound+xutils
 3.加密方式采用Des128 + RSA等组合加密
 4.为适配所有的安卓手机屏幕, 均采用百分比布局percentLayout
@@ -18,6 +18,7 @@ if(leancode > currentcode)--> 网络版本 > 当前运行版本
     else --> 显示下载
 else --> 继续运行 
 
+3.架构采用新封装的roothiber.aar架构
 
 TODO:待添加
 1.判断是否为模拟器
