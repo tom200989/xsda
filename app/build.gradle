@@ -7,7 +7,7 @@ android {
         config {
             keyAlias 'xsda'
             keyPassword 'horse13922813924'
-            storeFile file('G:\\xsda\\code\\xsda\\app\\src\\main\\res\\raw\\xsda.jks')
+            storeFile file('raw/xsda.jks')
             storePassword 'horse13922813924'
         }
     }
