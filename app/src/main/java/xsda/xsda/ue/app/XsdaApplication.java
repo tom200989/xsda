@@ -5,6 +5,9 @@ import android.text.TextUtils;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.jiagu.sdk.roothiberProtected;
+import com.tencent.tinker.loader.app.ApplicationLike;
+import com.tinkerpatch.sdk.TinkerPatch;
+import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
 
 import org.xutils.x;
 
@@ -21,6 +24,7 @@ public class XsdaApplication extends MultiDexApplication {
 
     public static XsdaApplication app;
     public static String deviceId;// 设备ID
+    private ApplicationLike tinkerApplicationLike;
 
     public static XsdaApplication getApp() {
         if (app == null) {
@@ -36,6 +40,8 @@ public class XsdaApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        // 初始化tinker
+        initTinker();
         // 初始化获取设备ID
         deviceId = Sgg.getInstance(this).getString(Cons.SP_DEVICE_ID, "");
         if (TextUtils.isEmpty(deviceId)) {
@@ -55,5 +61,22 @@ public class XsdaApplication extends MultiDexApplication {
         x.Ext.setDebug(true); // 是否输出debug日志, 开启debug会影响性能.
         // 初始化框架SDK
         roothiberProtected.install(this);
+    }
+
+    /**
+     * 初始化tinker
+     */
+    private void initTinker() {
+        Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":initTinker()");
+        // 1.我们可以从这里获得Tinker加载过程的信息
+        tinkerApplicationLike = TinkerPatchApplicationLike.getTinkerPatchApplicationLike();
+        // 2.初始化TinkerPatch SDK
+        TinkerPatch.init(tinkerApplicationLike)// 2.1.开始初始化
+                .reflectPatchLibrary()// 2.2.反射库
+                .setPatchRollbackOnScreenOff(true)// 2.3.设置回滚
+                .setPatchRestartOnSrceenOff(true)// 2.4.设置重启
+                .setFetchPatchIntervalByHours(3);// 2.5.设置轮询时间
+        // 3.每隔3个小时(通过setFetchPatchIntervalByHours设置)去访问后台时候有更新,通过handler实现轮训的效果
+        TinkerPatch.with().fetchPatchUpdateAndPollWithInterval();
     }
 }
