@@ -4,6 +4,7 @@ buildscript {
     
     repositories {
         // google()
+        mavenLocal()
         jcenter()
         maven {
             url 'https://maven.google.com/'
@@ -19,6 +20,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'me.tatarka:gradle-retrolambda:3.7.0' // 使用lamda表达式
         classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.1'
+        classpath ("com.tinkerpatch.sdk:tinkerpatch-gradle-plugin:${TINKERPATCH_VERSION}") { changing = true }
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -27,6 +29,7 @@ buildscript {
 allprojects {
     repositories {
         // google()
+        mavenLocal()
         jcenter()
         maven {
             url 'https://maven.google.com/'

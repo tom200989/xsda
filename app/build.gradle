@@ -7,7 +7,7 @@ android {
         config {
             keyAlias 'xsda'
             keyPassword 'horse13922813924'
-            storeFile file('raw/xsda.jks')
+            storeFile file('G:\\xsda\\code\\xsda\\xsda\\app\\src\\main\\res\\raw\\xsda.jks')
             storePassword 'horse13922813924'
         }
     }
@@ -18,7 +18,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         multiDexEnabled true // 方法数超过65535分包
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -27,6 +27,7 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+    
     lintOptions {
         abortOnError false
     }
@@ -60,52 +61,84 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
     // 百分比布局
     compile 'com.zhy:percent-support-extends:1.1.1'
+
     // 方法数超过65535分包(注: 1.0.1版本最稳定)
     compile 'com.android.support:multidex:1.0.1'
+
     // 该版本最稳定
     compile 'com.jakewharton:butterknife:7.0.1'
+
     // 设置系统状态栏颜色
     compile 'com.githang:status-bar-compat:0.3'
+
     // 布局不能预览则一定要添加以下三行依赖
+
     //noinspection GradleDependency,GradleCompatible
     compile 'com.android.support:design:25.4.0'
+
     //noinspection GradleDependency,GradleCompatible
     compile 'com.android.support:support-v4:25.4.0'
+
     //noinspection GradleDependency,GradleCompatible
     compile 'com.android.support:appcompat-v7:25.4.0'
+
     // LeanCloud 基础包
     compile 'cn.leancloud.android:avoscloud-sdk:v4.6.4'
+
     // 推送与实时聊天需要的包
     compile('cn.leancloud.android:avoscloud-push:v4.6.4@aar') { transitive = true }
+
     // LeanCloud 统计包
     compile 'cn.leancloud.android:avoscloud-statistics:v4.6.4'
+
     // LeanCloud 用户反馈包
     compile 'cn.leancloud.android:avoscloud-feedback:v4.6.4@aar'
+
     // avoscloud-sns：LeanCloud 第三方登录包
     compile 'cn.leancloud.android:avoscloud-sns:v4.6.4@aar'
     compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+
     // LeanCloud 应用内搜索包
     compile 'cn.leancloud.android:avoscloud-search:v4.6.4@aar'
+
     // RSA加密
     compile files('libs/rsa.jar')
+
     // 进度条
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
+
     // fastjson转换
     compile 'com.alibaba:fastjson:1.2.47'
     compile 'com.alibaba:fastjson:1.1.68.android'
+
     // 等待条
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.1.2'
+
     // 波浪条
     compile 'com.github.john990:WaveView:v0.9'
+
     // eventbus
     compile 'org.greenrobot:eventbus:3.1.1'
+
     // fragment监听返回键
     compile 'com.github.ikidou:FragmentBackHandler:2.1'
+
     // xutils 网络框架
     compile 'org.xutils:xutils:3.5.0'
+
     // 布局架构
-    compile(name: 'roothiber', ext:'aar')
+    compile(name: 'roothiber', ext: 'aar')
+
+    // tinker
+    compile("com.tinkerpatch.sdk:tinkerpatch-android-sdk:${TINKERPATCH_VERSION}") { changing = true }
+}
+
+apply from: 'tinkerpatch.gradle'
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }

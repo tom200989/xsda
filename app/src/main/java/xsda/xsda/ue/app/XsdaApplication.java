@@ -1,21 +1,25 @@
 package xsda.xsda.ue.app;
 
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.jiagu.sdk.roothiberProtected;
+import com.tinkerpatch.sdk.TinkerPatch;
+import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
+import com.tinkerpatch.sdk.server.callback.ConfigRequestCallback;
 
 import org.xutils.x;
 
+import java.util.HashMap;
+
+import xsda.xsda.BuildConfig;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
-
-/**
- * Created by qianli.ma on 2018/6/20 0020.
- */
 
 public class XsdaApplication extends MultiDexApplication {
 
@@ -34,8 +38,16 @@ public class XsdaApplication extends MultiDexApplication {
     }
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
+        // tinker init
+        initTinkerPatch();
         // 初始化获取设备ID
         deviceId = Sgg.getInstance(this).getString(Cons.SP_DEVICE_ID, "");
         if (TextUtils.isEmpty(deviceId)) {
@@ -56,4 +68,57 @@ public class XsdaApplication extends MultiDexApplication {
         // 初始化框架SDK
         roothiberProtected.install(this);
     }
+
+    /**
+     * 我们需要确保至少对主进程跟patch进程初始化 TinkerPatch
+     */
+    private void initTinkerPatch() {
+        // 我们可以从这里获得Tinker加载过程的信息
+        if (BuildConfig.TINKER_ENABLE) {
+            // 初始化TinkerPatch SDK
+            TinkerPatch
+                    // 初始化开始
+                    .init(TinkerPatchApplicationLike.getTinkerPatchApplicationLike())
+                    // 是否反射library路径        
+                    .reflectPatchLibrary()
+                    // 设置每次都会访问后台
+                    .fetchPatchUpdate(true)
+                    // 访问后台「补丁包」时间间隔1小时
+                    .setFetchPatchIntervalByHours(1)
+                    // 设置访问后台配置的回到监听(参数为true这每次调用都会访问后天)
+                    .fetchDynamicConfig(new ConfigRequestCallback() {
+                        @Override
+                        public void onSuccess(HashMap<String, String> hashMap) {
+                            if (hashMap.keySet().size() > 0) {
+                                for (String key : hashMap.keySet()) {
+                                    Lgg.t(Cons.TAG).ii("tinker--> " + key + " == " + hashMap.get(key));
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFail(Exception e) {
+                            Lgg.t(Cons.TAG).ee("Application tinker error: " + e.getMessage());
+                        }
+                    }, true)
+                    // 设置后台访问「配置」的时间间隔
+                    .setFetchDynamicConfigIntervalByHours(1)
+                    // 补丁合成成功, 锁屏重启
+                    .setPatchRestartOnSrceenOff(true)
+                    // 监听补丁合成回调
+                    .setPatchResultCallback(patchResult -> Lgg.t(Cons.TAG).ii("tinker patch result:\n" + patchResult.toString()))
+                    // 锁屏清除补丁,回滚
+                    .setPatchRollbackOnScreenOff(true)
+                    // 设置清除补丁监听
+                    .setPatchRollBackCallback(() -> Lgg.t(Cons.TAG).ii("tinker had roll back"));
+
+            // 获取当前的补丁版本
+            Lgg.t(Cons.TAG).ii("Current patch version is " + TinkerPatch.with().getPatchVersion());
+
+            // fetchPatchUpdateAndPollWithInterval 与 fetchPatchUpdate(false)
+            // 不同的是，会通过handler的方式去轮询
+            TinkerPatch.with().fetchPatchUpdateAndPollWithInterval();
+        }
+    }
 }
+

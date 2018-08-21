@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://G:\xsda\code\xsda\code.iml" filepath="G:\xsda\code\xsda\code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../code.iml" filepath="$PROJECT_DIR$/../code.iml" />
       <module fileurl="file://$PROJECT_DIR$/xsda.iml" filepath="$PROJECT_DIR$/xsda.iml" />
-      <module fileurl="file://C:\androidstudio3.1\project\xsda\code\xsda.iml" filepath="C:\androidstudio3.1\project\xsda\code\xsda.iml" />
+      <module fileurl="file://C:/androidstudio3.1/project/xsda/code/xsda.iml" filepath="C:/androidstudio3.1/project/xsda/code/xsda.iml" />
     </modules>
   </component>
 </project>

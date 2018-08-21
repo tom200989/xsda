@@ -11,6 +11,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="这里是主页" />
+    
+    <!-- tinker测试 -->
+    <Button
+        android:text="测试tinker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <!-- 离线通知面板 -->
     <xsda.xsda.widget.OfflineWidget
