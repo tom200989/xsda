@@ -107,7 +107,7 @@ public class XsdaApplication extends MultiDexApplication {
                     // 设置后台访问「配置」的时间间隔
                     .setFetchDynamicConfigIntervalByHours(1)
                     // 补丁合成成功, 锁屏重启
-                    .setPatchRestartOnSrceenOff(true)
+                    .setPatchRestartOnSrceenOff(false)
                     // 监听补丁合成回调
                     .setPatchResultCallback(patchResult -> Lgg.t(Cons.TAG).ii("tinker patch result:\n" + patchResult.toString()))
                     // 锁屏清除补丁,回滚
