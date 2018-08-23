@@ -7,9 +7,11 @@ import android.text.TextUtils;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.jiagu.sdk.roothiberProtected;
+import com.jiagu.sdk.xsdakeyProtected;
 import com.tinkerpatch.sdk.TinkerPatch;
 import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
 import com.tinkerpatch.sdk.server.callback.ConfigRequestCallback;
+import com.xsdakey.keyUtil.leanCloudKey;
 
 import org.xutils.x;
 
@@ -46,6 +48,9 @@ public class XsdaApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        // 初始化加固的SDK
+        xsdakeyProtected.install(this);// leancloud key
+        roothiberProtected.install(this);// 框架
         // tinker init
         initTinkerPatch();
         // 初始化获取设备ID
@@ -55,9 +60,9 @@ public class XsdaApplication extends MultiDexApplication {
             Sgg.getInstance(this).putString(Cons.SP_DEVICE_ID, deviceId);
         }
         Lgg.t(Cons.TAG).vv("application deviceId: " + deviceId);
-        // 初始化LeanClound
-        String appid = Ogg.readLeanCloudAppid(this);
-        String appkey = Ogg.readLeanCloudAppkey(this);
+        // 初始化LeanClound key
+        String appid = leanCloudKey.getAPPID();
+        String appkey = leanCloudKey.getAPPKEY();
         Lgg.t(Cons.TAG).ii("appid: " + appid + "; appkey: " + appkey);
         AVOSCloud.initialize(this, appid, appkey);
         // 开启LeanClound调试
@@ -65,8 +70,6 @@ public class XsdaApplication extends MultiDexApplication {
         // 初始化xutils框架
         x.Ext.init(this);
         x.Ext.setDebug(true); // 是否输出debug日志, 开启debug会影响性能.
-        // 初始化框架SDK
-        roothiberProtected.install(this);
     }
 
     /**

@@ -13,6 +13,8 @@
 #}
 -keep @com.qihoo.SdkProtected.roothiber.Keep class **(*;)
 -keep,allowobfuscation @interface com.qihoo.SdkProtected.roothiber.Keep
+-keep @com.qihoo.SdkProtected.xsdakey.Keep class **(*;)
+-keep,allowobfuscation @interface com.qihoo.SdkProtected.xsdakey.Keep
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

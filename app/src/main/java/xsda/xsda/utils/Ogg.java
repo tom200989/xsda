@@ -8,8 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.view.inputmethod.InputMethodManager;
 
-import com.liyi.liyiutils.main.LiyiEncryty;
-
 import org.xutils.common.util.MD5;
 
 import java.io.BufferedOutputStream;
@@ -21,8 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-import xsda.xsda.R;
 
 /**
  * Created by qianli.ma on 2018/6/22 0022.
@@ -48,36 +44,6 @@ public class Ogg {
             e.printStackTrace();
         }
         return sb.toString();
-    }
-
-    /**
-     * 获取LeanClound: APPID
-     *
-     * @param context 环境
-     * @return LeanClound: APPID
-     */
-    public static String readLeanCloudAppid(Context context) {
-        // 获取appid
-        InputStream in_appid = context.getResources().openRawResource(R.raw.param0);
-        InputStream in_private = context.getResources().openRawResource(R.raw.param1);
-        String en_appid = Ogg.streamToString(in_appid);
-        String privateKey = Ogg.streamToString(in_private);
-        return LiyiEncryty.decodeByPrivate(en_appid, privateKey);
-    }
-
-    /**
-     * 获取LeanClound: APPKEY
-     *
-     * @param context 环境
-     * @return LeanClound: APPKEY
-     */
-    public static String readLeanCloudAppkey(Context context) {
-        // 获取appid
-        InputStream in_appkey = context.getResources().openRawResource(R.raw.param5);
-        InputStream in_private = context.getResources().openRawResource(R.raw.param3);
-        String en_appkey = Ogg.streamToString(in_appkey);
-        String privateKey = Ogg.streamToString(in_private);
-        return LiyiEncryty.decodeByPrivate(en_appkey, privateKey);
     }
 
     /**
