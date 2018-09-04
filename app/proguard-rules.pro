@@ -15,6 +15,17 @@
 -keep,allowobfuscation @interface com.qihoo.SdkProtected.roothiber.Keep
 -keep @com.qihoo.SdkProtected.xsdakey.Keep class **(*;)
 -keep,allowobfuscation @interface com.qihoo.SdkProtected.xsdakey.Keep
+
+-keep class cn.sharesdk.**{*;}
+-keep class com.sina.**{*;}
+-keep class **.R$* {*;}
+-keep class **.R{*;}
+-keep class com.mob.**{*;}
+-keep class m.framework.**{*;}
+-dontwarn cn.sharesdk.**
+-dontwarn com.sina.**
+-dontwarn com.mob.**
+-dontwarn **.R$*
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

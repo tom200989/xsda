@@ -23,7 +23,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        tools:replace="android:icon,android:label,android:theme"
+        tools:replace="android:icon,android:label,android:theme,android:name"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <!-- ************************ LeanCloud SDK ************************ -->

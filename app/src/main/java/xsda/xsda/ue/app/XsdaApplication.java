@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.avos.avoscloud.AVOSCloud;
 import com.jiagu.sdk.roothiberProtected;
 import com.jiagu.sdk.xsdakeyProtected;
+import com.mob.MobSDK;
 import com.tinkerpatch.sdk.TinkerPatch;
 import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
 import com.tinkerpatch.sdk.server.callback.ConfigRequestCallback;
@@ -48,6 +49,8 @@ public class XsdaApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        // 初始化mobSDK
+        MobSDK.init(this);
         // 初始化加固的SDK
         xsdakeyProtected.install(this);// leancloud key
         roothiberProtected.install(this);// 框架

@@ -1,6 +1,11 @@
-构建说明:
+****** aar包说明:
+roothiber.aar   --> 项目的Activity与Fragment架构包
+rsa.jar         --> aes\des\rsa加密包
+xsdakey         --> leanCloud的appid appkey
+
+****** 构建说明:
 1.本项目全部采用封装好的roothiber.aar架构
-2.网络请求统一采用leanClound+xutils
+2.网络请求统一采用leanClound + xutils
 3.加密方式采用Des128 + RSA等组合加密
 4.为适配所有的安卓手机屏幕, 均采用百分比布局percentLayout
 5.资源文件能在根activity加载的尽量加载
@@ -12,13 +17,14 @@
 apkcode: 当前安装包的版本
 leancode: 网络上的版本
 currentcode: 当前安装的版本
-
-if(leancode > currentcode)--> 网络版本 > 当前运行版本
-    if(apkcode == leancode) --> 说明下载过--> 显示安装
-    else --> 显示下载
-else --> 继续运行 
+----------------------------------------------------------
+-   if(leancode > currentcode)--> 网络版本 > 当前运行版本
+-       if(apkcode == leancode) --> 说明下载过--> 显示安装
+-       else --> 显示下载
+-   else --> 继续运行
+----------------------------------------------------------
 
 3.架构采用新封装的roothiber.aar架构
 
-TODO:待添加
+******* TODO:待添加
 1.判断是否为模拟器
