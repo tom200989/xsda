@@ -240,4 +240,11 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+    <!-- authorized loading -->
+    <xsda.xsda.widget.AuthorizedLoadWidget
+        android:id="@+id/widget_login_authorized"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
+
 </com.zhy.android.percent.support.PercentRelativeLayout>

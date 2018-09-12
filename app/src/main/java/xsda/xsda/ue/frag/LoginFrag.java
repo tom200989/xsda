@@ -12,9 +12,11 @@ import com.hiber.tools.RootEncrypt;
 import com.john.waveview.WaveView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 import xsda.xsda.R;
 import xsda.xsda.bean.LoginBean;
 import xsda.xsda.helper.LoginOrOutHelper;
@@ -24,6 +26,7 @@ import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
+import xsda.xsda.widget.AuthorizedLoadWidget;
 import xsda.xsda.widget.WaitingWidget;
 
 /**
@@ -67,6 +70,9 @@ public class LoginFrag extends BaseFrag {
     @Bind(R.id.iv_login_remember_checkbox)
     ImageView ivLoginRememberCheckbox;
 
+    @Bind(R.id.widget_login_authorized)
+    AuthorizedLoadWidget widgetLoginAuthorized;
+
 
     private int colorFocus;
     private int colorUnFocus;
@@ -74,6 +80,7 @@ public class LoginFrag extends BaseFrag {
     private Drawable unVisibleEye;
     private Drawable checked;
     private Drawable uncheck;
+    private List<String> needAuthorizedLoadList;
 
     @Override
     public int onInflateLayout() {
@@ -84,9 +91,14 @@ public class LoginFrag extends BaseFrag {
     public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         initRes();
         onClickEvent();
+        authorized(whichFragmentStart);
     }
 
     private void initRes() {
+        needAuthorizedLoadList = new ArrayList<>();
+        needAuthorizedLoadList.add(SplashFrag.class.getSimpleName());
+        needAuthorizedLoadList.add(GuideFrag.class.getSimpleName());
+        needAuthorizedLoadList.add(UpdateFrag.class.getSimpleName());
         colorFocus = getResources().getColor(R.color.colorCompanyDark);
         colorUnFocus = getResources().getColor(R.color.colorCompany);
         visibleEye = getResources().getDrawable(R.drawable.visible_eye);
@@ -117,7 +129,7 @@ public class LoginFrag extends BaseFrag {
             ivEye.setImageDrawable(ivEye.getDrawable() == visibleEye ? unVisibleEye : visibleEye);
         });
         // 微信登陆
-        ivWechat.setOnClickListener(v -> weChat());
+        ivWechat.setOnClickListener(v -> weChatLogin());
         // 普通登陆
         tvLoginClick.setOnClickListener(v -> normalLogin());
         // 注册
@@ -126,6 +138,17 @@ public class LoginFrag extends BaseFrag {
         tvForgot.setOnClickListener(v -> forgotPassword());
         // 记住密码
         rlLoginRemember.setOnClickListener(v -> ivLoginRememberCheckbox.setImageDrawable(ivLoginRememberCheckbox.getDrawable() == checked ? uncheck : checked));
+    }
+
+    /**
+     * 针对指定跳转过来的页面进行微信登陆
+     *
+     * @param whichFragmentStart 由哪个界面跳转过来
+     */
+    private void authorized(String whichFragmentStart) {
+        boolean isNeedAuthorizedLoadUi = isNeedShowAuthorizedUi(whichFragmentStart);
+        widgetLoginAuthorized.setVisibility(isNeedAuthorizedLoadUi ? View.VISIBLE : View.GONE);
+        // TODO: 2018/9/12 0012  开始认证
     }
 
     @Override
@@ -139,31 +162,8 @@ public class LoginFrag extends BaseFrag {
         ButterKnife.unbind(this);
     }
 
-    public void weChat() {
+    public void weChatLogin() {
         // TODO: 2018/7/6 0006  微信登陆逻辑
-        showShare();
-    }
-
-    private void showShare() {
-
-        OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-
-        // title标题，微信、QQ和QQ空间等平台使用
-        oks.setTitle("标题");
-        // titleUrl QQ和QQ空间跳转链接
-        oks.setTitleUrl("http://sharesdk.cn");
-        // text是分享文本，所有平台都需要这个字段
-        oks.setText("我是分享文本");
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        oks.setImagePath("");//确保SDcard下面存在此张图片
-        // url在微信、微博，Facebook等平台中使用
-        oks.setUrl("http://sharesdk.cn");
-        // comment是我对这条分享的评论，仅在人人网使用
-        oks.setComment("我是测试评论文本");
-        // 启动分享GUI
-        oks.show(getActivity());
     }
 
     /**
@@ -259,5 +259,20 @@ public class LoginFrag extends BaseFrag {
             loginBean = JSONObject.parseObject(loginJson, LoginBean.class);
         }
         return loginBean;
+    }
+
+    /**
+     * 是否需要显示权限申请界面
+     *
+     * @param whichFragmentStart 由哪个界面跳转过来
+     * @return 是否需要显示权限申请界面
+     */
+    private boolean isNeedShowAuthorizedUi(String whichFragmentStart) {
+        for (String fragment : needAuthorizedLoadList) {
+            if (whichFragmentStart.contains(fragment)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -74,6 +74,7 @@ MobSDK {
                 appId "wxfb11cdec3869a117"
                 appSecret "6f3ae857215eb5d5161b00f076c2810e"
                 bypassApproval false
+                shareByAppClient true
                 enable true
             }
         }
