@@ -1,11 +1,16 @@
 package xsda.xsda.ue.frag;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVObject;
 
 import butterknife.Bind;
+import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.wechat.friends.Wechat;
 import xsda.xsda.R;
 import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.utils.Tgg;
@@ -21,6 +26,8 @@ public class MainFrag extends BaseFrag {
     OfflineWidget widgetOffline;
     @Bind(R.id.tv_test_main)
     TextView tvTestMain;
+    @Bind(R.id.bt_quit_wechat)
+    Button btQuitWechat;
 
     @Override
     public int onInflateLayout() {
@@ -62,5 +69,11 @@ public class MainFrag extends BaseFrag {
             return true;
         }
         return false;
+    }
+
+    @OnClick(R.id.bt_quit_wechat)
+    public void onViewClicked() {
+        Platform plat = ShareSDK.getPlatform(Wechat.NAME);
+        plat.removeAccount(true);
     }
 }

@@ -62,8 +62,8 @@ android {
 
 // MobSDK
 MobSDK {
-    appKey "19b7401e8082a"
-    appSecret "b3f896f2cff6562887590f9f88c4255e"
+    appKey "27e107a519142"
+    appSecret "a19950e0d6223a1d5779d63aedb3746b"
 
     ShareSDK {
         //平台配置信息
@@ -75,6 +75,15 @@ MobSDK {
                 appSecret "6f3ae857215eb5d5161b00f076c2810e"
                 bypassApproval false
                 shareByAppClient true
+                enable true
+            }
+
+            WechatMoments {
+                id 2
+                SortId 2
+                appId "wxfb11cdec3869a117"
+                appSecret "6f3ae857215eb5d5161b00f076c2810e"
+                bypassApproval = "false"
                 enable true
             }
         }

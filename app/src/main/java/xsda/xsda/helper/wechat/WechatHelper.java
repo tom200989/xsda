@@ -28,17 +28,13 @@ public class WechatHelper {
      * 初始化授权
      */
     public void initCheckAuthorized() {
-        Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":login()");
+        Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":initCheckAuthorized()");
         // 获取微信平台
         platform = ShareSDK.getPlatform(Wechat.NAME);
         // 判断是否已经安装微信
         if (platform.isClientValid()) {
             isAuthorize(platform);
             Lgg.t(TAG).ii("wechat had install");
-        } else {
-            /* 没有安装微信 */
-            wechatNotInstallNext();
-            Lgg.t(TAG).ii("wechat had not install");
         }
     }
 
@@ -47,9 +43,14 @@ public class WechatHelper {
      */
     public void clickAuthorized() {
         if (platform != null) {
-            // 申请获取用户的信息
-            platform.showUser(null);
-            Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":clickAuthorized()");
+            if (!platform.isClientValid()) {
+                wechatNotInstallNext();
+                Lgg.t(TAG).ww("wechat had not install");
+            } else {
+                // 申请获取用户的信息(只要微信用户数据,不要微信自带的登陆功能)
+                platform.showUser(null);
+                Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":clickAuthorized()");
+            }
         }
     }
 

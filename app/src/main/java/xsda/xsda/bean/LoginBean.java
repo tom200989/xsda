@@ -1,6 +1,6 @@
 package xsda.xsda.bean;
 /*
- * Created by qianli.ma on 2018/8/7 0007.
+ * Created by qianli.ma on 2018/8/7 0007.xsda.xsda.bean.LoginBean
  */
 
 public class LoginBean {

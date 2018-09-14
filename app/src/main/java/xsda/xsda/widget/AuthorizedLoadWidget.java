@@ -42,7 +42,7 @@ public class AuthorizedLoadWidget extends RelativeLayout {
      * @param view 目标view
      */
     private void setAnim(View view) {
-        RotateAnimation ra = new RotateAnimation(0, 360, 0.5f, 0.5f);
+        RotateAnimation ra = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
         ra.setInterpolator(new LinearInterpolator());
         ra.setDuration(2000);
         ra.setRepeatMode(Animation.INFINITE);
