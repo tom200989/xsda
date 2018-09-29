@@ -18,8 +18,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.wechat.friends.Wechat;
 import xsda.xsda.R;
 import xsda.xsda.bean.LoginBean;
 import xsda.xsda.helper.LoginOrOutHelper;
@@ -32,6 +30,7 @@ import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.AuthorizedLoadWidget;
 import xsda.xsda.widget.WaitingWidget;
+import xsda.xsda.wxapi.WXEntryActivity;
 
 /**
  * Created by qianli.ma on 2018/7/23 0023.
@@ -87,7 +86,7 @@ public class LoginFrag extends BaseFrag {
     private List<String> needAuthorizedLoadList;
     private WechatHelper wechatHelper;
     private String TAG = "LoginFrag";
-    private int initCount = 0;
+    private Platform platform;
 
     @Override
     public int onInflateLayout() {
@@ -98,7 +97,23 @@ public class LoginFrag extends BaseFrag {
     public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         initRes();
         onClickEvent();
-        authorized(whichFragmentStart);
+        // TODO: 2018/9/27 0027 初始化检测微信
+        // authorized(whichFragmentStart);// 停止使用
+        // userWechatOriToAuthorize();// 使用传统的微信登陆接入
+    }
+
+    /**
+     * 使用传统的微信登陆接入
+     */
+    private void userWechatOriToAuthorize() {
+        // TODO: 2018/9/28 0028 判断微信是否登陆
+        toActivity(activity, WXEntryActivity.class, false);
+    }
+
+    @Override
+    public boolean isReloadData() {
+        // 页面切换回来不重载数据
+        return false;
     }
 
     private void initRes() {
@@ -153,23 +168,36 @@ public class LoginFrag extends BaseFrag {
      * @param whichFragmentStart 由哪个界面跳转过来
      */
     private void authorized(String whichFragmentStart) {
-        boolean isNeedAuthorizedLoadUi = isNeedShowAuthorizedUi(whichFragmentStart);
-        // widgetLoginAuthorized.setVisibility(isNeedAuthorizedLoadUi ? View.VISIBLE : View.GONE);
-        // TODO: 2018/9/12 0012  开始认证
-        if (initCount == 0) {
-            wechatHelper = new WechatHelper(getActivity());
-            wechatHelper.setOnWeChatNotInstallListener(() -> Tgg.show(activity, R.string.login_wechat_install, 2500));
-            wechatHelper.setOnNoAuthorizedListener(wechatBean -> Tgg.show(activity, "有微信但还没有认证", 2500));
-            wechatHelper.setOnHadAuthorizedListener(wechatBean -> Tgg.show(activity, "有微信并且已经认证", 2500));
-            wechatHelper.setOnAuthorizedCompleteListener(wechatBean -> {
-                Tgg.show(activity, "认证完成", 2500);
-                Lgg.t(TAG).ii(wechatBean.toString());
-            });
-            wechatHelper.setOnAuthorizedCancelListener(wechatBean -> Tgg.show(activity, "认证取消", 2500));
-            wechatHelper.setOnAuthorizedErrorListener((wechatBean, throwable) -> Tgg.show(activity, "认证错误", 2500));
-            wechatHelper.initCheckAuthorized();
-            initCount++;
-        }
+        /* 开始认证 */
+        wechatHelper = new WechatHelper(getActivity());
+        wechatHelper.setOnHadInstallWechatListener(() -> {// 微信已安装
+            boolean isNeedAuthorizedLoadUi = isNeedShowAuthorizedUi(whichFragmentStart);
+            widgetLoginAuthorized.setVisibility(isNeedAuthorizedLoadUi ? View.VISIBLE : View.GONE);
+        });
+        wechatHelper.setOnWeChatNotInstallListener(() -> {// 没有安装微信
+            widgetLoginAuthorized.setVisibility(View.GONE);
+            Tgg.show(activity, R.string.login_wechat_install, 2500);
+        });
+        wechatHelper.setOnNoAuthorizedListener(wechatBean -> {// 微信已安装但没有认证
+            widgetLoginAuthorized.setVisibility(View.GONE);
+            Tgg.show(activity, R.string.login_wechat_had_install_but_not_authorized, 2500);
+        });
+        wechatHelper.setOnHadAuthorizedListener(wechatBean -> {// 微信已安装并已认证
+            widgetLoginAuthorized.setVisibility(View.GONE);
+            // TODO: 2018/9/17 0017 查询用户数据库--> 是否存在同名ID 
+            // TODO: 2018/9/17 0017 再查询用户数据库--> 该ID是否经过了手机验证 
+            // TODO: 根据注册情况跳转到主页或者手机绑定页
+        });
+        wechatHelper.setOnAuthorizedCompleteListener(wechatBean -> {// 点击微信登陆后--> 认证完成
+            // 跳转到手机号绑定界面
+            toFrag(getClass(), BindphoneFrag.class, null, true);
+            widgetLoginAuthorized.setVisibility(View.GONE);
+            Tgg.show(activity, "认证完成", 2500);
+            Lgg.t(TAG).ii(wechatBean.toString());
+        });
+        wechatHelper.setOnAuthorizedCancelListener(wechatBean -> Tgg.show(activity, R.string.login_wechat_cancel, 2500));
+        wechatHelper.setOnAuthorizedErrorListener((wechatBean, throwable) -> Tgg.show(activity, R.string.login_wechat_error, 2500));
+        platform = wechatHelper.initCheckAuthorized();
     }
 
     @Override
@@ -185,20 +213,15 @@ public class LoginFrag extends BaseFrag {
 
     public void weChatLogin() {
         // TODO: 2018/7/6 0006  微信登陆逻辑
-        wechatHelper.clickAuthorized();
+        // wechatHelper.clickAuthorized();// 停止使用
+        userWechatOriToAuthorize();
+        Tgg.show(activity, "等待最新SDK集成", 2500);
     }
 
     /**
      * 普通登陆
      */
     public void normalLogin() {
-
-        if (true) {
-            Platform plat = ShareSDK.getPlatform(Wechat.NAME);
-            plat.removeAccount(true);
-            Tgg.show(activity, "退出微信成功", 1000);
-            return;
-        }
 
         String phoneNum = etUserName.getText().toString();
         String password = etPassword.getText().toString();

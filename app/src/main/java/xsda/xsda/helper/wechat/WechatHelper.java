@@ -27,15 +27,17 @@ public class WechatHelper {
     /**
      * 初始化授权
      */
-    public void initCheckAuthorized() {
+    public Platform initCheckAuthorized() {
         Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":initCheckAuthorized()");
         // 获取微信平台
         platform = ShareSDK.getPlatform(Wechat.NAME);
         // 判断是否已经安装微信
         if (platform.isClientValid()) {
+            hadInstallWechatNext();
             isAuthorize(platform);
             Lgg.t(TAG).ii("wechat had install");
         }
+        return platform;
     }
 
     /**
@@ -48,6 +50,7 @@ public class WechatHelper {
                 Lgg.t(TAG).ww("wechat had not install");
             } else {
                 // 申请获取用户的信息(只要微信用户数据,不要微信自带的登陆功能)
+                hadInstallWechatNext();
                 platform.showUser(null);
                 Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":clickAuthorized()");
             }
@@ -57,7 +60,7 @@ public class WechatHelper {
     /**
      * 授权操作
      */
-    private void isAuthorize(final Platform plat) {
+    private void isAuthorize(final Platform plat) { 
         Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":isAuthorize()");
         // 1.封装微信信息
         WechatBean wechatBean = WechatBeanHandler.handle(null, platform);
@@ -110,6 +113,25 @@ public class WechatHelper {
     }
 
     /* -------------------------------------------- impl -------------------------------------------- */
+
+    private OnHadInstallWechatListener onHadInstallWechatListener;
+
+    // Inteerface--> 接口OnHadInstallWechatListener
+    public interface OnHadInstallWechatListener {
+        void hadInstallWechat();
+    }
+
+    // 对外方式setOnHadInstallWechatListener
+    public void setOnHadInstallWechatListener(OnHadInstallWechatListener onHadInstallWechatListener) {
+        this.onHadInstallWechatListener = onHadInstallWechatListener;
+    }
+
+    // 封装方法hadInstallWechatNext
+    private void hadInstallWechatNext() {
+        if (onHadInstallWechatListener != null) {
+            onHadInstallWechatListener.hadInstallWechat();
+        }
+    }
 
     private OnWeChatNotInstallListener onWeChatNotInstallListener;
 

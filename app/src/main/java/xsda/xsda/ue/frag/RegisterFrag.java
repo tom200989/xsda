@@ -108,6 +108,11 @@ public class RegisterFrag extends BaseFrag {
     }
 
     @Override
+    public boolean isReloadData() {
+        return true;
+    }
+
+    @Override
     public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         // 封装控件
         ets = new EditText[]{etRegisterInputUsername, etRegisterInputPassword, etRegisterInputConfirmPassword, etRegisterInputVerifyCode};
@@ -285,6 +290,7 @@ public class RegisterFrag extends BaseFrag {
             timer.stop();
         }
 
+
         // 后创建
         timer = new TimerHelper(activity) {
             @Override
@@ -320,7 +326,7 @@ public class RegisterFrag extends BaseFrag {
      * @param password 密码
      */
     private void getVerifyCode(String phoneNum, String password) {
-        
+
         /* 申请获取验证码 */
         VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
         verifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(activity, text_timeout, 2000));

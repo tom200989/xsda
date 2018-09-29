@@ -8,6 +8,7 @@ import com.hiber.hiber.RootMAActivity;
 
 import xsda.xsda.R;
 import xsda.xsda.helper.TimerHelper;
+import xsda.xsda.ue.frag.BindphoneFrag;
 import xsda.xsda.ue.frag.DownFrag;
 import xsda.xsda.ue.frag.ForgotPsdFrag;
 import xsda.xsda.ue.frag.GuideFrag;
@@ -32,7 +33,8 @@ public class SplashActivity extends RootMAActivity {
             RegisterFrag.class,// 注册
             ForgotPsdFrag.class,// 重置密码
             LoginFrag.class,// 登陆
-            MainFrag.class// 主页
+            MainFrag.class,// 主页
+            BindphoneFrag.class// 绑定手机                   
     };
 
     private static String[] permissions = {// 填写需要申请的权限
@@ -42,7 +44,7 @@ public class SplashActivity extends RootMAActivity {
             // .... 需要什么权限, 需要先声明 ....
             // 注意: 非危险权限不需要申请, 一定不能加进来, 否则影响业务逻辑
     };
-    
+
     private TimerHelper timerHelper;
 
     @Override
@@ -82,4 +84,5 @@ public class SplashActivity extends RootMAActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
 }

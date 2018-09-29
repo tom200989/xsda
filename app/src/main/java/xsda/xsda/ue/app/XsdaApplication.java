@@ -9,6 +9,7 @@ import com.avos.avoscloud.AVOSCloud;
 import com.jiagu.sdk.roothiberProtected;
 import com.jiagu.sdk.xsdakeyProtected;
 import com.mob.MobSDK;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tinkerpatch.sdk.TinkerPatch;
 import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
 import com.tinkerpatch.sdk.server.callback.ConfigRequestCallback;
@@ -28,6 +29,7 @@ public class XsdaApplication extends MultiDexApplication {
 
     public static XsdaApplication app;
     public static String deviceId;// 设备ID
+    public static IWXAPI api;
 
     public static XsdaApplication getApp() {
         if (app == null) {
