@@ -143,7 +143,7 @@ dependencies {
     // 布局架构
     compile(name: 'roothiber', ext: 'aar')
     // leanCloud key
-    compile(name: 'xsdakey', ext: 'aar')
+    compile(name: 'xsdakey1_2', ext: 'aar')
     // tinker
     compile("com.tinkerpatch.sdk:tinkerpatch-android-sdk:${TINKERPATCH_VERSION}") { changing = true }
     // wechat login

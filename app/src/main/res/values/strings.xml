@@ -42,7 +42,8 @@
     <string name="login_wechat_bindphone_commit">点击提交</string>
     <string name="login_wechat_bindphone_phone_not_empty">手机号码不能为空</string>
     <string name="login_wechat_bindphone_password">请设置一个备用密码(8~16位)</string>
-    <string name="login_wechat_authorized_error">授权错误\n请重试</string>
+    <string name="login_wechat_authorized_unsupport">不支持授权\n请重试</string>
+    <string name="login_wechat_authorized_err">授权错误\n请重试</string>
     <string name="login_wechat_authorized_network_error">网络错误\n请重试</string>
     <string name="login_wechat_authorized_cancel">授权取消</string>
     <string name="login_wechat_authorized_reject">授权被拒绝</string>

@@ -10,12 +10,13 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 
 import xsda.xsda.R;
+import xsda.xsda.utils.Lgg;
+import xsda.xsda.utils.Tgg;
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     private IWXAPI api;
     private String TAG = "XSDA_WXEntryActivity";
-    private int errCode = -1000;// 默认-1000为首次进入
     private WXHelper wxHelper;// 微信辅助
 
     @Override
@@ -41,7 +42,40 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onResp(BaseResp baseResp) {
-        // TODO: 2018/9/30 0030 植入监听 
+        // 植入监听
+        wxHelper.setOnErrAuthDeniedListener(() -> {
+            Lgg.t(TAG).ee(":onResp() 授权被拒绝");
+            Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_reject, 2500);
+            finish();
+        });
+        wxHelper.setOnErrAuthNoEffectListener(() -> {
+            Lgg.t(TAG).ee(":onResp() 授权无效");
+            Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_no_effect, 2500);
+            finish();
+        });
+        wxHelper.setOnErrUnsupportListener(() -> {
+            Lgg.t(TAG).ee(":onResp() 不支持授权");
+            Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_unsupport, 2500);
+            finish();
+        });
+        wxHelper.setOnErrUserCancelListener(() -> {
+            Lgg.t(TAG).ee(":onResp() 授权取消");
+            Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_cancel, 2500);
+            finish();
+        });
+        wxHelper.setOnErrUserErrorListener(ex -> {
+            if (ex != null) {
+                Lgg.t(TAG).ee(":onResp() 授权错误: " + ex.getMessage());
+            }
+            Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_err, 2500);
+            finish();
+        });
+        wxHelper.setOnGetWeChatInfoSuccessListener(userInfo -> {
+            Lgg.t(TAG).ii(":onResp() 授权成功\n" + userInfo);
+            // finish();
+            // TODO: 2018/10/8 0008  授权成功后的处理
+        });
+
         wxHelper.handlerResp(baseResp);
     }
 }

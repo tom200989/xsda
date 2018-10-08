@@ -8,14 +8,13 @@ import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.xsdakey.keyUtil.leanCloudKey;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
-import xsda.xsda.R;
 import xsda.xsda.utils.Lgg;
-import xsda.xsda.utils.Tgg;
 
 /*
  * Created by qianli.ma on 2018/9/30 0030.
@@ -39,12 +38,13 @@ public class WXHelper {
     public IWXAPI initWXAPI(IWXAPIEventHandler handler) {
         // 1.初始化微信API
         Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":initWXAPI()");
-        api = WXAPIFactory.createWXAPI(activity, "wxfb11cdec3869a117", true);
-        api.registerApp("wxfb11cdec3869a117");
+        String wxAppId = leanCloudKey.getWXAppid();
+        api = WXAPIFactory.createWXAPI(activity, wxAppId, true);
+        api.registerApp(wxAppId);
         api.handleIntent(activity.getIntent(), handler);
         // 2.立即请求
         final SendAuth.Req req = new SendAuth.Req();
-        req.transaction = "wxfb11cdec3869a117";
+        req.transaction = wxAppId;
         req.scope = "snsapi_userinfo";
         req.state = TAG;
         api.sendReq(req);
@@ -75,23 +75,15 @@ public class WXHelper {
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
                 errUserCancelNext();
-                Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_cancel, 2500);
-                finish();
                 break;
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
                 errAuthDeniedNext();
-                Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_reject, 2500);
-                finish();
                 break;
             case BaseResp.ErrCode.ERR_UNSUPPORT:
                 errUnSupportNext();
-                Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_error, 2500);
-                finish();
                 break;
             default:
                 errAuthNoEffectNext();
-                Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_no_effect, 2500);
-                finish();
                 break;
         }
     }
@@ -102,10 +94,12 @@ public class WXHelper {
      * @param code code
      */
     private void getAccessToken(String code) {
+        String wxAppId = leanCloudKey.getWXAppid();
+        String wxAppSecret = leanCloudKey.getWXAppSecret();
         // 格式: https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?" // 基本网址
-                             + "appid=wxfb11cdec3869a117" // appid
-                             + "&secret=fe5bd0899662b15f47c4cbbdfa8ff0b5" // appsecret
+                             + "appid=" + wxAppId // appid
+                             + "&secret=" + wxAppSecret // appsecret
                              + "&code=" + code // code
                              + "&grant_type=authorization_code";// grant_type
         RequestParams rp = new RequestParams(url);
@@ -114,7 +108,7 @@ public class WXHelper {
             public void onSuccess(String tokenInfo) {
                 Lgg.t(TAG).ii(tokenInfo);
                 if (tokenInfo.contains("errcode")) {
-                    Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_error, 2500);
+                    errUserErrorNext(null);
                 } else {
                     // 5.转换json
                     WechatToken wechatToken = JSONObject.parseObject(tokenInfo, WechatToken.class);
@@ -127,14 +121,12 @@ public class WXHelper {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_error, 2500);
-                finish();
+                errUserErrorNext(ex);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_cancel, 2500);
-                finish();
+                errUserCancelNext();
             }
 
             @Override
@@ -159,20 +151,17 @@ public class WXHelper {
         x.http().get(rp, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String userInfo) {
-                Lgg.t(TAG).ii(userInfo);
-                // TODO: 2018/9/29 0029  
+                getWeChatInfoSuccessNext(userInfo);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_error, 2500);
-                finish();
+                errUserErrorNext(ex);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                Tgg.show(WXEntryActivity.this, R.string.login_wechat_authorized_cancel, 2500);
-                finish();
+                errUserCancelNext();
             }
 
             @Override
@@ -183,6 +172,44 @@ public class WXHelper {
     }
 
     /* -------------------------------------------- impl -------------------------------------------- */
+
+    private OnGetWeChatInfoSuccessListener onGetWeChatInfoSuccessListener;
+
+    // Inteerface--> 接口OnGetWeChatInfoSuccessListener
+    public interface OnGetWeChatInfoSuccessListener {
+        void getWeChatInfoSuccess(String userInfo);
+    }
+
+    // 对外方式setOnGetWeChatInfoSuccessListener
+    public void setOnGetWeChatInfoSuccessListener(OnGetWeChatInfoSuccessListener onGetWeChatInfoSuccessListener) {
+        this.onGetWeChatInfoSuccessListener = onGetWeChatInfoSuccessListener;
+    }
+
+    // 封装方法getWeChatInfoSuccessNext
+    private void getWeChatInfoSuccessNext(String userInfo) {
+        if (onGetWeChatInfoSuccessListener != null) {
+            onGetWeChatInfoSuccessListener.getWeChatInfoSuccess(userInfo);
+        }
+    }
+
+    private OnErrUserErrorListener onErrUserErrorListener;
+
+    // Inteerface--> 接口OnErrUserErrorListener
+    public interface OnErrUserErrorListener {
+        void errUserError(Throwable ex);
+    }
+
+    // 对外方式setOnErrUserErrorListener
+    public void setOnErrUserErrorListener(OnErrUserErrorListener onErrUserErrorListener) {
+        this.onErrUserErrorListener = onErrUserErrorListener;
+    }
+
+    // 封装方法errUserErrorNext
+    private void errUserErrorNext(Throwable ex) {
+        if (onErrUserErrorListener != null) {
+            onErrUserErrorListener.errUserError(ex);
+        }
+    }
 
     private OnErrUserCancelListener onErrUserCancelListener;
 

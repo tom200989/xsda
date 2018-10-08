@@ -96,15 +96,14 @@ public class LoginFrag extends BaseFrag {
         initRes();
         onClickEvent();
         // TODO: 2018/9/27 0027 初始化检测微信
-        // authorized(whichFragmentStart);// 停止使用
-        // userWechatOriToAuthorize();// 使用传统的微信登陆接入
+        // userWechatOriToAuthorize();// 使用传统的微信登陆接入 
     }
 
     /**
      * 使用传统的微信登陆接入
      */
     private void userWechatOriToAuthorize() {
-        // TODO: 2018/9/28 0028 判断微信是否登陆
+        // TODO: 2018/9/28 0028 添加逻辑, 判断微信是否登陆
         toActivity(activity, WXEntryActivity.class, false);
     }
 
