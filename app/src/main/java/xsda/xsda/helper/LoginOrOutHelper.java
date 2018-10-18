@@ -25,6 +25,7 @@ import xsda.xsda.utils.Lgg;
 public class LoginOrOutHelper {
 
     private Activity activity;
+    private String TAG = "LoginOrOutHelper";
 
     public LoginOrOutHelper(Activity activity) {
         this.activity = activity;
@@ -61,6 +62,7 @@ public class LoginOrOutHelper {
         new Handler().postDelayed(() -> {
             UserExistHelper userExistHelper = new UserExistHelper(activity);
             userExistHelper.setOnExceptionListener(e -> activity.runOnUiThread(() -> {
+                Lgg.t(TAG).ee("Method--> " + getClass().getSimpleName() + ":checkUserIsExist(): err: " + e.getMessage());
                 loginErrorNext(e);
                 loginAfterNext();
             }));
@@ -91,6 +93,7 @@ public class LoginOrOutHelper {
                         queryLoginByPhone(avUser, phoneNum, true);
                         Lgg.t(Cons.TAG).ii("Method--> " + "LoginOrOutHelper: loginByMobilePhoneNumberInBackground" + "() success");
                     } else {
+                        Lgg.t(TAG).ee("Method--> " + getClass().getSimpleName() + ":toLogin()--> error: " + e.getMessage());
                         loginErrorNext(e);
                         loginAfterNext();
                         Lgg.t(Cons.TAG).ee("Method--> " + "LoginOrOutHelper: loginByMobilePhoneNumberInBackground" + "() failed");
@@ -125,6 +128,7 @@ public class LoginOrOutHelper {
                     }
                 } else {
                     if (isToLogin) {
+                        Lgg.t(TAG).ee("Method--> " + getClass().getSimpleName() + ":queryLoginByPhone()--> error: " + e.getMessage());
                         loginErrorNext(e);
                     } else {
                         logOutFailedNext(e);
@@ -165,6 +169,7 @@ public class LoginOrOutHelper {
                 } else {
                     if (isToLogin) {
                         AVUser.logOut();
+                        Lgg.t(TAG).ee("Method--> " + getClass().getSimpleName() + ":createLoginStateToServer()--> error: " + e.getMessage());
                         loginErrorNext(e);
                     } else {
                         logOutFailedNext(e);
@@ -203,6 +208,7 @@ public class LoginOrOutHelper {
                 } else {
                     if (isToLogin) {
                         AVUser.logOut();
+                        Lgg.t(TAG).ee("Method--> " + getClass().getSimpleName() + ":updateLoginNewStateToServer()--> error: " + e.getMessage());
                         loginErrorNext(e);
                     } else {
                         logOutFailedNext(e);
@@ -214,7 +220,7 @@ public class LoginOrOutHelper {
             }
         });
     }
-    
+
     /* -------------------------------------------- impl -------------------------------------------- */
 
     private OnLogOutFailedListener onLogOutFailedListener;

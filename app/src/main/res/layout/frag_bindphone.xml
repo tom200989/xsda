@@ -35,8 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:background="@color/colorCompany" />
 
     </com.zhy.android.percent.support.PercentRelativeLayout>
@@ -50,7 +50,7 @@
         android:layout_centerHorizontal="true"
         app:layout_heightPercent="9%h"
         app:layout_marginTopPercent="5%h"
-        app:layout_widthPercent="85%w">
+        app:layout_widthPercent="80%w">
 
         <ImageView
             android:id="@+id/iv_bindphone_logo"
@@ -68,14 +68,14 @@
             android:layout_centerHorizontal="true"
             android:layout_toEndOf="@id/iv_bindphone_logo"
             android:background="@null"
-            android:inputType="number"
             android:hint="@string/login_input_hint_username"
+            android:inputType="number"
             android:maxLength="11"
             android:paddingStart="10dp"
             android:textColor="@color/colorCompanyDark"
             android:textColorHint="@color/colorCompany"
             app:layout_marginTopPercent="5%h"
-            app:layout_textSizePercent="30%h" />
+            app:layout_textSizePercent="27%h" />
 
         <View
             android:layout_width="match_parent"
@@ -94,7 +94,7 @@
         android:layout_centerInParent="true"
         app:layout_heightPercent="9%h"
         app:layout_marginTopPercent="3%h"
-        app:layout_widthPercent="85%w">
+        app:layout_widthPercent="80%w">
 
         <ImageView
             android:id="@+id/iv_bindphone_password_logo"
@@ -106,7 +106,6 @@
             app:layout_widthPercent="100%h" />
 
         <EditText
-            android:inputType="text"
             android:id="@+id/et_bindphone_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -114,12 +113,13 @@
             android:layout_toEndOf="@id/iv_bindphone_password_logo"
             android:background="@null"
             android:hint="@string/login_wechat_bindphone_password"
+            android:inputType="text"
             android:maxLength="16"
             android:paddingStart="10dp"
             android:textColor="@color/colorCompanyDark"
             android:textColorHint="@color/colorCompany"
             app:layout_marginTopPercent="5%h"
-            app:layout_textSizePercent="30%h" />
+            app:layout_textSizePercent="27%h" />
 
         <View
             android:layout_width="match_parent"
@@ -138,7 +138,7 @@
         android:layout_centerHorizontal="true"
         app:layout_heightPercent="9%h"
         app:layout_marginTopPercent="3%h"
-        app:layout_widthPercent="85%w">
+        app:layout_widthPercent="80%w">
 
         <com.zhy.android.percent.support.PercentRelativeLayout
             android:layout_width="wrap_content"
@@ -155,17 +155,17 @@
                 app:layout_widthPercent="100%h" />
 
             <EditText
-                android:inputType="text"
                 android:id="@+id/et_bindphone_verify"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_toEndOf="@id/iv_bindphone_verifylogo"
                 android:background="@null"
                 android:hint="@string/register_input_hint_verifycode"
+                android:inputType="text"
                 android:maxLength="6"
                 android:textColor="@color/colorCompanyDark"
                 android:textColorHint="@color/colorCompany"
-                app:layout_textSizePercent="30%h" />
+                app:layout_textSizePercent="27%h" />
 
         </com.zhy.android.percent.support.PercentRelativeLayout>
 
@@ -174,13 +174,14 @@
             android:id="@+id/tv_bindphone_getVerify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/bg_conner_colorpink_8"
             android:gravity="center"
             android:text="@string/register_get_verifycode"
             android:textColor="@color/colorWhite"
             app:layout_heightPercent="70%h"
+            app:layout_textSizePercent="27%h"
             app:layout_widthPercent="40%w" />
 
         <View
@@ -204,8 +205,15 @@
         android:text="@string/login_wechat_bindphone_commit"
         android:textColor="@color/colorWhite"
         app:layout_heightPercent="8%h"
-        app:layout_marginTopPercent="5%h"
+        app:layout_marginTopPercent="15%h"
         app:layout_textSizePercent="2.7%h"
         app:layout_widthPercent="80%w" />
+
+    <!-- waiting -->
+    <xsda.xsda.widget.WaitingWidget
+        android:id="@+id/widget_waiting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
 </com.zhy.android.percent.support.PercentRelativeLayout>

@@ -1,16 +1,17 @@
 package xsda.xsda.ue.frag;
 
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hiber.tools.RootEncrypt;
+import com.avos.avoscloud.AVUser;
 import com.john.waveview.WaveView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +26,12 @@ import xsda.xsda.ue.activity.SplashActivity;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
-import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.AuthorizedLoadWidget;
 import xsda.xsda.widget.WaitingWidget;
 import xsda.xsda.wxapi.WXEntryActivity;
+import xsda.xsda.wxapi.WXHelper;
+import xsda.xsda.wxapi.WechatInfo;
 
 /**
  * Created by qianli.ma on 2018/7/23 0023.
@@ -85,6 +87,7 @@ public class LoginFrag extends BaseFrag {
     private List<String> needAuthorizedLoadList;
     private String TAG = "LoginFrag";
     private Platform platform;
+    private WechatInfo wechatInfo;
 
     @Override
     public int onInflateLayout() {
@@ -103,8 +106,29 @@ public class LoginFrag extends BaseFrag {
      * 使用传统的微信登陆接入
      */
     private void userWechatOriToAuthorize() {
-        // TODO: 2018/9/28 0028 添加逻辑, 判断微信是否登陆
-        toActivity(activity, WXEntryActivity.class, false);
+        // 判断微信是否登陆
+        boolean wxInstall = WXHelper.isWXInstall(activity);
+        if (!wxInstall) {
+            Tgg.show(activity, R.string.login_wechat_install, 2500);
+        } else {
+            toActivity(activity, WXEntryActivity.class, false);
+        }
+    }
+
+    /**
+     * 获取到微信信息
+     *
+     * @param wechatInfo 微信信息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void getWXInfo(WechatInfo wechatInfo) {
+        this.wechatInfo = wechatInfo;
+        if (wechatInfo != null) {
+            String attach = wechatInfo.getAttach();
+            if (attach.contains(Cons.ATTACH_GO_TO_BINDPHONE)) {
+                toFrag(this.getClass(), BindphoneFrag.class, null, true);
+            }
+        }
     }
 
     @Override
@@ -128,12 +152,18 @@ public class LoginFrag extends BaseFrag {
 
     public void onClickEvent() {
         // 从shareprefrence获取登陆信息
-        LoginBean loginBean = getLoginBeanFromShare();
+        LoginBean loginBean = Ogg.readLoginJson(activity);
         // 是否显示密码
         if (loginBean.isRemember()) {
             etUserName.setText(loginBean.getPhoneNum());
             etPassword.setText(loginBean.getPassword());
         }
+
+        if (AVUser.getCurrentUser() != null) {
+            String username = AVUser.getCurrentUser().getUsername();
+            Lgg.t(TAG).ii("current user name: " + username);
+        }
+
         // 记住密码图标
         ivLoginRememberCheckbox.setImageDrawable(loginBean.isRemember() ? checked : uncheck);
         // 设置焦点控制底线颜色
@@ -198,17 +228,9 @@ public class LoginFrag extends BaseFrag {
                 Tgg.show(getActivity(), R.string.login_success, 2500);
                 // 保存用户信息到临时集合
                 if (ivLoginRememberCheckbox.getDrawable() == checked) {
-                    LoginBean loginBean = new LoginBean();
-                    loginBean.setPhoneNum(phoneNum);
-                    loginBean.setPassword(password);
-                    loginBean.setRemember(ivLoginRememberCheckbox.getDrawable() == checked);
-                    String loginJson = JSONObject.toJSONString(loginBean);
-                    loginJson = RootEncrypt.des_encrypt(loginJson);// 加密
-                    Sgg.getInstance(getActivity()).putString(Cons.SP_LOGIN_INFO, loginJson);
+                    Ogg.saveLoginJson(activity, phoneNum, password, true);
                 } else {
-                    String loginJson = JSONObject.toJSONString(new LoginBean());
-                    loginJson = RootEncrypt.des_encrypt(loginJson);// 加密
-                    Sgg.getInstance(getActivity()).putString(Cons.SP_LOGIN_INFO, loginJson);
+                    Ogg.saveLoginJson(activity, "", "", false);
                 }
                 // 封装数据并跳转
                 Ogg.hideKeyBoard(getActivity());
@@ -253,23 +275,6 @@ public class LoginFrag extends BaseFrag {
         // 前往登陆界面
         Ogg.hideKeyBoard(getActivity());
         toFrag(getClass(), RegisterFrag.class, null, true);
-    }
-
-    /**
-     * 从shareprefrence获取登陆信息
-     *
-     * @return loginbean
-     */
-    private LoginBean getLoginBeanFromShare() {
-        String loginJson = Sgg.getInstance(getActivity()).getString(Cons.SP_LOGIN_INFO, "");
-        loginJson = RootEncrypt.des_descrypt(loginJson);// 解密
-        LoginBean loginBean;
-        if (TextUtils.isEmpty(loginJson)) {
-            loginBean = new LoginBean();
-        } else {
-            loginBean = JSONObject.parseObject(loginJson, LoginBean.class);
-        }
-        return loginBean;
     }
 
     /**

@@ -20,6 +20,8 @@ public class Avfield {
         public static String session_token = "session_token";
         public static String password = "password";
         public static String username = "username";
+        public static String nickname = "nickname";
+        public static String headurl = "headurl";
         public static String emailVerified = "emailVerified";
         public static String mobilePhoneNumber = "mobilePhoneNumber";
         public static String authData = "authData";

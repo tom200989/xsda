@@ -6,7 +6,6 @@ import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.avos.avoscloud.AVOSCloud;
-import com.jiagu.sdk.roothiberProtected;
 import com.jiagu.sdk.xsdakeyProtected;
 import com.mob.MobSDK;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -55,7 +54,7 @@ public class XsdaApplication extends MultiDexApplication {
         MobSDK.init(this);
         // 初始化加固的SDK
         xsdakeyProtected.install(this);// leancloud key
-        roothiberProtected.install(this);// 框架
+        //roothiberProtected.install(this);// 框架
         // tinker init
         initTinkerPatch();
         // 初始化获取设备ID

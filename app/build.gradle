@@ -141,7 +141,7 @@ dependencies {
     // xutils 网络框架
     compile 'org.xutils:xutils:3.5.0'
     // 布局架构
-    compile(name: 'roothiber', ext: 'aar')
+     compile(name: 'roothiber1', ext: 'aar')
     // leanCloud key
     compile(name: 'xsdakey1_2', ext: 'aar')
     // tinker

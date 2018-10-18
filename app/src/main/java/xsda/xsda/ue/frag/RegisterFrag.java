@@ -38,7 +38,7 @@ public class RegisterFrag extends BaseFrag {
 
     @Bind(R.id.iv_register_logo)
     ImageView ivRegisterLogo;
-
+    // phonename
     @Bind(R.id.rl_register_username)
     PercentRelativeLayout rlRegisterUsername;
     @Bind(R.id.iv_register_username_logo)
@@ -47,7 +47,16 @@ public class RegisterFrag extends BaseFrag {
     EditText etRegisterInputUsername;
     @Bind(R.id.v_register_username_line)
     View vRegisterUsernameLine;
-
+    // nickname
+    @Bind(R.id.rl_register_nickname)
+    PercentRelativeLayout rlRegisterNickname;
+    @Bind(R.id.iv_register_nickname_logo)
+    ImageView ivRegisterNicknameLogo;
+    @Bind(R.id.et_register_input_nickname)
+    EditText etRegisterInputNickname;
+    @Bind(R.id.v_register_nickname_line)
+    View vRegisterNicknameLine;
+    // password
     @Bind(R.id.rl_register_password)
     PercentRelativeLayout rlRegisterPassword;
     @Bind(R.id.iv_register_password_logo)
@@ -56,7 +65,7 @@ public class RegisterFrag extends BaseFrag {
     EditText etRegisterInputPassword;
     @Bind(R.id.v_register_password_line)
     View vRegisterPasswordLine;
-
+    // confirm password
     @Bind(R.id.rl_register_confirmPassword)
     PercentRelativeLayout rlRegisterConfirmPassword;
     @Bind(R.id.iv_register_confirmPassword_logo)
@@ -65,7 +74,7 @@ public class RegisterFrag extends BaseFrag {
     EditText etRegisterInputConfirmPassword;
     @Bind(R.id.v_register_confirmPassword_line)
     View vRegisterConfirmPasswordLine;
-
+    // verifycode
     @Bind(R.id.rl_register_verifyCode)
     PercentRelativeLayout rlRegisterVerifyCode;
     @Bind(R.id.iv_register_verifyCode_logo)
@@ -76,7 +85,7 @@ public class RegisterFrag extends BaseFrag {
     EditText etRegisterInputVerifyCode;
     @Bind(R.id.v_register_verifyCode_line)
     View vRegisterVerifyCodeLine;
-
+    // commit
     @Bind(R.id.tv_register_commit)
     TextView tvRegisterCommit;
 
@@ -115,8 +124,8 @@ public class RegisterFrag extends BaseFrag {
     @Override
     public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         // 封装控件
-        ets = new EditText[]{etRegisterInputUsername, etRegisterInputPassword, etRegisterInputConfirmPassword, etRegisterInputVerifyCode};
-        lines = new View[]{vRegisterUsernameLine, vRegisterPasswordLine, vRegisterConfirmPasswordLine, vRegisterVerifyCodeLine};
+        ets = new EditText[]{etRegisterInputUsername, etRegisterInputPassword, etRegisterInputConfirmPassword, etRegisterInputVerifyCode, etRegisterInputNickname};
+        lines = new View[]{vRegisterUsernameLine, vRegisterPasswordLine, vRegisterConfirmPasswordLine, vRegisterVerifyCodeLine, vRegisterNicknameLine};
         onClickEvent();
         // 获取服务器时间
         getServerDate();
@@ -126,9 +135,7 @@ public class RegisterFrag extends BaseFrag {
         // E.设定焦点切换监听
         for (int i = 0; i < ets.length; i++) {
             int finalI = i;
-            ets[i].setOnFocusChangeListener((v, hasFocus) -> {
-                lines[finalI].setBackgroundColor(hasFocus ? color_checked : color_unchecked);
-            });
+            ets[i].setOnFocusChangeListener((v, hasFocus) -> lines[finalI].setBackgroundColor(hasFocus ? color_checked : color_unchecked));
         }
         ets[0].requestFocus();
 
@@ -156,6 +163,10 @@ public class RegisterFrag extends BaseFrag {
             if (matchEdittext(activity, true)) {
                 String phoneName = etRegisterInputUsername.getText().toString();
                 String verifyCode = etRegisterInputVerifyCode.getText().toString();
+                String nickName = etRegisterInputNickname.getText().toString();
+                if (TextUtils.isEmpty(nickName)) {
+                    nickName = phoneName;
+                }
                 if (currentServerDate != -1) {
                     /* 提交验证码 */
                     VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
@@ -167,7 +178,7 @@ public class RegisterFrag extends BaseFrag {
                         Tgg.show(activity, text_Verify_success, 2000);
                         new Handler().postDelayed(this::exit, 1500);
                     });
-                    verifyCodeHelper.commitVerifyCode(phoneName, verifyCode);
+                    verifyCodeHelper.commitVerifyCode(phoneName, null, verifyCode, nickName);
                 }
             }
         });

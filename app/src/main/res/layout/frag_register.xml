@@ -108,13 +108,62 @@
                 android:background="@color/colorCompanyDark" />
 
         </com.zhy.android.percent.support.PercentRelativeLayout>
+        
+        <!-- nickname -->
+        <com.zhy.android.percent.support.PercentRelativeLayout
+            android:id="@+id/rl_register_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_register_username"
+            android:layout_centerHorizontal="true"
+            app:layout_heightPercent="8%h"
+            app:layout_marginTopPercent="3%h"
+            app:layout_widthPercent="70%w">
+
+            <ImageView
+                android:id="@+id/iv_register_nickname_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/nickname"
+                app:layout_heightPercent="50%h"
+                app:layout_marginBottomPercent="15%h"
+                app:layout_widthPercent="50%h" />
+
+            <EditText
+                android:id="@+id/et_register_input_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/iv_register_nickname_logo"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="@string/login_input_hint_nickname"
+                android:inputType="text"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:textColor="@color/colorCompanyDark"
+                android:textColorHint="@color/colorCompany"
+                android:textCursorDrawable="@null"
+                app:layout_paddingBottomPercent="15%h"
+                app:layout_textSizePercent="30%h" />
+
+            <View
+                android:id="@+id/v_register_nickname_line"
+                android:layout_width="match_parent"
+                android:layout_height="1.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorCompany" />
+
+        </com.zhy.android.percent.support.PercentRelativeLayout>
 
         <!-- password -->
         <com.zhy.android.percent.support.PercentRelativeLayout
             android:id="@+id/rl_register_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rl_register_username"
+            android:layout_below="@id/rl_register_nickname"
             android:layout_centerHorizontal="true"
             app:layout_heightPercent="8%h"
             app:layout_marginTopPercent="2%h"

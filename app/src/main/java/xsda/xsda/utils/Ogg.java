@@ -6,7 +6,11 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
+
+import com.alibaba.fastjson.JSONObject;
+import com.hiber.tools.RootEncrypt;
 
 import org.xutils.common.util.MD5;
 
@@ -19,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import xsda.xsda.bean.LoginBean;
 
 /**
  * Created by qianli.ma on 2018/6/22 0022.
@@ -215,5 +221,38 @@ public class Ogg {
         String id = MD5.md5(UUID.randomUUID().toString().replace("-", ""));
         Lgg.t(Cons.TAG).vv("id:" + id);
         return id;
+    }
+
+    /**
+     * 保存登陆信息
+     * @param phoneNum 手机号
+     * @param password 密码
+     * @param isRemember 是否记住密码
+     */
+    public static void saveLoginJson(Context context,String phoneNum, String password, boolean isRemember) {
+        LoginBean loginBean = new LoginBean();
+        loginBean.setPhoneNum(phoneNum);
+        loginBean.setPassword(password);
+        loginBean.setRemember(isRemember);
+        String loginJson = JSONObject.toJSONString(loginBean);
+        loginJson = RootEncrypt.des_encrypt(loginJson);// 加密
+        Sgg.getInstance(context).putString(Cons.SP_LOGIN_INFO, loginJson);
+    }
+
+    /**
+     * 读取登陆信息
+     * @param context 上下文
+     * @return loginbean
+     */
+    public static LoginBean readLoginJson(Context context) {
+        String loginJson = Sgg.getInstance(context).getString(Cons.SP_LOGIN_INFO, "");
+        loginJson = RootEncrypt.des_descrypt(loginJson);// 解密
+        LoginBean loginBean;
+        if (TextUtils.isEmpty(loginJson)) {
+            loginBean = new LoginBean();
+        } else {
+            loginBean = JSONObject.parseObject(loginJson, LoginBean.class);
+        }
+        return loginBean;
     }
 }

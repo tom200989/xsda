@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 
+import org.greenrobot.eventbus.EventBus;
+
 import xsda.xsda.R;
+import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Tgg;
 
@@ -72,8 +76,11 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         });
         wxHelper.setOnGetWeChatInfoSuccessListener(userInfo -> {
             Lgg.t(TAG).ii(":onResp() 授权成功\n" + userInfo);
-            // finish();
-            // TODO: 2018/10/8 0008  授权成功后的处理
+            WechatInfo wechatInfo = JSONObject.parseObject(userInfo, WechatInfo.class);
+            wechatInfo.setAttach(Cons.ATTACH_GO_TO_BINDPHONE);
+            // 发送至bindphonefrag.java & loginfrag.java
+            EventBus.getDefault().postSticky(wechatInfo);
+            finish();
         });
 
         wxHelper.handlerResp(baseResp);

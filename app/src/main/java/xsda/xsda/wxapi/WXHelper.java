@@ -1,6 +1,9 @@
 package xsda.xsda.wxapi;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
@@ -13,6 +16,8 @@ import com.xsdakey.keyUtil.leanCloudKey;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
+import java.util.List;
 
 import xsda.xsda.utils.Lgg;
 
@@ -151,17 +156,17 @@ public class WXHelper {
         x.http().get(rp, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String userInfo) {
-                getWeChatInfoSuccessNext(userInfo);
+                activity.runOnUiThread(() -> getWeChatInfoSuccessNext(userInfo));
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                errUserErrorNext(ex);
+                activity.runOnUiThread(() -> errUserErrorNext(ex));
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                errUserCancelNext();
+                activity.runOnUiThread(() -> errUserCancelNext());
             }
 
             @Override
@@ -169,6 +174,31 @@ public class WXHelper {
 
             }
         });
+    }
+
+    /**
+     * 判断微信是否已经安装
+     *
+     * @param context 上下文
+     * @return true: had install
+     */
+    public static boolean isWXInstall(Context context) {
+        IWXAPI api = WXAPIFactory.createWXAPI(context, leanCloudKey.getWXAppid());
+        if (api.isWXAppInstalled()) {
+            return true;
+        } else {
+            final PackageManager packageManager = context.getPackageManager();
+            List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+            if (pinfo != null) {
+                for (int i = 0; i < pinfo.size(); i++) {
+                    String pn = pinfo.get(i).packageName;
+                    if (pn.equalsIgnoreCase("com.tencent.mm")) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
     /* -------------------------------------------- impl -------------------------------------------- */

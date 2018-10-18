@@ -24,7 +24,7 @@ public class VerifyCodeHelper {
     public VerifyCodeHelper(Activity activity) {
         this.activity = activity;
     }
-    
+
     /* -------------------------------------------- A.申请验证码 -------------------------------------------- */
 
     /**
@@ -133,15 +133,17 @@ public class VerifyCodeHelper {
      * B1.提交验证码
      *
      * @param username   用户名(手机号)
+     * @param password   用户密码
      * @param verifyCode 验证码
+     * @param nickName   昵称
      */
-    public void commitVerifyCode(String username, String verifyCode) {
+    public void commitVerifyCode(String username, String password, String verifyCode, String nickName) {
         Lgg.t(Cons.TAG).ii("commitVerifyCode");
         commitVerifyPrepareNext();
         new Handler().postDelayed(() -> {
             UserExistHelper userExistHelper = new UserExistHelper(activity);
             userExistHelper.setOnExceptionListener(this::requestVerifyErrorNext);
-            userExistHelper.setOnUserNotExistListener(() -> verifyMobilePhone(username, verifyCode));
+            userExistHelper.setOnUserNotExistListener(() -> verifyMobilePhone(username, password, verifyCode, nickName));
             userExistHelper.setOnUserHadExistListener(this::userHadExistNext);
             userExistHelper.setOnGetUserExistAfterListener(this::commitVerifyAfterNext);
             userExistHelper.isExist(username);
@@ -153,9 +155,11 @@ public class VerifyCodeHelper {
      * B1.1.提交验证码
      *
      * @param username   用户名(手机号)
+     * @param password   用户密码
      * @param verifyCode 验证码
+     * @param nickName   昵称
      */
-    private void verifyMobilePhone(String username, String verifyCode) {
+    private void verifyMobilePhone(String username, String password, String verifyCode, String nickName) {
         // 1.1.提交验证码
         AVUser.verifyMobilePhoneInBackground(verifyCode, new AVMobilePhoneVerifyCallback() {
             @Override
@@ -165,7 +169,7 @@ public class VerifyCodeHelper {
                     commitVerifyErrorNext(e);
                 } else {
                     // 1.2.成功后提交验证成功信息
-                    putVerifyUserInfo(username, true);
+                    putVerifyUserInfo(username, password, nickName, true);
                 }
                 commitVerifyAfterNext();
             }
@@ -176,9 +180,11 @@ public class VerifyCodeHelper {
      * B2.成功后提交验证成功信息
      *
      * @param username 手机号
+     * @param password 用户密码
+     * @param nickName 昵称
      * @param isVerify 是否成功验证
      */
-    private void putVerifyUserInfo(String username, boolean isVerify) {
+    private void putVerifyUserInfo(String username, String password, String nickName, boolean isVerify) {
         Lgg.t(Cons.TAG).ii("putVerifyUserInfo");
         // 2.1.form: UserVerify
         AVObject userVerify = new AVObject(Avfield.UserVerify.classname);
@@ -192,6 +198,10 @@ public class VerifyCodeHelper {
             public void done(AVException e) {
                 Egg.print(getClass().getSimpleName(), "putVerifyUserInfo", e, null);
                 // 2.5.无论提交信息是否成功--> 只要验证码步骤成功即算成功
+                // 2.5.1.提交昵称
+                // 2.5.2.提交密码--> 如果是绑定手机操作的话
+                commitPassword(password);
+                commitNickname(nickName);
                 commitVerifySuccessNext();
                 if (e == null) {
                     Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":" + "putVerifyUserInfo():" + "提交验证信息成功");
@@ -201,7 +211,27 @@ public class VerifyCodeHelper {
             }
         });
     }
-    
+
+    /**
+     * 提交密码
+     *
+     * @param password 密码
+     */
+    private void commitPassword(String password) {
+        AVUser.getCurrentUser().put(Avfield.User.password, password);
+        AVUser.getCurrentUser().saveInBackground();
+    }
+
+    /**
+     * 提交昵称
+     *
+     * @param nickName 昵称
+     */
+    private void commitNickname(String nickName) {
+        AVUser.getCurrentUser().put(Avfield.User.nickname, nickName);
+        AVUser.getCurrentUser().saveInBackground();
+    }
+
     /* -------------------------------------------- 回调 -------------------------------------------- */
 
     private OnCommitVerifyPrepareListener onCommitVerifyPrepareListener;

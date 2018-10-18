@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hiber.hiber.RootFrag;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import butterknife.Bind;

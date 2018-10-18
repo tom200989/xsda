@@ -1,24 +1,35 @@
 package xsda.xsda.ue.frag;
 
+import android.content.Context;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVUser;
 import com.hiber.hiber.RootFrag;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.Bind;
 import xsda.xsda.R;
 import xsda.xsda.helper.GetServerDateHelper;
+import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.helper.TimerHelper;
 import xsda.xsda.helper.VerifyCodeHelper;
+import xsda.xsda.ue.activity.SplashActivity;
+import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
+import xsda.xsda.widget.WaitingWidget;
+import xsda.xsda.wxapi.WechatInfo;
 
 /*
  * Created by qianli.ma on 2018/9/25 0025.
@@ -38,12 +49,17 @@ public class BindphoneFrag extends RootFrag {
     TextView tvBindphoneGetVerify;// 获取验证码按钮
     @Bind(R.id.tv_bindphone_commit)
     TextView tvBindphoneCommit;// 提交验证码
+    @Bind(R.id.widget_waiting)
+    WaitingWidget widgetWaiting;// 等待
 
     private long currentServerDate;
     private final long COUNTDOWN = 120;
     private long countdown = COUNTDOWN;// 默认间隔120秒才可重复获取验证码
     private long limitVerify = 120 * 1000;// 限制2分钟以内不可再点击
     private TimerHelper timer;
+    private String nickname;
+    private int OP_MUST_BINDPHONE = -1;// 提示绑定手机
+    private int OP_CAN_EXIT = 0;// 返回登录页
 
     @Override
     public int onInflateLayout() {
@@ -60,11 +76,21 @@ public class BindphoneFrag extends RootFrag {
         // 获取服务器时间并校验验证码按钮是否可点
         getCurrentServerDate();
         // 点击回退
-        ivBindphoneBack.setOnClickListener(v -> exit());
+        ivBindphoneBack.setOnClickListener(v -> exit(OP_MUST_BINDPHONE));
         // 点击获取
         tvBindphoneGetVerify.setOnClickListener(v -> getVerifyCode());
         // 点击提交
-        tvBindphoneCommit.setOnClickListener(v -> matchRule());
+        tvBindphoneCommit.setOnClickListener(v -> commitClick());
+    }
+
+    /**
+     * 接收来自WXactivity的信息
+     *
+     * @param wechatInfo 微信用户信息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void getWechatInfo(WechatInfo wechatInfo) {
+        nickname = wechatInfo.getNickname();
     }
 
     /**
@@ -105,7 +131,7 @@ public class BindphoneFrag extends RootFrag {
         } else {// 时间不正常(当前服务器时间 < 上次记录的时间)
             tvBindphoneGetVerify.setClickable(false);
             Tgg.show(activity, getString(R.string.register_time_error), 2500);
-            exit();
+            exit(OP_CAN_EXIT);
         }
     }
 
@@ -144,7 +170,7 @@ public class BindphoneFrag extends RootFrag {
     private void getVerifyCode() {
         String phoneNum = etBindphonePhonenum.getText().toString();
         String password = etBindphonePassword.getText().toString();
-        
+
         boolean isMatchPhoneNum = Ogg.matchPhoneReg(phoneNum);
         if (TextUtils.isEmpty(phoneNum)) {
             Tgg.show(activity, R.string.login_wechat_bindphone_phone_not_empty, 2500);
@@ -164,6 +190,7 @@ public class BindphoneFrag extends RootFrag {
         }
 
         /* 申请获取验证码 */
+        widgetWaiting.setVisibleByAnim();
         VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
         verifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(activity, R.string.register_timeout, 2000));
         verifyCodeHelper.setOnUserHadExistListener(() -> Tgg.show(activity, R.string.register_user_exist_tip, 2000));
@@ -171,8 +198,10 @@ public class BindphoneFrag extends RootFrag {
             if (e.getCode() == Egg.CANT_SEND_SMS_TOO_FREQUENTLY) {
                 // 验证码获取频繁
                 Tgg.show(activity, R.string.register_frequently_tip, 2000);
+                exit(OP_CAN_EXIT);
             } else {
                 Tgg.show(activity, R.string.register_timeout, 2000);
+                exit(OP_CAN_EXIT);
             }
         });
         verifyCodeHelper.setOnGetVerifySuccessListener(() -> {
@@ -182,15 +211,28 @@ public class BindphoneFrag extends RootFrag {
             Lgg.t(Cons.TAG).ii("begin to countdown 120s");
             countDown();
         });
-
+        verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
         verifyCodeHelper.getVerifyCode(phoneNum, password);
-        // TODO: 2018/9/26 0026  
     }
 
     /**
      * 匹配是否编辑域是否符合
      */
-    private void matchRule() {
+    private void commitClick() {
+        // 匹配规则
+        if (!matchRule()) {
+            return;
+        }
+        // 提交
+        commit();
+    }
+
+    /**
+     * 匹配规则
+     *
+     * @return 是否匹配
+     */
+    private boolean matchRule() {
         String phoneNum = etBindphonePhonenum.getText().toString();
         String password = etBindphonePassword.getText().toString();
         String verifyCode = etBindphoneVerify.getText().toString();
@@ -198,45 +240,146 @@ public class BindphoneFrag extends RootFrag {
         // 判断手机号规则
         if (TextUtils.isEmpty(phoneNum)) {
             Tgg.show(activity, R.string.login_wechat_bindphone_phone_not_empty, 2500);
-            return;
+            return false;
         }
         if (!isMatchPhoneNum) {
             Tgg.show(activity, R.string.register_username_tip, 2500);
-            return;
+            return false;
         }
         // 备用密码规则
         if (TextUtils.isEmpty(password)) {
             Tgg.show(activity, R.string.login_wechat_bindphone_password, 2500);
-            return;
+            return false;
         }
         if (password.length() < 8 | password.length() > 16) {
             Tgg.show(activity, R.string.register_password_tip, 2500);
-            return;
+            return false;
         }
         // 验证码规则
         if (TextUtils.isEmpty(verifyCode)) {
             Tgg.show(activity, R.string.register_not_verify_empty, 2500);
-            return;
+            return false;
         }
         if (verifyCode.length() != 6) {
             Tgg.show(activity, R.string.register_commit_verify_failed, 2500);
-            return;
+            return false;
         }
-        // TODO: 2018/9/26 0026  校验验证码
+        return true;
+    }
+
+    /**
+     * 点击提交
+     */
+    private void commit() {
+        if (matchEdittext(activity, true)) {
+            String phoneName = etBindphonePhonenum.getText().toString();
+            String password = etBindphonePassword.getText().toString();
+            String verifyCode = etBindphoneVerify.getText().toString();
+            if (currentServerDate != -1) {
+                /* 提交验证码 */
+                VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
+                verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setVisibleByAnim());
+                verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
+                verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(activity, R.string.register_commit_verify_failed, 2000));
+                verifyCodeHelper.setOnCommitVerifySuccessListener(() -> {
+                    // 提示验证成功
+                    Tgg.show(activity, R.string.register_commit_verify_success, 2500);
+                    new Handler().postDelayed(() -> {
+                        // 保存登陆信息到本地
+                        Ogg.saveLoginJson(activity, phoneName, password, true);
+                        // 直接登陆
+                        toLogin(phoneName, password);
+                    }, 1000);
+                });
+                verifyCodeHelper.commitVerifyCode(phoneName, password, verifyCode, nickname);
+            }
+        }
+    }
+
+    /**
+     * 去登陆
+     *
+     * @param phoneNum 手机号
+     * @param password 密码
+     */
+    private void toLogin(String phoneNum, String password) {
+        LoginOrOutHelper loginHelper = new LoginOrOutHelper(getActivity());
+        loginHelper.setOnLoginPrepareListener(() -> widgetWaiting.setVisibleText(getString(R.string.logining)));
+        loginHelper.setOnLoginAfterListener(() -> widgetWaiting.setGone());
+        loginHelper.setOnLoginErrorListener(ex -> {
+            Tgg.show(getActivity(), R.string.login_failed, 2500);
+            Ogg.saveLoginJson(activity, "", "", false);
+            exit(OP_CAN_EXIT);
+        });
+        loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
+        loginHelper.setOnLoginSuccessListener(avUser -> {
+            // 保存用户对象以及即时通讯对象
+            ((SplashActivity) getActivity()).avUser = avUser;
+            // 提示
+            Tgg.show(getActivity(), R.string.login_success, 2500);
+            // 保存用户信息到临时集合
+            Ogg.saveLoginJson(activity, phoneNum, password, true);
+            // 提交昵称
+            AVUser.getCurrentUser().put(Avfield.User.nickname, nickname);
+            AVUser.getCurrentUser().saveInBackground();
+            // 封装数据并跳转
+            Ogg.hideKeyBoard(getActivity());
+            toFrag(getClass(), MainFrag.class, null, false);
+            Lgg.t(Cons.TAG).ii("login success to main fragment");
+        });
+        loginHelper.login(phoneNum, password);
+    }
+
+    /**
+     * 校验手机号密码规则
+     *
+     * @param context  环境
+     * @param isVerify 是否检查验证码框
+     * @return true:符合规则
+     */
+    private boolean matchEdittext(Context context, boolean isVerify) {
+        // 手机号是否匹配正则
+        if (!Ogg.matchPhoneReg(etBindphonePhonenum.getText().toString())) {
+            etBindphonePhonenum.requestFocus();
+            Tgg.show(context, context.getString(R.string.register_username_tip), 2000);
+            return false;
+        } else if (etBindphonePassword.getText().toString().length() < 8 // 密码位数
+                           | etBindphonePassword.getText().toString().length() > 16) {// 密码位数
+            etBindphonePassword.requestFocus();
+            Tgg.show(context, context.getString(R.string.register_password_tip), 2000);
+            return false;
+        } else if (TextUtils.isEmpty(etBindphoneVerify.getText().toString()) & isVerify) {
+            etBindphoneVerify.requestFocus();
+            Tgg.show(context, context.getString(R.string.register_not_verify_empty), 2000);
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
     public boolean onBackPresss() {
         // 返回登录界面
-        exit();
+        exit(OP_MUST_BINDPHONE);
         return true;
     }
 
-    private void exit() {
+    private void exit(int tag) {
         if (timer != null) {
             timer.stop();
         }
-        toFrag(getClass(), LoginFrag.class, null, true);
+
+        // 强制绑定手机提示
+        if (tag == OP_MUST_BINDPHONE) {
+            Tgg.show(activity, R.string.login_wechat_authorized_bindphone_tip, 2500);
+            return;
+        }
+
+        // 退回登录页
+        if (tag == OP_CAN_EXIT) {
+            toFrag(getClass(), LoginFrag.class, null, true);
+            return;
+        }
     }
 
     @Override
