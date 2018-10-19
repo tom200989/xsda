@@ -160,8 +160,16 @@ public class SplashFrag extends BaseFrag {
      */
     private void toGuideOrLogin() {
         if (Sgg.getInstance(activity).getBoolean(Cons.SP_GUIDE, false)) {
-            // 进入登录页 
-            toFrag(getClass(), LoginFrag.class, null, false);
+
+            // 自动登陆判断
+            // TODO: 2018/10/19 0019 如果有选择了自动登录, 则直接跳转主页 
+            boolean canAutoLogin = Ogg.isCanAutoLogin(activity);
+            if (canAutoLogin) {
+                // TODO: 2018/10/19 0019  调用登陆接口
+            } else {
+                // 进入登录页 
+                toFrag(getClass(), LoginFrag.class, null, false);
+            }
         } else {
             // 进入向导页
             toFrag(getClass(), GuideFrag.class, null, false);

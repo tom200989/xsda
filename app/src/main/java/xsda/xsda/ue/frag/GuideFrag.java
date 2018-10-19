@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xsda.xsda.R;
 import xsda.xsda.utils.Cons;
+import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
 
 /**
@@ -56,7 +57,15 @@ public class GuideFrag extends BaseFrag {
         // 点击「立即体验」
         tvGuideClick.setOnClickListener(v -> {
             Sgg.getInstance(activity).putBoolean(Cons.SP_GUIDE, true);
-            toFrag(getClass(), LoginFrag.class, null, false);
+            // 自动登陆判断
+            // TODO: 2018/10/19 0019 如果有选择了自动登录, 则直接跳转主页 
+            boolean canAutoLogin = Ogg.isCanAutoLogin(activity);
+            if (canAutoLogin) {
+                // TODO: 2018/10/19 0019  调用登陆接口
+            } else {
+                // 进入登录页 
+                toFrag(getClass(), LoginFrag.class, null, false);
+            }
         });
     }
 

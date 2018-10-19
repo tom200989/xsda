@@ -225,11 +225,12 @@ public class Ogg {
 
     /**
      * 保存登陆信息
-     * @param phoneNum 手机号
-     * @param password 密码
+     *
+     * @param phoneNum   手机号
+     * @param password   密码
      * @param isRemember 是否记住密码
      */
-    public static void saveLoginJson(Context context,String phoneNum, String password, boolean isRemember) {
+    public static void saveLoginJson(Context context, String phoneNum, String password, boolean isRemember) {
         LoginBean loginBean = new LoginBean();
         loginBean.setPhoneNum(phoneNum);
         loginBean.setPassword(password);
@@ -241,6 +242,7 @@ public class Ogg {
 
     /**
      * 读取登陆信息
+     *
      * @param context 上下文
      * @return loginbean
      */
@@ -254,5 +256,21 @@ public class Ogg {
             loginBean = JSONObject.parseObject(loginJson, LoginBean.class);
         }
         return loginBean;
+    }
+
+    /**
+     * 是否符合自动登陆的前提条件
+     *
+     * @param context 上下文
+     * @return true:符合
+     */
+    public static boolean isCanAutoLogin(Context context) {
+        LoginBean loginBean = readLoginJson(context);
+        if (loginBean.isRemember()) {
+            boolean isMatchPhoneNum = !TextUtils.isEmpty(loginBean.getPhoneNum());
+            boolean isMatchPassword = !TextUtils.isEmpty(loginBean.getPassword());
+            return isMatchPhoneNum && isMatchPassword;
+        }
+        return false;
     }
 }

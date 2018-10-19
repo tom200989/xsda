@@ -279,6 +279,7 @@ public class BindphoneFrag extends RootFrag {
      * 点击提交
      */
     private void commit() {
+        Ogg.hideKeyBoard(activity);// 隐藏键盘
         if (matchEdittext(activity, true)) {
             String phoneName = etBindphonePhonenum.getText().toString();
             String password = etBindphonePassword.getText().toString();
