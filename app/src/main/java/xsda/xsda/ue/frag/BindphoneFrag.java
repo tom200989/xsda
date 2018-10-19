@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.avos.avoscloud.AVUser;
 import com.hiber.hiber.RootFrag;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -21,7 +20,6 @@ import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.helper.TimerHelper;
 import xsda.xsda.helper.VerifyCodeHelper;
 import xsda.xsda.ue.activity.SplashActivity;
-import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
@@ -60,6 +58,8 @@ public class BindphoneFrag extends RootFrag {
     private String nickname;
     private int OP_MUST_BINDPHONE = -1;// 提示绑定手机
     private int OP_CAN_EXIT = 0;// 返回登录页
+    private int current_state = OP_MUST_BINDPHONE;// 记录当前状态
+    private String TAG = "BindphoneFrag";
 
     @Override
     public int onInflateLayout() {
@@ -76,7 +76,7 @@ public class BindphoneFrag extends RootFrag {
         // 获取服务器时间并校验验证码按钮是否可点
         getCurrentServerDate();
         // 点击回退
-        ivBindphoneBack.setOnClickListener(v -> exit(OP_MUST_BINDPHONE));
+        ivBindphoneBack.setOnClickListener(v -> exit(current_state));
         // 点击获取
         tvBindphoneGetVerify.setOnClickListener(v -> getVerifyCode());
         // 点击提交
@@ -91,6 +91,7 @@ public class BindphoneFrag extends RootFrag {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void getWechatInfo(WechatInfo wechatInfo) {
         nickname = wechatInfo.getNickname();
+        Lgg.t(TAG).ii("nickname from bindphone: " + nickname);
     }
 
     /**
@@ -192,9 +193,16 @@ public class BindphoneFrag extends RootFrag {
         /* 申请获取验证码 */
         widgetWaiting.setVisibleByAnim();
         VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
-        verifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(activity, R.string.register_timeout, 2000));
-        verifyCodeHelper.setOnUserHadExistListener(() -> Tgg.show(activity, R.string.register_user_exist_tip, 2000));
+        verifyCodeHelper.setOnGetServerDateErrorListener(e -> {
+            current_state = OP_CAN_EXIT;// 修改状态为「可退出」
+            Tgg.show(activity, R.string.register_timeout, 2000);
+        });
+        verifyCodeHelper.setOnUserHadExistListener(() -> {
+            current_state = OP_CAN_EXIT;// 修改状态为「可退出」
+            Tgg.show(activity, R.string.register_user_exist_tip, 2000);
+        });
         verifyCodeHelper.setOnGetVerifyErrorListener(e -> {
+            current_state = OP_CAN_EXIT;// 修改状态为「可退出」
             if (e.getCode() == Egg.CANT_SEND_SMS_TOO_FREQUENTLY) {
                 // 验证码获取频繁
                 Tgg.show(activity, R.string.register_frequently_tip, 2000);
@@ -212,7 +220,7 @@ public class BindphoneFrag extends RootFrag {
             countDown();
         });
         verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
-        verifyCodeHelper.getVerifyCode(phoneNum, password);
+        verifyCodeHelper.getVerifyCode(phoneNum, password, nickname);
     }
 
     /**
@@ -280,7 +288,10 @@ public class BindphoneFrag extends RootFrag {
                 VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
                 verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setVisibleByAnim());
                 verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
-                verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(activity, R.string.register_commit_verify_failed, 2000));
+                verifyCodeHelper.setOnCommitVerifyErrorListener(e -> {
+                    current_state = OP_CAN_EXIT;// 修改状态为「可修改」
+                    Tgg.show(activity, R.string.register_commit_verify_failed, 2000);
+                });
                 verifyCodeHelper.setOnCommitVerifySuccessListener(() -> {
                     // 提示验证成功
                     Tgg.show(activity, R.string.register_commit_verify_success, 2500);
@@ -291,7 +302,7 @@ public class BindphoneFrag extends RootFrag {
                         toLogin(phoneName, password);
                     }, 1000);
                 });
-                verifyCodeHelper.commitVerifyCode(phoneName, password, verifyCode, nickname);
+                verifyCodeHelper.commitVerifyCode(phoneName, password, verifyCode);
             }
         }
     }
@@ -307,11 +318,15 @@ public class BindphoneFrag extends RootFrag {
         loginHelper.setOnLoginPrepareListener(() -> widgetWaiting.setVisibleText(getString(R.string.logining)));
         loginHelper.setOnLoginAfterListener(() -> widgetWaiting.setGone());
         loginHelper.setOnLoginErrorListener(ex -> {
+            current_state = OP_CAN_EXIT;// 修改状态为「可修改」
             Tgg.show(getActivity(), R.string.login_failed, 2500);
             Ogg.saveLoginJson(activity, "", "", false);
             exit(OP_CAN_EXIT);
         });
-        loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
+        loginHelper.setOnLoginUserNotExistListener(() -> {
+            current_state = OP_CAN_EXIT;// 修改状态为「可修改」
+            Tgg.show(getActivity(), R.string.login_user_not_exist, 2500);
+        });
         loginHelper.setOnLoginSuccessListener(avUser -> {
             // 保存用户对象以及即时通讯对象
             ((SplashActivity) getActivity()).avUser = avUser;
@@ -319,9 +334,6 @@ public class BindphoneFrag extends RootFrag {
             Tgg.show(getActivity(), R.string.login_success, 2500);
             // 保存用户信息到临时集合
             Ogg.saveLoginJson(activity, phoneNum, password, true);
-            // 提交昵称
-            AVUser.getCurrentUser().put(Avfield.User.nickname, nickname);
-            AVUser.getCurrentUser().saveInBackground();
             // 封装数据并跳转
             Ogg.hideKeyBoard(getActivity());
             toFrag(getClass(), MainFrag.class, null, false);
@@ -364,6 +376,11 @@ public class BindphoneFrag extends RootFrag {
         return true;
     }
 
+    /**
+     * 退出
+     *
+     * @param tag 标记位
+     */
     private void exit(int tag) {
         if (timer != null) {
             timer.stop();

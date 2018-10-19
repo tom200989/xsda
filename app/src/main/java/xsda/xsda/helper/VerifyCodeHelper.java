@@ -2,6 +2,7 @@ package xsda.xsda.helper;
 
 import android.app.Activity;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
@@ -33,7 +34,7 @@ public class VerifyCodeHelper {
      * @param phoneNum 电话
      * @param password 密码
      */
-    public void getVerifyCode(String phoneNum, String password) {
+    public void getVerifyCode(String phoneNum,  String password,String nickname) {
 
         // 1.1.从服务器获取时间 
         GetServerDateHelper getServerDateHelper = new GetServerDateHelper();
@@ -42,7 +43,7 @@ public class VerifyCodeHelper {
             commitVerifyPrepareNext();
             new Handler().postDelayed(() -> {
                 // 1.2.判断用户是否存在
-                isUserExist(phoneNum, password, millute);
+                isUserExist(phoneNum, nickname, password, millute);
             }, 2000);
 
         });
@@ -56,11 +57,11 @@ public class VerifyCodeHelper {
      * @param password 密码
      * @param millute  服务器时间
      */
-    private void isUserExist(String username, String password, long millute) {
+    private void isUserExist(String username, String nickname, String password, long millute) {
         Lgg.t(Cons.TAG).ii("isUserExist");
         UserExistHelper userExistHelper = new UserExistHelper(activity);
         userExistHelper.setOnExceptionListener(this::requestVerifyErrorNext);
-        userExistHelper.setOnUserNotExistListener(() -> createUserAndRequestVerify(username, password, millute));
+        userExistHelper.setOnUserNotExistListener(() -> createUserAndRequestVerify(username, nickname, password, millute));
         userExistHelper.setOnUserHadExistListener(this::userHadExistNext);
         userExistHelper.setOnGetUserExistAfterListener(this::commitVerifyAfterNext);
         userExistHelper.isExist(username);
@@ -73,13 +74,14 @@ public class VerifyCodeHelper {
      * @param password 密码
      * @param millute  服务器时间
      */
-    private void createUserAndRequestVerify(String phoneNum, String password, long millute) {
+    private void createUserAndRequestVerify(String phoneNum, String nickname, String password, long millute) {
         Lgg.t(Cons.TAG).ii("createUserAndRequestVerify");
         AVUser user = new AVUser();
         user.setUsername(phoneNum);
         user.setPassword(password);
         // 2.3.其他属性可以像其他AVObject对象一样使用put方法添加
         user.put(Avfield.User.mobilePhoneNumber, phoneNum);
+        user.put(Avfield.User.nickname, TextUtils.isEmpty(nickname) ? phoneNum : nickname);
         user.signUpInBackground(new SignUpCallback() {
             public void done(AVException e) {
                 Egg.print(getClass().getSimpleName(), "createUserAndRequestVerify", e, null);
@@ -135,15 +137,14 @@ public class VerifyCodeHelper {
      * @param username   用户名(手机号)
      * @param password   用户密码
      * @param verifyCode 验证码
-     * @param nickName   昵称
      */
-    public void commitVerifyCode(String username, String password, String verifyCode, String nickName) {
+    public void commitVerifyCode(String username, String password, String verifyCode) {
         Lgg.t(Cons.TAG).ii("commitVerifyCode");
         commitVerifyPrepareNext();
         new Handler().postDelayed(() -> {
             UserExistHelper userExistHelper = new UserExistHelper(activity);
             userExistHelper.setOnExceptionListener(this::requestVerifyErrorNext);
-            userExistHelper.setOnUserNotExistListener(() -> verifyMobilePhone(username, password, verifyCode, nickName));
+            userExistHelper.setOnUserNotExistListener(() -> verifyMobilePhone(username, password, verifyCode));
             userExistHelper.setOnUserHadExistListener(this::userHadExistNext);
             userExistHelper.setOnGetUserExistAfterListener(this::commitVerifyAfterNext);
             userExistHelper.isExist(username);
@@ -157,9 +158,8 @@ public class VerifyCodeHelper {
      * @param username   用户名(手机号)
      * @param password   用户密码
      * @param verifyCode 验证码
-     * @param nickName   昵称
      */
-    private void verifyMobilePhone(String username, String password, String verifyCode, String nickName) {
+    private void verifyMobilePhone(String username, String password, String verifyCode) {
         // 1.1.提交验证码
         AVUser.verifyMobilePhoneInBackground(verifyCode, new AVMobilePhoneVerifyCallback() {
             @Override
@@ -169,7 +169,7 @@ public class VerifyCodeHelper {
                     commitVerifyErrorNext(e);
                 } else {
                     // 1.2.成功后提交验证成功信息
-                    putVerifyUserInfo(username, password, nickName, true);
+                    putVerifyUserInfo(username, password, true);
                 }
                 commitVerifyAfterNext();
             }
@@ -181,10 +181,9 @@ public class VerifyCodeHelper {
      *
      * @param username 手机号
      * @param password 用户密码
-     * @param nickName 昵称
      * @param isVerify 是否成功验证
      */
-    private void putVerifyUserInfo(String username, String password, String nickName, boolean isVerify) {
+    private void putVerifyUserInfo(String username, String password, boolean isVerify) {
         Lgg.t(Cons.TAG).ii("putVerifyUserInfo");
         // 2.1.form: UserVerify
         AVObject userVerify = new AVObject(Avfield.UserVerify.classname);
@@ -198,10 +197,6 @@ public class VerifyCodeHelper {
             public void done(AVException e) {
                 Egg.print(getClass().getSimpleName(), "putVerifyUserInfo", e, null);
                 // 2.5.无论提交信息是否成功--> 只要验证码步骤成功即算成功
-                // 2.5.1.提交昵称
-                // 2.5.2.提交密码--> 如果是绑定手机操作的话
-                commitPassword(password);
-                commitNickname(nickName);
                 commitVerifySuccessNext();
                 if (e == null) {
                     Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":" + "putVerifyUserInfo():" + "提交验证信息成功");
@@ -210,26 +205,6 @@ public class VerifyCodeHelper {
                 }
             }
         });
-    }
-
-    /**
-     * 提交密码
-     *
-     * @param password 密码
-     */
-    private void commitPassword(String password) {
-        AVUser.getCurrentUser().put(Avfield.User.password, password);
-        AVUser.getCurrentUser().saveInBackground();
-    }
-
-    /**
-     * 提交昵称
-     *
-     * @param nickName 昵称
-     */
-    private void commitNickname(String nickName) {
-        AVUser.getCurrentUser().put(Avfield.User.nickname, nickName);
-        AVUser.getCurrentUser().saveInBackground();
     }
 
     /* -------------------------------------------- 回调 -------------------------------------------- */

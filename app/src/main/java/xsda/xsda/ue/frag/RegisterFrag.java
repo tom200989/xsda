@@ -163,10 +163,7 @@ public class RegisterFrag extends BaseFrag {
             if (matchEdittext(activity, true)) {
                 String phoneName = etRegisterInputUsername.getText().toString();
                 String verifyCode = etRegisterInputVerifyCode.getText().toString();
-                String nickName = etRegisterInputNickname.getText().toString();
-                if (TextUtils.isEmpty(nickName)) {
-                    nickName = phoneName;
-                }
+
                 if (currentServerDate != -1) {
                     /* 提交验证码 */
                     VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
@@ -178,7 +175,7 @@ public class RegisterFrag extends BaseFrag {
                         Tgg.show(activity, text_Verify_success, 2000);
                         new Handler().postDelayed(this::exit, 1500);
                     });
-                    verifyCodeHelper.commitVerifyCode(phoneName, null, verifyCode, nickName);
+                    verifyCodeHelper.commitVerifyCode(phoneName, null, verifyCode);
                 }
             }
         });
@@ -358,7 +355,12 @@ public class RegisterFrag extends BaseFrag {
             countDown();
         });
 
-        verifyCodeHelper.getVerifyCode(phoneNum, password);
+        // 获取昵称
+        String nickName = etRegisterInputNickname.getText().toString();
+        if (TextUtils.isEmpty(nickName)) {
+            nickName = phoneNum;
+        }
+        verifyCodeHelper.getVerifyCode(phoneNum, password, nickName);
     }
 
 }
