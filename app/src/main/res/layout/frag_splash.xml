@@ -75,4 +75,11 @@
         app:layout_marginBottomPercent="4%h"
         app:layout_textSizePercent="2%h" />
 
+    <!-- wait -->
+    <xsda.xsda.widget.WaitingWidget
+        android:id="@+id/wd_splash_wait"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </com.zhy.android.percent.support.PercentRelativeLayout>

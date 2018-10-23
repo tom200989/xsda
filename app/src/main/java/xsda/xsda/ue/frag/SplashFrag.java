@@ -6,18 +6,24 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVUser;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 
 import butterknife.Bind;
 import xsda.xsda.R;
+import xsda.xsda.bean.LoginBean;
 import xsda.xsda.bean.UpdateBean;
 import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.GetUpdateHelper;
+import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.helper.PingHelper;
+import xsda.xsda.ue.activity.SplashActivity;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
+import xsda.xsda.utils.Tgg;
+import xsda.xsda.widget.WaitingWidget;
 
 /**
  * Created by qianli.ma on 2018/7/23 0023.
@@ -36,6 +42,8 @@ public class SplashFrag extends BaseFrag {
     NumberProgressBar pgSplashLoagding;// 进度条
     @Bind(R.id.tv_splash_loading_text)
     TextView tvSplashLoadingText;// 进度文本
+    @Bind(R.id.wd_splash_wait)
+    WaitingWidget widgetLoginWaitting;// 等待面板
 
     public static String DEFAULT_TEXT = "";
     private String check_net;
@@ -165,7 +173,14 @@ public class SplashFrag extends BaseFrag {
             // TODO: 2018/10/19 0019 如果有选择了自动登录, 则直接跳转主页 
             boolean canAutoLogin = Ogg.isCanAutoLogin(activity);
             if (canAutoLogin) {
-                // TODO: 2018/10/19 0019  调用登陆接口
+                if (AVUser.getCurrentUser() == null) {// 没有登陆过
+                    // TODO: 2018/10/19 0019  调用登陆接口
+                    toLogin();
+                } else {
+                    // 登陆过直接跳到主页
+                    toFrag(getClass(), MainFrag.class, null, true);
+                }
+
             } else {
                 // 进入登录页 
                 toFrag(getClass(), LoginFrag.class, null, false);
@@ -174,6 +189,31 @@ public class SplashFrag extends BaseFrag {
             // 进入向导页
             toFrag(getClass(), GuideFrag.class, null, false);
         }
+    }
+
+    /**
+     * 执行登陆操作
+     */
+    private void toLogin() {
+
+        LoginBean loginBean = Ogg.readLoginJson(activity);
+        String phoneNum = loginBean.getPhoneNum();
+        String password = loginBean.getPassword();
+
+        LoginOrOutHelper loginHelper = new LoginOrOutHelper(getActivity());
+        loginHelper.setOnLoginPrepareListener(() -> widgetLoginWaitting.setVisibleText(getString(R.string.logining)));
+        loginHelper.setOnLoginAfterListener(() -> widgetLoginWaitting.setGone());
+        loginHelper.setOnLoginErrorListener(ex -> Tgg.show(getActivity(), R.string.login_failed, 2500));
+        loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
+        loginHelper.setOnLoginSuccessListener(avUser -> {
+            // 保存用户对象以及即时通讯对象
+            ((SplashActivity) getActivity()).avUser = avUser;
+            // 隐藏软键盘
+            Ogg.hideKeyBoard(getActivity());
+            toFrag(getClass(), MainFrag.class, null, false);
+            Lgg.t(Cons.TAG).ii("login success to main fragment");
+        });
+        loginHelper.login(phoneNum, password);
     }
 
     /**
