@@ -85,6 +85,15 @@ public class UserVerifyHelper {
         });
     }
 
+    /**
+     * 验证当前的Openid是否存在
+     *
+     * @param currentId 当前获取到的ID
+     */
+    public void isOpenidExist(String currentId) {
+        // TODO: 2018/11/2 0002  
+    }
+
     private OnGetUserExistAfterListener onGetUserExistAfterListener;
 
     // Inteerface--> 接口OnGetUserExistAfterListener
