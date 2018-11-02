@@ -15,6 +15,8 @@ public abstract class TimerHelper {
     private Activity activity;
     private Timer timer;
 
+    public abstract void doSomething();
+
     public TimerHelper(Activity activity) {
         this.activity = activity;
     }
@@ -81,6 +83,5 @@ public abstract class TimerHelper {
         }
     }
 
-    public abstract void doSomething();
 
 }

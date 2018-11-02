@@ -22,7 +22,7 @@ import xsda.xsda.utils.Tgg;
 
 public class NetErrFrag extends BaseFrag {
 
-    @Bind(R.id.rl_neterror_all)
+    @Bind(R.id.rl_neterror_all) 
     RelativeLayout rlNeterrorAll;// 总布局
     @Bind(R.id.tv_neterror_des)
     TextView tvNeterrorDes;// 图标

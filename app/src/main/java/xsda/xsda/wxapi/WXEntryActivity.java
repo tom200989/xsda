@@ -77,6 +77,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         wxHelper.setOnGetWeChatInfoSuccessListener(userInfo -> {
             Lgg.t(TAG).ii(":onResp() 授权成功\n" + userInfo);
             WechatInfo wechatInfo = JSONObject.parseObject(userInfo, WechatInfo.class);
+            // TODO: 2018/11/2 0002  判断openid是否有保存过(用户是否使用过微信登陆)
             wechatInfo.setAttach(Cons.ATTACH_GO_TO_BINDPHONE);
             // 发送至bindphonefrag.java & loginfrag.java
             EventBus.getDefault().postSticky(wechatInfo);

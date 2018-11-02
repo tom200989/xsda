@@ -9,6 +9,7 @@ import android.view.View;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.hiber.hiber.RootFrag;
 
@@ -88,8 +89,17 @@ public class BaseFrag extends RootFrag {
      */
     private void checkLogin() {
         Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":checkLogin()");
+
+        // 0.检查是否处于登陆状态
+        AVUser avUser = ((SplashActivity) getActivity()).avUser;
+        if (avUser == null) {
+            avUser = AVUser.getCurrentUser();
+            if (avUser == null) {
+                checkLoginError(null);
+            }
+        }
         // 1.获取手机号码
-        String phoneNum = ((SplashActivity) getActivity()).avUser.getMobilePhoneNumber();
+        String phoneNum = avUser.getMobilePhoneNumber();
         // 2.建立查询对象
         AVQuery<AVObject> query = new AVQuery<>(Avfield.LoginStatus.classname);
         query.whereEqualTo(Avfield.LoginStatus.phoneNum, phoneNum);
@@ -124,7 +134,7 @@ public class BaseFrag extends RootFrag {
         // 获取服务器ID以及本地ID
         String deviceIdFromServer = avo.getString(Avfield.LoginStatus.deviceId);
         String deviceIdFromLocal = Sgg.getInstance(getActivity()).getString(Cons.SP_DEVICE_ID, "");
-        if (!deviceIdFromServer.equalsIgnoreCase(deviceIdFromLocal) ) {
+        if (!deviceIdFromServer.equalsIgnoreCase(deviceIdFromLocal)) {
             /* 如果ID不相等 & 设备处于登陆状态--> 意味这其他设备登陆 */
             otherDevicesLogin(avo);
         }

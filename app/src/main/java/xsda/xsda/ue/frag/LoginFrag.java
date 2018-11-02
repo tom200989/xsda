@@ -98,8 +98,6 @@ public class LoginFrag extends BaseFrag {
     public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         initRes();
         onClickEvent();
-        // TODO: 2018/9/27 0027 初始化检测微信
-        // userWechatOriToAuthorize();// 使用传统的微信登陆接入 
     }
 
     /**
@@ -201,9 +199,8 @@ public class LoginFrag extends BaseFrag {
     }
 
     public void weChatLogin() {
-        // TODO: 2018/7/6 0006  微信登陆逻辑
+        // 微信登陆逻辑
         userWechatOriToAuthorize();
-        Tgg.show(activity, "等待最新SDK集成", 2500);
     }
 
     /**

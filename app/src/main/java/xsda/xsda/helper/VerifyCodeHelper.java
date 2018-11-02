@@ -34,7 +34,7 @@ public class VerifyCodeHelper {
      * @param phoneNum 电话
      * @param password 密码
      */
-    public void getVerifyCode(String phoneNum,  String password,String nickname) {
+    public void getVerifyCode(String phoneNum, String password, String nickname) {
 
         // 1.1.从服务器获取时间 
         GetServerDateHelper getServerDateHelper = new GetServerDateHelper();

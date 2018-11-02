@@ -12,7 +12,9 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 import xsda.xsda.R;
+import xsda.xsda.bean.LoginBean;
 import xsda.xsda.helper.LoginOrOutHelper;
+import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.OfflineWidget;
 
@@ -34,6 +36,8 @@ public class MainFrag extends BaseFrag {
         return R.layout.frag_main;
     }
 
+    // TODO 开始做退出登陆
+
     @Override
     public boolean isNeedTimer() {
         return true;
@@ -41,7 +45,7 @@ public class MainFrag extends BaseFrag {
 
     @Override
     public void onNexts(Object o, View view, String s) {
-        super.onNexts(o, view, s);// super父类以启动定时器
+        super.onNexts(o, view, s);
         clickEvent();
     }
 
@@ -55,6 +59,8 @@ public class MainFrag extends BaseFrag {
         tvTestMain.setOnClickListener(v -> {
             LoginOrOutHelper loginOrOutHelper = new LoginOrOutHelper(getActivity());
             loginOrOutHelper.setOnLogOutSuccessListener(() -> {
+                LoginBean loginBean = Ogg.readLoginJson(activity);
+                Ogg.saveLoginJson(activity, loginBean.getPhoneNum(), loginBean.getPassword(), false);
                 toFrag(getClass(), LoginFrag.class, null, false);
                 Tgg.show(getActivity(), "登出成功", 2500);
             });

@@ -169,14 +169,15 @@ public class SplashFrag extends BaseFrag {
     private void toGuideOrLogin() {
         if (Sgg.getInstance(activity).getBoolean(Cons.SP_GUIDE, false)) {
 
-            // 自动登陆判断
-            // TODO: 2018/10/19 0019 如果有选择了自动登录, 则直接跳转主页 
+            // 自动登陆判断: 如果有选择了自动登录, 则直接跳转主页 
             boolean canAutoLogin = Ogg.isCanAutoLogin(activity);
             if (canAutoLogin) {
                 if (AVUser.getCurrentUser() == null) {// 没有登陆过
-                    // TODO: 2018/10/19 0019  调用登陆接口
+                    // 调用登陆接口
                     toLogin();
                 } else {
+                    /* 这里一定记得把user信息保存到全域 */
+                    ((SplashActivity) activity).avUser = AVUser.getCurrentUser();
                     // 登陆过直接跳到主页
                     toFrag(getClass(), MainFrag.class, null, true);
                 }

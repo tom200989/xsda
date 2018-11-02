@@ -18,6 +18,7 @@ import xsda.xsda.R;
 import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.helper.TimerHelper;
+import xsda.xsda.helper.UserVerifyHelper;
 import xsda.xsda.helper.VerifyCodeHelper;
 import xsda.xsda.ue.activity.SplashActivity;
 import xsda.xsda.utils.Cons;
@@ -56,6 +57,7 @@ public class BindphoneFrag extends RootFrag {
     private long limitVerify = 120 * 1000;// 限制2分钟以内不可再点击
     private TimerHelper timer;
     private String nickname;
+    private String openid;
     private int OP_MUST_BINDPHONE = -1;// 提示绑定手机
     private int OP_CAN_EXIT = 0;// 返回登录页
     private int current_state = OP_MUST_BINDPHONE;// 记录当前状态
@@ -91,7 +93,9 @@ public class BindphoneFrag extends RootFrag {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void getWechatInfo(WechatInfo wechatInfo) {
         nickname = wechatInfo.getNickname();
+        openid = wechatInfo.getOpenid();
         Lgg.t(TAG).ii("nickname from bindphone: " + nickname);
+        Lgg.t(TAG).ii("openid from bindphone: " + openid);
     }
 
     /**
@@ -299,12 +303,27 @@ public class BindphoneFrag extends RootFrag {
                     new Handler().postDelayed(() -> {
                         // 保存登陆信息到本地
                         Ogg.saveLoginJson(activity, phoneName, password, true);
+                        // 保存openid到数据库
+                        saveOpenId();
                         // 直接登陆
                         toLogin(phoneName, password);
                     }, 1000);
                 });
                 verifyCodeHelper.commitVerifyCode(phoneName, password, verifyCode);
             }
+        }
+    }
+
+    /**
+     * 保存openid到数据库
+     */
+    private void saveOpenId() {
+        if (!TextUtils.isEmpty(openid)) {
+            String phoneName = etBindphonePhonenum.getText().toString();
+            UserVerifyHelper userVerifyHelper = new UserVerifyHelper(activity);
+            userVerifyHelper.setOnExceptionListener(e -> Tgg.show(activity, R.string.login_wechat_authorized_bindphone_openid_failed, 2500));
+            userVerifyHelper.setOnUserNotExistListener(() -> Tgg.show(activity, R.string.login_wechat_authorized_bindphone_openid_failed, 2500));
+            userVerifyHelper.saveOpenId(phoneName, openid);
         }
     }
 
