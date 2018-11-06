@@ -97,32 +97,33 @@ public class BaseFrag extends RootFrag {
             if (avUser == null) {
                 checkLoginError(null);
             }
-        }
-        // 1.获取手机号码
-        String phoneNum = avUser.getMobilePhoneNumber();
-        // 2.建立查询对象
-        AVQuery<AVObject> query = new AVQuery<>(Avfield.LoginStatus.classname);
-        query.whereEqualTo(Avfield.LoginStatus.phoneNum, phoneNum);
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                if (e == null) {
-                    count = 0;
-                    if (list == null || list.size() <= 0) {
-                        checkLoginError(null);
-                    } else {
-                        checkDeviceId(list.get(0));
-                    }
-                } else {// 出错--> 重复请求5次
-                    if (count > MAX_COUNT) {
-                        checkLoginError(e);
+        } else {
+            // 1.获取手机号码
+            String phoneNum = avUser.getMobilePhoneNumber();
+            // 2.建立查询对象
+            AVQuery<AVObject> query = new AVQuery<>(Avfield.LoginStatus.classname);
+            query.whereEqualTo(Avfield.LoginStatus.phoneNum, phoneNum);
+            query.findInBackground(new FindCallback<AVObject>() {
+                @Override
+                public void done(List<AVObject> list, AVException e) {
+                    if (e == null) {
                         count = 0;
-                    } else {
-                        count++;
+                        if (list == null || list.size() <= 0) {
+                            checkLoginError(null);
+                        } else {
+                            checkDeviceId(list.get(0));
+                        }
+                    } else {// 出错--> 重复请求5次
+                        if (count > MAX_COUNT) {
+                            checkLoginError(e);
+                            count = 0;
+                        } else {
+                            count++;
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**

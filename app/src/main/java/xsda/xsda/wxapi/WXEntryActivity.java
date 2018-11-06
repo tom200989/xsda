@@ -13,8 +13,11 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import org.greenrobot.eventbus.EventBus;
 
 import xsda.xsda.R;
+import xsda.xsda.helper.LoginOrOutHelper;
+import xsda.xsda.helper.UserVerifyHelper;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
+import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Tgg;
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
@@ -77,12 +80,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         wxHelper.setOnGetWeChatInfoSuccessListener(userInfo -> {
             Lgg.t(TAG).ii(":onResp() 授权成功\n" + userInfo);
             WechatInfo wechatInfo = JSONObject.parseObject(userInfo, WechatInfo.class);
-            // TODO: 2018/11/2 0002  判断openid是否有保存过(用户是否使用过微信登陆)
+            // 查询数据库是否已经保存过openid
             checkOpenId(wechatInfo);
-            wechatInfo.setAttach(Cons.ATTACH_GO_TO_BINDPHONE);
-            // 发送至bindphonefrag.java & loginfrag.java
-            EventBus.getDefault().postSticky(wechatInfo);
-            finish();
         });
 
         wxHelper.handlerResp(baseResp);
@@ -90,10 +89,56 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     /**
      * 判断openid是否有保存过(用户是否使用过微信登陆)
+     *
      * @param wechatInfo 微信信息
      */
     private void checkOpenId(WechatInfo wechatInfo) {
-        String openid = wechatInfo.getOpenid();
+        Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":checkOpenId()");
+        String wxopenid = wechatInfo.getOpenid();
+        UserVerifyHelper userVerifyHelper = new UserVerifyHelper(this);
+        userVerifyHelper.setOnOpenIdExistListener((phone, password) -> {/* openid存在 */
+            // 调用登陆
+            Lgg.t(TAG).ii(":checkOpenId(): openid had exist");
+            toLogin(wechatInfo, phone, password);
+        });
         
+        userVerifyHelper.setOnOpenidNotExistListener(() -> {/* openid不存在 */
+            Lgg.t(TAG).ii(":checkOpenId(): openid not exist");
+            wechatInfo.setAttach(Cons.ATTACH_GO_TO_BINDPHONE);
+            // 发送至bindphonefrag.java & loginfrag.java & mainfrag.java
+            EventBus.getDefault().postSticky(wechatInfo);
+            finish();
+        });
+        
+        userVerifyHelper.setOnExceptionListener(e -> {/* 出错 */
+            Lgg.t(TAG).ii(":checkOpenId(): error: " + e.getMessage());
+            wechatInfo.setAttach(Cons.ATTACH_GO_TO_ERROR);
+            // 发送至bindphonefrag.java & loginfrag.java & mainfrag.java
+            EventBus.getDefault().postSticky(wechatInfo);
+            finish();
+        });
+        userVerifyHelper.isOpenidExist(wxopenid);
+
+    }
+
+    /**
+     * 登陆(目的是产生AVUser实例, 避免MainFrag.java的avuser空指针)
+     *
+     * @param phone    用户
+     * @param password 密码
+     */
+    private void toLogin(WechatInfo wechatInfo, String phone, String password) {
+        LoginOrOutHelper loginHelper = new LoginOrOutHelper(this);
+        loginHelper.setOnLoginErrorListener(ex -> Tgg.show(this, R.string.login_failed, 2500));
+        loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(this, R.string.login_user_not_exist, 2500));
+        loginHelper.setOnLoginSuccessListener(avUser -> {
+            // 保存密码到本地
+            Ogg.saveLoginJson(this, phone, password, true);
+            wechatInfo.setAttach(Cons.ATTACH_GO_TO_MAIN);
+            // 发送至bindphonefrag.java & loginfrag.java & mainfrag.java
+            EventBus.getDefault().postSticky(wechatInfo);
+            finish();
+        });
+        loginHelper.login(phone, password);
     }
 }

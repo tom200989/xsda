@@ -11,6 +11,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
+import com.hiber.tools.RootEncrypt;
 
 import xsda.xsda.ue.app.XsdaApplication;
 import xsda.xsda.utils.Avfield;
@@ -189,6 +190,8 @@ public class VerifyCodeHelper {
         AVObject userVerify = new AVObject(Avfield.UserVerify.classname);
         // 2.2.用户名(手机号)
         userVerify.put(Avfield.UserVerify.username, username);
+        // 2.2.1.密码
+        userVerify.put(Avfield.UserVerify.password, RootEncrypt.des_encrypt(password));
         // 2.3.是否已经验证
         userVerify.put(Avfield.UserVerify.isPhoneVerify, isVerify);
         // 2.4.执行上传

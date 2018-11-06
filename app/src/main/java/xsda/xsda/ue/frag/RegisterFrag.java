@@ -162,6 +162,7 @@ public class RegisterFrag extends BaseFrag {
             // 校验手机号密码验证码等等
             if (matchEdittext(activity, true)) {
                 String phoneName = etRegisterInputUsername.getText().toString();
+                String password = etRegisterInputPassword.getText().toString();
                 String verifyCode = etRegisterInputVerifyCode.getText().toString();
 
                 if (currentServerDate != -1) {
@@ -175,7 +176,7 @@ public class RegisterFrag extends BaseFrag {
                         Tgg.show(activity, text_Verify_success, 2000);
                         new Handler().postDelayed(this::exit, 1500);
                     });
-                    verifyCodeHelper.commitVerifyCode(phoneName, null, verifyCode);
+                    verifyCodeHelper.commitVerifyCode(phoneName, password, verifyCode);
                 }
             }
         });

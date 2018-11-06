@@ -53,6 +53,7 @@ public class Avfield {
         public static String createdAt = "createdAt";
         public static String updatedAt = "updatedAt";
         public static String username = "username";
+        public static String password = "password";
         public static String isPhoneVerify = "isPhoneVerify";
         public static String openid = "openid";
     }

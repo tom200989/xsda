@@ -109,6 +109,7 @@ public class LoginFrag extends BaseFrag {
         if (!wxInstall) {
             Tgg.show(activity, R.string.login_wechat_install, 2500);
         } else {
+            widgetLoginAuthorized.setVisibility(View.GONE);
             toActivity(activity, WXEntryActivity.class, false);
         }
     }
@@ -124,7 +125,14 @@ public class LoginFrag extends BaseFrag {
         if (wechatInfo != null) {
             String attach = wechatInfo.getAttach();
             if (attach.contains(Cons.ATTACH_GO_TO_BINDPHONE)) {
+                Lgg.t(TAG).ii("to bindphone");
                 toFrag(this.getClass(), BindphoneFrag.class, null, true);
+            } else if (attach.contains(Cons.ATTACH_GO_TO_MAIN)) {
+                Lgg.t(TAG).ii("to main");
+                toFrag(this.getClass(), MainFrag.class, null, true);
+            } else if (attach.contains(Cons.ATTACH_GO_TO_ERROR)) {
+                Lgg.t(TAG).ii("wx error");
+                toast(R.string.login_wechat_authorized_openid_error, 2500);
             }
         }
     }
@@ -200,6 +208,7 @@ public class LoginFrag extends BaseFrag {
 
     public void weChatLogin() {
         // 微信登陆逻辑
+        widgetLoginAuthorized.setVisibility(View.VISIBLE);
         userWechatOriToAuthorize();
     }
 

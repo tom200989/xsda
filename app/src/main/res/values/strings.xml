@@ -49,6 +49,8 @@
     <string name="login_wechat_authorized_cancel">授权取消</string>
     <string name="login_wechat_authorized_reject">授权被拒绝</string>
     <string name="login_wechat_authorized_no_effect">授权无效</string>
+    <string name="login_wechat_authorized_openid_error">获取ID错误\n请重试</string>
+    <string name="login_wechat_authorized_openid_wxactivity">正在拉取微信授权</string>
     <string name="login_wechat_authorized_bindphone_tip">请先绑定手机和备用密码</string>
     <string name="login_wechat_authorized_bindphone_openid_failed">微信登陆失败, 请联系客服\nQQ号: 173279578</string>
     <string name="register_input_hint_password">请输入您的密码(8~16位)</string>

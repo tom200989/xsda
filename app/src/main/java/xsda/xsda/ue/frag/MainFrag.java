@@ -6,6 +6,9 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVObject;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
@@ -14,9 +17,11 @@ import cn.sharesdk.wechat.friends.Wechat;
 import xsda.xsda.R;
 import xsda.xsda.bean.LoginBean;
 import xsda.xsda.helper.LoginOrOutHelper;
+import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.OfflineWidget;
+import xsda.xsda.wxapi.WechatInfo;
 
 /*
  * Created by qianli.ma on 2018/8/7 0007.
@@ -37,6 +42,12 @@ public class MainFrag extends BaseFrag {
     }
 
     // TODO 开始做退出登陆
+    // TODO: 2018/11/5 0005 复写eventbus接收来自WXEntryActivity的wechatinfo
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void getWXInfo(WechatInfo wechatInfo) {
+        Lgg.t("main_test").ii("openid: " + wechatInfo.getOpenid());
+    }
 
     @Override
     public boolean isNeedTimer() {

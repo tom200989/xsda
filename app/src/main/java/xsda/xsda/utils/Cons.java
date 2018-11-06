@@ -17,5 +17,7 @@ public class Cons {
     public final static String SP_SERVER_DATE_FOR_BIND = "SP_SERVER_DATE_FOR_BIND";// 绑定手机时的服务器时间标记
 
     /* -------------------------------------------- Attach -------------------------------------------- */
-    public final static String ATTACH_GO_TO_BINDPHONE = "ATTACH_GO_TO_BINDPHONE";// 附加信息
+    public final static String ATTACH_GO_TO_BINDPHONE = "ATTACH_GO_TO_BINDPHONE";// 附加信息1
+    public final static String ATTACH_GO_TO_MAIN = "ATTACH_GO_TO_MAIN";// 附加信息2
+    public final static String ATTACH_GO_TO_ERROR = "ATTACH_GO_TO_ERROR";// 附加信息3
 }
