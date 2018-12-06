@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVUser;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import xsda.xsda.R;
 import xsda.xsda.bean.LoginBean;
 import xsda.xsda.bean.UpdateBean;
@@ -32,17 +32,17 @@ import xsda.xsda.widget.WaitingWidget;
 public class SplashFrag extends BaseFrag {
 
 
-    @Bind(R.id.iv_splash_logo)
+    @BindView(R.id.iv_splash_logo)
     ImageView ivSplashLogo;// 图标
-    @Bind(R.id.iv_splash_name)
+    @BindView(R.id.iv_splash_name)
     TextView ivSplashName;// 标题
-    @Bind(R.id.tv_splash_copyright)
+    @BindView(R.id.tv_splash_copyright)
     TextView tvSplashCopyright;// 版权
-    @Bind(R.id.pg_splash_loagding)
+    @BindView(R.id.pg_splash_loagding)
     NumberProgressBar pgSplashLoagding;// 进度条
-    @Bind(R.id.tv_splash_loading_text)
+    @BindView(R.id.tv_splash_loading_text)
     TextView tvSplashLoadingText;// 进度文本
-    @Bind(R.id.wd_splash_wait)
+    @BindView(R.id.wd_splash_wait)
     WaitingWidget widgetLoginWaitting;// 等待面板
 
     public static String DEFAULT_TEXT = "";

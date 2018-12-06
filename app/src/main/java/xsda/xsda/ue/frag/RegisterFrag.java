@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import xsda.xsda.R;
 import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.TimerHelper;
@@ -28,68 +28,68 @@ import xsda.xsda.widget.WaitingWidget;
 
 public class RegisterFrag extends BaseFrag {
 
-    @Bind(R.id.rl_register_all)
+    @BindView(R.id.rl_register_all)
     PercentRelativeLayout rlRegisterAll;
 
-    @Bind(R.id.rl_register_banner)
+    @BindView(R.id.rl_register_banner)
     PercentRelativeLayout rlRegisterBanner;
-    @Bind(R.id.iv_register_back)
+    @BindView(R.id.iv_register_back)
     ImageView ivRegisterBack;
 
-    @Bind(R.id.iv_register_logo)
+    @BindView(R.id.iv_register_logo)
     ImageView ivRegisterLogo;
     // phonename
-    @Bind(R.id.rl_register_username)
+    @BindView(R.id.rl_register_username)
     PercentRelativeLayout rlRegisterUsername;
-    @Bind(R.id.iv_register_username_logo)
+    @BindView(R.id.iv_register_username_logo)
     ImageView ivRegisterUsernameLogo;
-    @Bind(R.id.et_register_input_username)
+    @BindView(R.id.et_register_input_username)
     EditText etRegisterInputUsername;
-    @Bind(R.id.v_register_username_line)
+    @BindView(R.id.v_register_username_line)
     View vRegisterUsernameLine;
     // nickname
-    @Bind(R.id.rl_register_nickname)
+    @BindView(R.id.rl_register_nickname)
     PercentRelativeLayout rlRegisterNickname;
-    @Bind(R.id.iv_register_nickname_logo)
+    @BindView(R.id.iv_register_nickname_logo)
     ImageView ivRegisterNicknameLogo;
-    @Bind(R.id.et_register_input_nickname)
+    @BindView(R.id.et_register_input_nickname)
     EditText etRegisterInputNickname;
-    @Bind(R.id.v_register_nickname_line)
+    @BindView(R.id.v_register_nickname_line)
     View vRegisterNicknameLine;
     // password
-    @Bind(R.id.rl_register_password)
+    @BindView(R.id.rl_register_password)
     PercentRelativeLayout rlRegisterPassword;
-    @Bind(R.id.iv_register_password_logo)
+    @BindView(R.id.iv_register_password_logo)
     ImageView ivRegisterPasswordLogo;
-    @Bind(R.id.et_register_input_password)
+    @BindView(R.id.et_register_input_password)
     EditText etRegisterInputPassword;
-    @Bind(R.id.v_register_password_line)
+    @BindView(R.id.v_register_password_line)
     View vRegisterPasswordLine;
     // confirm password
-    @Bind(R.id.rl_register_confirmPassword)
+    @BindView(R.id.rl_register_confirmPassword)
     PercentRelativeLayout rlRegisterConfirmPassword;
-    @Bind(R.id.iv_register_confirmPassword_logo)
+    @BindView(R.id.iv_register_confirmPassword_logo)
     ImageView ivRegisterConfirmPasswordLogo;
-    @Bind(R.id.et_register_input_confirmPassword)
+    @BindView(R.id.et_register_input_confirmPassword)
     EditText etRegisterInputConfirmPassword;
-    @Bind(R.id.v_register_confirmPassword_line)
+    @BindView(R.id.v_register_confirmPassword_line)
     View vRegisterConfirmPasswordLine;
     // verifycode
-    @Bind(R.id.rl_register_verifyCode)
+    @BindView(R.id.rl_register_verifyCode)
     PercentRelativeLayout rlRegisterVerifyCode;
-    @Bind(R.id.iv_register_verifyCode_logo)
+    @BindView(R.id.iv_register_verifyCode_logo)
     ImageView ivRegisterVerifyCodeLogo;
-    @Bind(R.id.tv_register_getVerifyCode)
+    @BindView(R.id.tv_register_getVerifyCode)
     TextView tvRegisterGetVerifyCode;
-    @Bind(R.id.et_register_input_verifyCode)
+    @BindView(R.id.et_register_input_verifyCode)
     EditText etRegisterInputVerifyCode;
-    @Bind(R.id.v_register_verifyCode_line)
+    @BindView(R.id.v_register_verifyCode_line)
     View vRegisterVerifyCodeLine;
     // commit
-    @Bind(R.id.tv_register_commit)
+    @BindView(R.id.tv_register_commit)
     TextView tvRegisterCommit;
 
-    @Bind(R.id.widget_waiting)
+    @BindView(R.id.widget_waiting)
     WaitingWidget widgetWaiting;
 
     private int color_checked;
@@ -363,5 +363,4 @@ public class RegisterFrag extends BaseFrag {
         }
         verifyCodeHelper.getVerifyCode(phoneNum, password, nickName);
     }
-
 }

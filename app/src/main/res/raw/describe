@@ -1,7 +1,7 @@
 ****** aar包说明:
-roothiber.aar   --> 项目的Activity与Fragment架构包
+hiber.aar       --> 项目的Activity与Fragment架构包
 rsa.jar         --> aes\des\rsa加密包
-xsdakey         --> leanCloud的appid appkey
+keys.aar        --> leanCloud的appid appkey
 
 ****** 构建说明:
 1.本项目全部采用封装好的roothiber.aar架构

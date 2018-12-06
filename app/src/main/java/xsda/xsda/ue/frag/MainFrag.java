@@ -9,7 +9,7 @@ import com.avos.avoscloud.AVObject;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -29,21 +29,26 @@ import xsda.xsda.wxapi.WechatInfo;
 
 public class MainFrag extends BaseFrag {
 
-    @Bind(R.id.widget_offline)
+    @BindView(R.id.widget_offline)
     OfflineWidget widgetOffline;
-    @Bind(R.id.tv_test_main)
+    @BindView(R.id.tv_test_main)
     TextView tvTestMain;
-    @Bind(R.id.bt_quit_wechat)
+    @BindView(R.id.bt_quit_wechat)
     Button btQuitWechat;
 
     @Override
     public int onInflateLayout() {
-        return R.layout.frag_main;
+        return R.layout.frag_mains;
     }
 
     // TODO 开始做退出登陆
-    // TODO: 2018/11/5 0005 复写eventbus接收来自WXEntryActivity的wechatinfo
 
+
+    /**
+     * 接收来自WXEntryActivity的wechatinfo
+     *
+     * @param wechatInfo 用户信息
+     */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void getWXInfo(WechatInfo wechatInfo) {
         Lgg.t("main_test").ii("openid: " + wechatInfo.getOpenid());

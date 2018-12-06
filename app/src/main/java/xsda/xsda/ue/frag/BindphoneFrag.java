@@ -13,7 +13,7 @@ import com.hiber.hiber.RootFrag;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import xsda.xsda.R;
 import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.LoginOrOutHelper;
@@ -36,19 +36,19 @@ import xsda.xsda.wxapi.WechatInfo;
 public class BindphoneFrag extends RootFrag {
 
 
-    @Bind(R.id.iv_bindphone_back)
+    @BindView(R.id.iv_bindphone_back)
     ImageView ivBindphoneBack;// 返回
-    @Bind(R.id.et_bindphone_phonenum)
+    @BindView(R.id.et_bindphone_phonenum)
     EditText etBindphonePhonenum;// 输入手机号码
-    @Bind(R.id.et_bindphone_password)
+    @BindView(R.id.et_bindphone_password)
     EditText etBindphonePassword;// 输入备用密码
-    @Bind(R.id.et_bindphone_verify)
+    @BindView(R.id.et_bindphone_verify)
     EditText etBindphoneVerify;// 输入验证码
-    @Bind(R.id.tv_bindphone_getVerify)
+    @BindView(R.id.tv_bindphone_getVerify)
     TextView tvBindphoneGetVerify;// 获取验证码按钮
-    @Bind(R.id.tv_bindphone_commit)
+    @BindView(R.id.tv_bindphone_commit)
     TextView tvBindphoneCommit;// 提交验证码
-    @Bind(R.id.widget_waiting)
+    @BindView(R.id.widget_waiting)
     WaitingWidget widgetWaiting;// 等待
 
     private long currentServerDate;

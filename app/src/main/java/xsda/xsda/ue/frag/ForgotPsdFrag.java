@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import xsda.xsda.R;
 import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.ResetPasswordHelper;
@@ -29,67 +29,67 @@ import xsda.xsda.widget.WaitingWidget;
 public class ForgotPsdFrag extends BaseFrag {
 
     // 全体
-    @Bind(R.id.rl_forgot_all)
+    @BindView(R.id.rl_forgot_all)
     PercentRelativeLayout rlForgotAll;
 
     // 导航
-    @Bind(R.id.rl_forgot_banner)
+    @BindView(R.id.rl_forgot_banner)
     PercentRelativeLayout rlForgotBanner;
-    @Bind(R.id.iv_forgot_back)
+    @BindView(R.id.iv_forgot_back)
     ImageView ivForgotBack;
 
     // logo
-    @Bind(R.id.iv_forgot_logo)
+    @BindView(R.id.iv_forgot_logo)
     ImageView ivForgotLogo;
 
     // 用户名
-    @Bind(R.id.rl_forgot_username)
+    @BindView(R.id.rl_forgot_username)
     PercentRelativeLayout rlForgotUsername;
-    @Bind(R.id.iv_forgot_username_logo)
+    @BindView(R.id.iv_forgot_username_logo)
     ImageView ivForgotUsernameLogo;
-    @Bind(R.id.et_forgot_input_username)
+    @BindView(R.id.et_forgot_input_username)
     EditText etForgotInputUsername;
-    @Bind(R.id.v_forgot_username_line)
+    @BindView(R.id.v_forgot_username_line)
     View vForgotUsernameLine;
 
     // 密码
-    @Bind(R.id.rl_forgot_password)
+    @BindView(R.id.rl_forgot_password)
     PercentRelativeLayout rlForgotPassword;
-    @Bind(R.id.iv_forgot_password_logo)
+    @BindView(R.id.iv_forgot_password_logo)
     ImageView ivForgotPasswordLogo;
-    @Bind(R.id.et_forgot_input_password)
+    @BindView(R.id.et_forgot_input_password)
     EditText etForgotInputPassword;
-    @Bind(R.id.v_forgot_password_line)
+    @BindView(R.id.v_forgot_password_line)
     View vForgotPasswordLine;
 
     // 确认密码
-    @Bind(R.id.rl_forgot_confirmPassword)
+    @BindView(R.id.rl_forgot_confirmPassword)
     PercentRelativeLayout rlForgotConfirmPassword;
-    @Bind(R.id.iv_forgot_confirmPassword_logo)
+    @BindView(R.id.iv_forgot_confirmPassword_logo)
     ImageView ivForgotConfirmPasswordLogo;
-    @Bind(R.id.et_forgot_input_confirmPassword)
+    @BindView(R.id.et_forgot_input_confirmPassword)
     EditText etForgotInputConfirmPassword;
-    @Bind(R.id.v_forgot_confirmPassword_line)
+    @BindView(R.id.v_forgot_confirmPassword_line)
     View vForgotConfirmPasswordLine;
 
     // 验证码
-    @Bind(R.id.rl_forgot_verifyCode)
+    @BindView(R.id.rl_forgot_verifyCode)
     PercentRelativeLayout rlForgotVerifyCode;
-    @Bind(R.id.iv_forgot_verifyCode_logo)
+    @BindView(R.id.iv_forgot_verifyCode_logo)
     ImageView ivForgotVerifyCodeLogo;
-    @Bind(R.id.tv_forgot_getVerifyCode)
+    @BindView(R.id.tv_forgot_getVerifyCode)
     TextView tvForgotGetVerifyCode;
-    @Bind(R.id.et_forgot_input_verifyCode)
+    @BindView(R.id.et_forgot_input_verifyCode)
     EditText etForgotInputVerifyCode;
-    @Bind(R.id.v_forgot_verifyCode_line)
+    @BindView(R.id.v_forgot_verifyCode_line)
     View vForgotVerifyCodeLine;
 
     // 提交
-    @Bind(R.id.tv_forgot_commit)
+    @BindView(R.id.tv_forgot_commit)
     TextView tvForgotCommit;
 
     // 等待
-    @Bind(R.id.widget_waiting)
+    @BindView(R.id.widget_waiting)
     WaitingWidget widgetWaiting;
 
     private int color_checked;
@@ -236,7 +236,7 @@ public class ForgotPsdFrag extends BaseFrag {
      * @param password 密码
      */
     private void getVerifyCode(String phoneNum, String password) {
-        
+
         /* 申请获取重置验证码 */
         ResetPasswordHelper resetPasswordHelper = new ResetPasswordHelper(getActivity());
         resetPasswordHelper.setOnPrepareListener(() -> widgetWaiting.setVisibleByAnim());
@@ -335,6 +335,4 @@ public class ForgotPsdFrag extends BaseFrag {
         toFrag(getClass(), LoginFrag.class, null, false);
         return true;
     }
-
-
 }

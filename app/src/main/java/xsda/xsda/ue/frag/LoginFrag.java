@@ -16,8 +16,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import butterknife.BindView;
 import cn.sharesdk.framework.Platform;
 import xsda.xsda.R;
 import xsda.xsda.bean.LoginBean;
@@ -39,42 +38,42 @@ import xsda.xsda.wxapi.WechatInfo;
 
 public class LoginFrag extends BaseFrag {
 
-    @Bind(R.id.rl_login_input_username)
+    @BindView(R.id.rl_login_input_username)
     PercentRelativeLayout rlUsername;
-    @Bind(R.id.et_login_input_username)
+    @BindView(R.id.et_login_input_username)
     EditText etUserName;
-    @Bind(R.id.v_login_input_username_line)
+    @BindView(R.id.v_login_input_username_line)
     View vUserNameLine;
 
-    @Bind(R.id.rl_login_input_password)
+    @BindView(R.id.rl_login_input_password)
     PercentRelativeLayout rlPassword;
-    @Bind(R.id.et_login_input_password)
+    @BindView(R.id.et_login_input_password)
     EditText etPassword;
-    @Bind(R.id.iv_login_eye)
+    @BindView(R.id.iv_login_eye)
     ImageView ivEye;
-    @Bind(R.id.v_login_input_password_line)
+    @BindView(R.id.v_login_input_password_line)
     View vPasswordLine;
 
-    @Bind(R.id.iv_login_wechat)
+    @BindView(R.id.iv_login_wechat)
     ImageView ivWechat;
-    @Bind(R.id.wv_login)
+    @BindView(R.id.wv_login)
     WaveView wvLogin;
-    @Bind(R.id.tv_login_click)
+    @BindView(R.id.tv_login_click)
     TextView tvLoginClick;
-    @Bind(R.id.tv_login_register)
+    @BindView(R.id.tv_login_register)
     TextView tvRegisterClick;
-    @Bind(R.id.tv_login_forgot)
+    @BindView(R.id.tv_login_forgot)
     TextView tvForgot;
 
-    @Bind(R.id.widget_login_waitting)
+    @BindView(R.id.widget_login_waitting)
     WaitingWidget widgetLoginWaitting;
 
-    @Bind(R.id.rl_login_remember)
+    @BindView(R.id.rl_login_remember)
     PercentRelativeLayout rlLoginRemember;
-    @Bind(R.id.iv_login_remember_checkbox)
+    @BindView(R.id.iv_login_remember_checkbox)
     ImageView ivLoginRememberCheckbox;
 
-    @Bind(R.id.widget_login_authorized)
+    @BindView(R.id.widget_login_authorized)
     AuthorizedLoadWidget widgetLoginAuthorized;
 
 
@@ -203,7 +202,7 @@ public class LoginFrag extends BaseFrag {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     public void weChatLogin() {

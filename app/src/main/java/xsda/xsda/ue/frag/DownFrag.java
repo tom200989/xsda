@@ -13,7 +13,7 @@ import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import java.io.File;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import xsda.xsda.R;
 import xsda.xsda.bean.UpdateBean;
 import xsda.xsda.helper.DownloadHelper;
@@ -35,25 +35,25 @@ import static android.view.View.VISIBLE;
 
 public class DownFrag extends BaseFrag {
 
-    @Bind(R.id.rl_download_all)
+    @BindView(R.id.rl_download_all)
     PercentRelativeLayout rlDownloadAll;// 总布局
-    @Bind(R.id.iv_download_logo)
+    @BindView(R.id.iv_download_logo)
     ImageView ivDownloadLogo;// logo
-    @Bind(R.id.sk_download_ui)
+    @BindView(R.id.sk_download_ui)
     SpinKitView skDownloadUi;// 动效
-    @Bind(R.id.tv_download_des_fix)
+    @BindView(R.id.tv_download_des_fix)
     TextView tvDownloadDesFix;// 更新说明
-    @Bind(R.id.scv_download)
+    @BindView(R.id.scv_download)
     ScrollView scvDownload;// 滚动面板
-    @Bind(R.id.pg_download_loagding)
+    @BindView(R.id.pg_download_loagding)
     NumberProgressBar pgDownloadLoagding;// 进度条
-    @Bind(R.id.tv_download_percent)
+    @BindView(R.id.tv_download_percent)
     TextView tvDownloadPercent;// 百分比
-    @Bind(R.id.tv_download_retry)
+    @BindView(R.id.tv_download_retry)
     TextView tvDownloadRetry;// 重试
-    @Bind(R.id.tv_download_back)
+    @BindView(R.id.tv_download_back)
     TextView tvDownloadBack;// 下次再说
-    @Bind(R.id.tv_download_install)
+    @BindView(R.id.tv_download_install)
     TextView tvDownloadInstall;// 安装
 
     private View inflate;
@@ -78,17 +78,17 @@ public class DownFrag extends BaseFrag {
     }
 
     public void onClickEvent() {
-        
+
         /* 返回按钮:下次再说 */
         tvDownloadBack.setOnClickListener(v -> onBackPresss());
-        
+
         /* 重试按钮:出错后为重试按钮设置监听 */
         tvDownloadRetry.setOnClickListener(v -> {
             showLoadingUi();
             setProgresss(0);
             downloadHelper.download(updateBean.getFile());
         });
-        
+
         /* 安装按钮 */
         tvDownloadInstall.setOnClickListener(v -> {
             // 获取下载的文件名(非路径), bbb.apk
@@ -307,5 +307,4 @@ public class DownFrag extends BaseFrag {
         pgDownloadLoagding.setProgress(progress);
         tvDownloadPercent.setText(String.format(getResources().getString(R.string.downloading), progress));
     }
-
 }

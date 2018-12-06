@@ -11,7 +11,7 @@ import com.avos.avoscloud.FindCallback;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import xsda.xsda.R;
 import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Tgg;
@@ -22,15 +22,15 @@ import xsda.xsda.utils.Tgg;
 
 public class NetErrFrag extends BaseFrag {
 
-    @Bind(R.id.rl_neterror_all) 
+    @BindView(R.id.rl_neterror_all)
     RelativeLayout rlNeterrorAll;// 总布局
-    @Bind(R.id.tv_neterror_des)
+    @BindView(R.id.tv_neterror_des)
     TextView tvNeterrorDes;// 图标
-    @Bind(R.id.tv_neterror_logo)
+    @BindView(R.id.tv_neterror_logo)
     TextView tvNeterrorLogo;// 描述
-    @Bind(R.id.tv_neterror_retry)
+    @BindView(R.id.tv_neterror_retry)
     TextView tvNeterrorRetry;// 重试
-    @Bind(R.id.tv_neterror_back)
+    @BindView(R.id.tv_neterror_back)
     TextView tvNeterrorBack;// 退出
 
 

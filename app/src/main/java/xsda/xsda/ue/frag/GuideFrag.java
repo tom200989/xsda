@@ -15,8 +15,7 @@ import com.zhy.android.percent.support.PercentLinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import butterknife.BindView;
 import xsda.xsda.R;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Sgg;
@@ -27,15 +26,16 @@ import xsda.xsda.utils.Sgg;
 
 public class GuideFrag extends BaseFrag {
 
-    @Bind(R.id.vp_guide)
+    @BindView(R.id.vp_guide)
     ViewPager vpGuide;
-    @Bind(R.id.tv_guide_click)
+    @BindView(R.id.tv_guide_click)
     TextView tvGuideClick;
-    @Bind(R.id.ll_guide_points)
+    @BindView(R.id.ll_guide_points)
     PercentLinearLayout llGuidePoints;
 
     List<ImageView> guideViews = new ArrayList<>();
     List<ImageView> dotViews = new ArrayList<>();
+
     private int size = 15;// 圆点大小以及间隔参考
     private int[] res_bgs = new int[]{R.drawable.guide1, R.drawable.guide2, R.drawable.guide3};
     private int[] res_dots = new int[]{R.drawable.dot_guide_selected, R.drawable.dot_guide_unselected};
@@ -64,12 +64,6 @@ public class GuideFrag extends BaseFrag {
     @Override
     public boolean onBackPresss() {
         return false;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     /**
@@ -153,5 +147,11 @@ public class GuideFrag extends BaseFrag {
             container.addView(guideViews.get(position));
             return guideViews.get(position);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

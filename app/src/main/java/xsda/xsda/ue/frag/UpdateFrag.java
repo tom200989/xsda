@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import xsda.xsda.R;
 import xsda.xsda.bean.UpdateBean;
 import xsda.xsda.utils.Cons;
@@ -19,17 +19,17 @@ import xsda.xsda.utils.Sgg;
 
 public class UpdateFrag extends BaseFrag {
 
-    @Bind(R.id.iv_update_bg)
+    @BindView(R.id.iv_update_bg)
     ImageView ivUpdateBg;
-    @Bind(R.id.tv_update_title)
+    @BindView(R.id.tv_update_title)
     TextView tvUpdateTitle;
-    @Bind(R.id.tv_update_des)
+    @BindView(R.id.tv_update_des)
     TextView tvUpdateDes;
-    @Bind(R.id.tv_update_cancel)
+    @BindView(R.id.tv_update_cancel)
     TextView tvUpdateCancel;
-    @Bind(R.id.tv_update_ok)
+    @BindView(R.id.tv_update_ok)
     TextView tvUpdateOk;
-    @Bind(R.id.rl_update_content)
+    @BindView(R.id.rl_update_content)
     PercentRelativeLayout rlUpdateContent;
 
     private View inflate;
@@ -83,5 +83,4 @@ public class UpdateFrag extends BaseFrag {
             Lgg.t(Cons.TAG).ii(getClass().getSimpleName() + ":toGuideOrLogin()" + "to guide fragment");
         }
     }
-
 }
