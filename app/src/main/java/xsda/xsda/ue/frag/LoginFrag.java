@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
 import com.hiber.tools.layout.PercentRelativeLayout;
-import com.john.waveview.WaveView;
+import com.qianli.WaveView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

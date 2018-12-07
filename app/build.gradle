@@ -116,15 +116,9 @@ dependencies {
     implementation 'cn.leancloud.android:avoscloud-search:v4.6.4@aar'
     // RSA加密
     implementation files('libs/rsa.jar')
-    // 进度条
-    implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     // fastjson转换
     implementation 'com.alibaba:fastjson:1.2.47'
     implementation 'com.alibaba:fastjson:1.1.68.android'
-    // 等待条
-    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
-    // 波浪条
-    implementation 'com.github.john990:WaveView:v0.9'
     // eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
     // xutils 网络框架
@@ -135,4 +129,10 @@ dependencies {
     implementation(name: 'keys', ext: 'aar')
     // wechat login
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.6'
+    // 进度条
+    implementation(name: 'numprogress', ext: 'aar')
+    // 等待条(截止20181207为止,作者仍在更新, 因此无需重新打包)
+    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+    // 波浪条
+    implementation(name: 'waveviews', ext: 'aar')
 }

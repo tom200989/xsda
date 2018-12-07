@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
-import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.qianli.NumberProgressBar;
 
 import butterknife.BindView;
 import xsda.xsda.R;

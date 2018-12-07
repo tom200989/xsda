@@ -207,7 +207,7 @@
         app:layout_widthPercent="30%w" />
 
     <!-- wave -->
-    <com.john.waveview.WaveView
+    <com.qianli.WaveView
         android:id="@+id/wv_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -7,9 +7,9 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.hiber.tools.layout.PercentRelativeLayout;
+import com.qianli.NumberProgressBar;
 
 import java.io.File;
 

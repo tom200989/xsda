@@ -59,7 +59,7 @@
         </ScrollView>
 
         <!-- progress bar -->
-        <com.daimajia.numberprogressbar.NumberProgressBar
+        <com.qianli.NumberProgressBar
             android:visibility="gone"
             android:id="@+id/pg_download_loagding"
             android:layout_width="wrap_content"

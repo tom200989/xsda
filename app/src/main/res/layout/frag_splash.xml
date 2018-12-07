@@ -42,7 +42,7 @@
         app:layout_textSizePercent="2%h" />
 
     <!-- progress bar -->
-    <com.daimajia.numberprogressbar.NumberProgressBar
+    <com.qianli.NumberProgressBar
         android:id="@+id/pg_splash_loagding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
