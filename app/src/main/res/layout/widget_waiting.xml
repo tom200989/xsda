@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentRelativeLayout
+<com.hiber.tools.layout.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!-- wait -->
-    <com.zhy.android.percent.support.PercentRelativeLayout
+    <com.hiber.tools.layout.PercentRelativeLayout
         android:id="@+id/rl_waiting_all"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,7 +17,7 @@
             android:alpha="0.7"
             android:background="@color/colorGrayDark" />
 
-        <com.zhy.android.percent.support.PercentRelativeLayout
+        <com.hiber.tools.layout.PercentRelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -26,7 +26,7 @@
             app:layout_widthPercent="80%w">
 
             <!-- 指针 -->
-            <com.zhy.android.percent.support.PercentRelativeLayout
+            <com.hiber.tools.layout.PercentRelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -53,7 +53,7 @@
                     app:layout_heightPercent="70%h"
                     app:layout_widthPercent="70%w" />
 
-            </com.zhy.android.percent.support.PercentRelativeLayout>
+            </com.hiber.tools.layout.PercentRelativeLayout>
 
             <TextView
                 android:id="@+id/tv_waiting_des"
@@ -64,8 +64,8 @@
                 android:textColor="@color/colorCompanyDark"
                 app:layout_textSizePercent="25%h" />
 
-        </com.zhy.android.percent.support.PercentRelativeLayout>
+        </com.hiber.tools.layout.PercentRelativeLayout>
 
-    </com.zhy.android.percent.support.PercentRelativeLayout>
+    </com.hiber.tools.layout.PercentRelativeLayout>
 
-</com.zhy.android.percent.support.PercentRelativeLayout>
+</com.hiber.tools.layout.PercentRelativeLayout>

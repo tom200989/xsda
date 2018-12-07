@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.zhy.android.percent.support.PercentRelativeLayout;
+import com.hiber.tools.layout.PercentRelativeLayout;
 
 import butterknife.BindView;
 import xsda.xsda.R;

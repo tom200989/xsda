@@ -93,7 +93,8 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // 百分比布局
-    implementation 'com.zhy:percent-support-extends:1.1.1'
+    // implementation 'com.zhy:percent-support-extends:1.1.1'
+    //implementation(name: 'perlayout', ext: 'aar')
     // 方法数超过65535分包(注: 1.0.1版本最稳定)
     implementation 'com.android.support:multidex:1.0.1'
     // 该版本最稳定

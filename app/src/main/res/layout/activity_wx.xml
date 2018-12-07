@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentRelativeLayout
+<com.hiber.tools.layout.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +8,7 @@
     tools:context=".wxapi.WXEntryActivity">
 
     <!-- logo -->
-    <com.zhy.android.percent.support.PercentRelativeLayout
+    <com.hiber.tools.layout.PercentRelativeLayout
         android:layout_width="match_parent"
         android:id="@+id/rl_wx_logo"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             android:background="@drawable/wechat_logo"
             app:layout_widthPercent="17%w" />
 
-    </com.zhy.android.percent.support.PercentRelativeLayout>
+    </com.hiber.tools.layout.PercentRelativeLayout>
     
     <!-- des -->
     <TextView
@@ -54,4 +54,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-</com.zhy.android.percent.support.PercentRelativeLayout>
+</com.hiber.tools.layout.PercentRelativeLayout>

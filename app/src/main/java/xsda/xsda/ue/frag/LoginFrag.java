@@ -7,8 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
+import com.hiber.tools.layout.PercentRelativeLayout;
 import com.john.waveview.WaveView;
-import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

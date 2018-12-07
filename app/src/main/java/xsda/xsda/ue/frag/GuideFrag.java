@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.zhy.android.percent.support.PercentLinearLayout;
+import com.hiber.tools.layout.PercentLinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;

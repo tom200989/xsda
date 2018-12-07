@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentRelativeLayout
+<com.hiber.tools.layout.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -7,7 +7,7 @@
     android:background="@color/colorWhite">
 
     <!-- banner -->
-    <com.zhy.android.percent.support.PercentRelativeLayout
+    <com.hiber.tools.layout.PercentRelativeLayout
         android:id="@+id/rl_bindphone_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,10 +39,10 @@
             android:layout_marginEnd="10dp"
             android:background="@color/colorCompany" />
 
-    </com.zhy.android.percent.support.PercentRelativeLayout>
+    </com.hiber.tools.layout.PercentRelativeLayout>
 
     <!-- phone number -->
-    <com.zhy.android.percent.support.PercentRelativeLayout
+    <com.hiber.tools.layout.PercentRelativeLayout
         android:id="@+id/rl_bindPhone_phonenum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,10 +83,10 @@
             android:layout_alignParentBottom="true"
             android:background="@color/colorCompanyDark" />
 
-    </com.zhy.android.percent.support.PercentRelativeLayout>
+    </com.hiber.tools.layout.PercentRelativeLayout>
 
     <!-- password -->
-    <com.zhy.android.percent.support.PercentRelativeLayout
+    <com.hiber.tools.layout.PercentRelativeLayout
         android:id="@+id/rl_bindphone_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -127,10 +127,10 @@
             android:layout_alignParentBottom="true"
             android:background="@color/colorCompanyDark" />
 
-    </com.zhy.android.percent.support.PercentRelativeLayout>
+    </com.hiber.tools.layout.PercentRelativeLayout>
 
     <!-- verify code -->
-    <com.zhy.android.percent.support.PercentRelativeLayout
+    <com.hiber.tools.layout.PercentRelativeLayout
         android:id="@+id/rl_bindphone_verify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
         app:layout_marginTopPercent="3%h"
         app:layout_widthPercent="80%w">
 
-        <com.zhy.android.percent.support.PercentRelativeLayout
+        <com.hiber.tools.layout.PercentRelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_widthPercent="50%w">
@@ -167,7 +167,7 @@
                 android:textColorHint="@color/colorCompany"
                 app:layout_textSizePercent="27%h" />
 
-        </com.zhy.android.percent.support.PercentRelativeLayout>
+        </com.hiber.tools.layout.PercentRelativeLayout>
 
         <!-- get verify button -->
         <TextView
@@ -191,7 +191,8 @@
             android:background="@color/colorCompanyDark"
             app:layout_widthPercent="50%w" />
 
-    </com.zhy.android.percent.support.PercentRelativeLayout>
+    </com.hiber.tools.layout.PercentRelativeLayout>
+    >
 
     <!-- commit -->
     <TextView
@@ -216,4 +217,4 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-</com.zhy.android.percent.support.PercentRelativeLayout>
+</com.hiber.tools.layout.PercentRelativeLayout>
