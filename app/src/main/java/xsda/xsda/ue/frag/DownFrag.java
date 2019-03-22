@@ -150,14 +150,14 @@ public class DownFrag extends BaseFrag {
         GetUpdateHelper getUpdateHelper = new GetUpdateHelper();
         getUpdateHelper.setOnExceptionListener(e -> toGuideOrLogin());
         getUpdateHelper.setOnGetUpdateListener(updateBean -> {
-            int localVersion = Ogg.getLocalVersion(getActivity());
+            int localVersion = Ogg.getLocalVersion(activity);
             int newVersion = Integer.valueOf(updateBean.getNewVersionCode());
             if (localVersion > newVersion) {
                 toGuideOrLogin();
             } else if (newVersion - localVersion <= 2) {
                 toGuideOrLogin();
             } else {
-                finish();
+                finishActivity();
                 kill();
             }
         });

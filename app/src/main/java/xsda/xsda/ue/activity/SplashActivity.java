@@ -1,7 +1,5 @@
 package xsda.xsda.ue.activity;
 
-import android.Manifest;
-
 import com.avos.avoscloud.AVUser;
 import com.hiber.bean.RootProperty;
 import com.hiber.hiber.RootMAActivity;
@@ -37,14 +35,6 @@ public class SplashActivity extends RootMAActivity {
             BindphoneFrag.class// 绑定手机                   
     };
 
-    private static String[] permissions = {// 填写需要申请的权限
-            Manifest.permission.READ_EXTERNAL_STORAGE,// 读取外部存储
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,// 写入外部存储
-            Manifest.permission.READ_PHONE_STATE// 电话状态
-            // .... 需要什么权限, 需要先声明 ....
-            // 注意: 非危险权限不需要申请, 一定不能加进来, 否则影响业务逻辑
-    };
-
     private TimerHelper timerHelper;
 
     @Override
@@ -76,7 +66,6 @@ public class SplashActivity extends RootMAActivity {
         rootProperty.setProjectDirName(Cons.INSTALL_FILEPATH);
         rootProperty.setFragmentClazzs(frags);
         rootProperty.setPermissionCode(0x100);
-        rootProperty.setPermissions(permissions);
         return rootProperty;
     }
 

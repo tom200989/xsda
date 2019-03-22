@@ -230,7 +230,7 @@ public class LoginFrag extends BaseFrag {
             loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
             loginHelper.setOnLoginSuccessListener(avUser -> {
                 // 保存用户对象以及即时通讯对象
-                ((SplashActivity) getActivity()).avUser = avUser;
+                ((SplashActivity) activity).avUser = avUser;
                 // 提示
                 Tgg.show(getActivity(), R.string.login_success, 2500);
                 // 保存用户信息到临时集合
@@ -271,7 +271,7 @@ public class LoginFrag extends BaseFrag {
      */
     public void forgotPassword() {
         // 忘记密码
-        Ogg.hideKeyBoard(getActivity());
+        Ogg.hideKeyBoard(activity);
         toFrag(getClass(), ForgotPsdFrag.class, null, true);
     }
 
@@ -280,7 +280,7 @@ public class LoginFrag extends BaseFrag {
      */
     private void register() {
         // 前往登陆界面
-        Ogg.hideKeyBoard(getActivity());
+        Ogg.hideKeyBoard(activity);
         toFrag(getClass(), RegisterFrag.class, null, true);
     }
 

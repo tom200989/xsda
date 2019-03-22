@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hiber.tools.layout.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 背景 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="@color/colorGray" />
+
+    <!-- 内容 -->
+    <com.hiber.tools.layout.PercentRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_conner_8"
+        app:layout_heightPercent="40%h"
+        app:layout_widthPercent="80%w">
+
+        <TextView
+            android:id="@+id/tv_no_pass_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/splash_no_pass_title"
+            android:textColor="@color/colorCompanyDark"
+            app:layout_marginTopPercent="5%h"
+            app:layout_textSizePercent="8%h" />
+
+        <TextView
+            android:textColor="@color/colorCompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_no_pass_title"
+            android:layout_margin="15dp"
+            android:text="@string/splash_tip_no_pass_content"
+            app:layout_textSizePercent="6.5%h" />
+        
+        <com.hiber.tools.layout.PercentRelativeLayout
+            app:layout_heightPercent="8%h"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+        </com.hiber.tools.layout.PercentRelativeLayout>
+
+    </com.hiber.tools.layout.PercentRelativeLayout>
+
+</com.hiber.tools.layout.PercentRelativeLayout>

@@ -202,7 +202,7 @@ public class RegisterFrag extends BaseFrag {
      */
     private void toGetVerifyInit() {
         // 获取上次获取验证码成功的时间
-        long lastServerDate = Sgg.getInstance(getActivitys()).getLong(Cons.SP_SERVER_DATE, 0);
+        long lastServerDate = Sgg.getInstance(activity).getLong(Cons.SP_SERVER_DATE, 0);
 
         // 时间正常
         if (currentServerDate > lastServerDate) {

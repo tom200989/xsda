@@ -1,5 +1,6 @@
 package xsda.xsda.ue.frag;
 
+import android.Manifest;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
@@ -52,6 +53,14 @@ public class SplashFrag extends BaseFrag {
     private UpdateBean updateBean;
     private Handler handler;
 
+    private static String[] permissions = {// 填写需要申请的权限
+            Manifest.permission.READ_EXTERNAL_STORAGE,// 读取外部存储
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,// 写入外部存储
+            Manifest.permission.READ_PHONE_STATE// 电话状态
+            // .... 需要什么权限, 需要先声明 ....
+            // 注意: 非危险权限不需要申请, 一定不能加进来, 否则影响业务逻辑
+    };
+
     @Override
     public int onInflateLayout() {
         handler = new Handler();
@@ -59,7 +68,7 @@ public class SplashFrag extends BaseFrag {
     }
 
     @Override
-    public void initViewFinish() {
+    public void initViewFinish(View inflateView) {
         initRes();
         handler.postDelayed(this::ping, 2000);
     }
@@ -67,6 +76,14 @@ public class SplashFrag extends BaseFrag {
     @Override
     public void onNexts(Object yourBean, View view, String whichFragmentStart) {
 
+    }
+
+    @Override
+    public String[] initPermissed() {
+        setPermissedListener((isAllPass, strings) -> {
+            // TODO: 2019/3/22 0022 弹出提示面板进行提示
+        });
+        return permissions;
     }
 
     @Override
@@ -109,7 +126,7 @@ public class SplashFrag extends BaseFrag {
             // 显示进度
             if (progress <= 50) {
                 setLoadingText(check_net);
-            } else if (progress > 50 & progress <= 75) {
+            } else if (progress <= 75) {
                 setLoadingText(loading_text);
             } else {
                 setLoadingText(loading_success);
@@ -208,7 +225,7 @@ public class SplashFrag extends BaseFrag {
         loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
         loginHelper.setOnLoginSuccessListener(avUser -> {
             // 保存用户对象以及即时通讯对象
-            ((SplashActivity) getActivity()).avUser = avUser;
+            ((SplashActivity) activity).avUser = avUser;
             // 隐藏软键盘
             Ogg.hideKeyBoard(getActivity());
             toFrag(getClass(), MainFrag.class, null, false);

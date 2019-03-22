@@ -118,7 +118,7 @@ public class BindphoneFrag extends RootFrag {
      */
     private void toGetVerifyInit() {
         // 获取上次获取验证码成功的时间
-        long lastServerDate = Sgg.getInstance(getActivitys()).getLong(Cons.SP_SERVER_DATE_FOR_BIND, 0);
+        long lastServerDate = Sgg.getInstance(activity).getLong(Cons.SP_SERVER_DATE_FOR_BIND, 0);
 
         // 时间正常
         if (currentServerDate > lastServerDate) {
