@@ -4,6 +4,8 @@
     <string name="app_company">呵护你的每一天</string>
     <string name="splash_no_pass_title">警告</string>
     <string name="splash_tip_no_pass_content">使用APP需要通过以下列举的权限,否则将退出APP.为了让您拥有更优质的体验,请点击同意并重新打开APP,谢谢！</string>
+    <string name="splash_no_pass_leave">离开</string>
+    <string name="splash_no_pass_agree">好的</string>
     <string name="neterror">T_T</string>
     <string name="neterror_retry">点击重试</string>
     <string name="exit">退出</string>
