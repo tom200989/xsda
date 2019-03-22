@@ -5,7 +5,6 @@ import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.avos.avoscloud.AVOSCloud;
-import com.jiagu.sdk.hiberProtected;
 import com.jiagu.sdk.xsdakeyProtected;
 import com.mob.MobSDK;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -47,7 +46,6 @@ public class XsdaApplication extends MultiDexApplication {
         MobSDK.init(this);
         // 初始化加固的SDK
         xsdakeyProtected.install(this);// leancloud key
-        hiberProtected.install(this);// 框架
         // 初始化获取设备ID
         deviceId = Sgg.getInstance(this).getString(Cons.SP_DEVICE_ID, "");
         if (TextUtils.isEmpty(deviceId)) {

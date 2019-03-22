@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 /**
- * SharedPreferences存储数据方式工具�?
+ * SharedPreferences存储数据方式工具
  *
  * @author Tank
  */
@@ -25,6 +25,9 @@ public class Sgg {
     public Sgg(Context context) {
         super();
         this.context = context.getApplicationContext();
+        if (this.context == null) {
+            this.context = context;
+        }
     }
 
     /**
@@ -40,7 +43,7 @@ public class Sgg {
      */
 
     public Sgg setSP_NAME(String sharedPrefsName) {
-        this.SP_NAME = sharedPrefsName;
+        SP_NAME = sharedPrefsName;
         return this;
     }
 

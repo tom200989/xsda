@@ -75,7 +75,7 @@ public class NetErrFrag extends BaseFrag {
 
     @Override
     public boolean onBackPresss() {
-        finish();
+        finishActivity();
         kill();
         return true;
     }

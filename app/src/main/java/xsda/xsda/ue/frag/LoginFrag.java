@@ -1,5 +1,6 @@
 package xsda.xsda.ue.frag;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.EditText;
@@ -109,7 +110,8 @@ public class LoginFrag extends BaseFrag {
             Tgg.show(activity, R.string.login_wechat_install, 2500);
         } else {
             widgetLoginAuthorized.setVisibility(View.GONE);
-            toActivity(activity, WXEntryActivity.class, false);
+            Intent intent = new Intent(activity, WXEntryActivity.class);
+            startActivity(intent);
         }
     }
 

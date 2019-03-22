@@ -91,48 +91,49 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    api fileTree(include: ['*.jar'], dir: 'libs')
     // 方法数超过65535分包(注: 1.0.1版本最稳定)
-    implementation 'com.android.support:multidex:1.0.1'
+    api 'com.android.support:multidex:1.0.1'
     // butterknife
-    implementation 'com.jakewharton:butterknife:9.0.0-rc2'
+    api 'com.jakewharton:butterknife:9.0.0-rc2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
     // 布局不能预览则一定要添加以下三行依赖
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    api 'com.android.support:design:28.0.0'
+    api 'com.android.support:support-v4:28.0.0'
+    api 'com.android.support:appcompat-v7:28.0.0'
     // LeanCloud 基础包
-    implementation 'cn.leancloud.android:avoscloud-sdk:v4.6.4'
+    api 'cn.leancloud.android:avoscloud-sdk:v4.6.4'
     // 推送与实时聊天需要的包
-    implementation('cn.leancloud.android:avoscloud-push:v4.6.4@aar') { transitive = true }
+    api('cn.leancloud.android:avoscloud-push:v4.6.4@aar') { transitive = true }
     // LeanCloud 统计包
-    implementation 'cn.leancloud.android:avoscloud-statistics:v4.6.4'
+    api 'cn.leancloud.android:avoscloud-statistics:v4.6.4'
     // LeanCloud 用户反馈包
-    implementation 'cn.leancloud.android:avoscloud-feedback:v4.6.4@aar'
+    api 'cn.leancloud.android:avoscloud-feedback:v4.6.4@aar'
     // avoscloud-sns：LeanCloud 第三方登录包
-    implementation 'cn.leancloud.android:avoscloud-sns:v4.6.4@aar'
-    implementation 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+    api 'cn.leancloud.android:avoscloud-sns:v4.6.4@aar'
+    api 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
     // LeanCloud 应用内搜索包
-    implementation 'cn.leancloud.android:avoscloud-search:v4.6.4@aar'
+    api 'cn.leancloud.android:avoscloud-search:v4.6.4@aar'
     // RSA加密
-    implementation files('libs/rsa.jar')
+    api files('libs/rsa.jar')
     // fastjson转换
-    implementation 'com.alibaba:fastjson:1.2.47'
-    implementation 'com.alibaba:fastjson:1.1.68.android'
+    api 'com.alibaba:fastjson:1.2.47'
+    api 'com.alibaba:fastjson:1.1.68.android'
     // eventbus
-    implementation 'org.greenrobot:eventbus:3.1.1'
+    api 'org.greenrobot:eventbus:3.1.1'
     // xutils 网络框架
-    implementation 'org.xutils:xutils:3.5.0'
+    api 'org.xutils:xutils:3.5.0'
     // 布局架构
-    implementation(name: 'hiber_lock', ext: 'aar')
+    api(name: 'ma_hiber2', ext: 'aar')
+    // implementation(name: 'hiber_mkn0', ext: 'aar')
     // key
-    implementation(name: 'keys', ext: 'aar')
+    api(name: 'keys', ext: 'aar')
     // wechat login
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.6'
+    api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.6'
     // 进度条
-    implementation(name: 'numprogress', ext: 'aar')
+    api(name: 'numprogress', ext: 'aar')
     // 等待条(截止20181207为止,作者仍在更新, 因此无需重新打包)
-    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+    api 'com.github.ybq:Android-SpinKit:1.2.0'
     // 波浪条
-    implementation(name: 'waveviews', ext: 'aar')
+    api(name: 'waveviews', ext: 'aar')
 }
