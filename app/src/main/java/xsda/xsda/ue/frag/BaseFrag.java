@@ -75,7 +75,7 @@ public class BaseFrag extends RootFrag {
         Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":startTimer()");
         stopTimer();
         Lgg.t(Cons.TAG).ii("Method-->" + getClass().getSimpleName() + " renew the timer");
-        timerHelper = new TimerHelper(getActivity()) {
+        timerHelper = new TimerHelper(activity) {
             @Override
             public void doSomething() {
                 checkLogin();
@@ -91,7 +91,7 @@ public class BaseFrag extends RootFrag {
         Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":checkLogin()");
 
         // 0.检查是否处于登陆状态
-        AVUser avUser = ((SplashActivity) getActivity()).avUser;
+        AVUser avUser = ((SplashActivity) activity).avUser;
         if (avUser == null) {
             avUser = AVUser.getCurrentUser();
             if (avUser == null) {
@@ -134,7 +134,7 @@ public class BaseFrag extends RootFrag {
     private void checkDeviceId(AVObject avo) {
         // 获取服务器ID以及本地ID
         String deviceIdFromServer = avo.getString(Avfield.LoginStatus.deviceId);
-        String deviceIdFromLocal = Sgg.getInstance(getActivity()).getString(Cons.SP_DEVICE_ID, "");
+        String deviceIdFromLocal = Sgg.getInstance(activity).getString(Cons.SP_DEVICE_ID, "");
         if (!deviceIdFromServer.equalsIgnoreCase(deviceIdFromLocal)) {
             /* 如果ID不相等 & 设备处于登陆状态--> 意味这其他设备登陆 */
             otherDevicesLogin(avo);
@@ -145,7 +145,7 @@ public class BaseFrag extends RootFrag {
      * 其他设备登陆
      */
     public void otherDevicesLogin(AVObject avo) {
-        Tgg.show(getActivity(), R.string.base_other_login, 2500);
+        Tgg.show(activity, R.string.base_other_login, 2500);
         toFrag(getClass(), LoginFrag.class, null, false);
         Lgg.t(Cons.TAG).ii("Method--> " + getClass().getSimpleName() + ":otherDevicesLogin()");
     }
@@ -155,11 +155,11 @@ public class BaseFrag extends RootFrag {
      */
     private void checkLoginError(@Nullable AVException e) {
         if (e != null && e.getCode() == 0) {
-            Tgg.show(getActivity(), R.string.base_network_login, 2500);
+            Tgg.show(activity, R.string.base_network_login, 2500);
             toFrag(getClass(), NetErrFrag.class, null, false);
             Egg.print(getClass().getSimpleName(), ":checkLoginError()", e, null);
         } else {
-            Tgg.show(getActivity(), R.string.base_login_error, 2500);
+            Tgg.show(activity, R.string.base_login_error, 2500);
             toFrag(getClass(), LoginFrag.class, null, false);
             Egg.print(getClass().getSimpleName(), ":checkLoginError()", e, null);
         }

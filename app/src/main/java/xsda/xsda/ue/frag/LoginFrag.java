@@ -223,16 +223,16 @@ public class LoginFrag extends BaseFrag {
         // 匹配规则
         boolean isMatcher = matchRule(phoneNum, password);
         if (isMatcher) {
-            LoginOrOutHelper loginHelper = new LoginOrOutHelper(getActivity());
+            LoginOrOutHelper loginHelper = new LoginOrOutHelper(activity);
             loginHelper.setOnLoginPrepareListener(() -> widgetLoginWaitting.setVisibleText(getString(R.string.logining)));
             loginHelper.setOnLoginAfterListener(() -> widgetLoginWaitting.setGone());
-            loginHelper.setOnLoginErrorListener(ex -> Tgg.show(getActivity(), R.string.login_failed, 2500));
-            loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
+            loginHelper.setOnLoginErrorListener(ex -> Tgg.show(activity, R.string.login_failed, 2500));
+            loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(activity, R.string.login_user_not_exist, 2500));
             loginHelper.setOnLoginSuccessListener(avUser -> {
                 // 保存用户对象以及即时通讯对象
                 ((SplashActivity) activity).avUser = avUser;
                 // 提示
-                Tgg.show(getActivity(), R.string.login_success, 2500);
+                Tgg.show(activity, R.string.login_success, 2500);
                 // 保存用户信息到临时集合
                 if (ivLoginRememberCheckbox.getDrawable() == checked) {
                     Ogg.saveLoginJson(activity, phoneNum, password, true);
@@ -240,7 +240,7 @@ public class LoginFrag extends BaseFrag {
                     Ogg.saveLoginJson(activity, "", "", false);
                 }
                 // 封装数据并跳转
-                Ogg.hideKeyBoard(getActivity());
+                Ogg.hideKeyBoard(activity);
                 toFrag(getClass(), MainFrag.class, null, false);
                 Lgg.t(Cons.TAG).ii("login success to main fragment");
             });
@@ -257,10 +257,10 @@ public class LoginFrag extends BaseFrag {
      */
     private boolean matchRule(String phoneNum, String password) {
         if (!Ogg.matchPhoneReg(phoneNum)) {
-            Tgg.show(getActivity(), getString(R.string.register_username_tip), 2500);
+            Tgg.show(activity, getString(R.string.register_username_tip), 2500);
             return false;
         } else if (password.length() < 8 | password.length() > 16) {
-            Tgg.show(getActivity(), getString(R.string.register_password_tip), 2500);
+            Tgg.show(activity, getString(R.string.register_password_tip), 2500);
             return false;
         }
         return true;

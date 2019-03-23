@@ -67,7 +67,7 @@ public class NetErrFrag extends BaseFrag {
                 if (e == null) {
                     toFrag(getClass(), MainFrag.class, null, false);
                 } else {
-                    Tgg.show(getActivity(), R.string.base_network_login, 2500);
+                    Tgg.show(activity, R.string.base_network_login, 2500);
                 }
             }
         });

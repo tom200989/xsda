@@ -82,4 +82,11 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+    <!-- no pass permiss -->
+    <xsda.xsda.widget.NoPassPermissWidget
+        android:id="@+id/wd_splash_no_pass_permiss"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </com.hiber.tools.layout.PercentRelativeLayout>

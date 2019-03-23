@@ -214,7 +214,7 @@ public class ForgotPsdFrag extends BaseFrag {
                 String verifyCode = etForgotInputVerifyCode.getText().toString();
                 if (currentServerDate != -1) {
                     /* 提交验证码 */
-                    ResetPasswordHelper resetPasswordHelper = new ResetPasswordHelper(getActivity());
+                    ResetPasswordHelper resetPasswordHelper = new ResetPasswordHelper(activity);
                     resetPasswordHelper.setOnPrepareListener(() -> widgetWaiting.setVisibleByAnim());
                     resetPasswordHelper.setOnAfterListener(() -> widgetWaiting.setGone());
                     resetPasswordHelper.setOnResetGetVerifyErrorListener(err -> Tgg.show(activity, text_Verify_error, 2000));
@@ -238,7 +238,7 @@ public class ForgotPsdFrag extends BaseFrag {
     private void getVerifyCode(String phoneNum, String password) {
 
         /* 申请获取重置验证码 */
-        ResetPasswordHelper resetPasswordHelper = new ResetPasswordHelper(getActivity());
+        ResetPasswordHelper resetPasswordHelper = new ResetPasswordHelper(activity);
         resetPasswordHelper.setOnPrepareListener(() -> widgetWaiting.setVisibleByAnim());
         resetPasswordHelper.setOnAfterListener(() -> widgetWaiting.setGone());
         resetPasswordHelper.setOnResetGetVerifyErrorListener(err -> {
@@ -331,7 +331,7 @@ public class ForgotPsdFrag extends BaseFrag {
             timer.stop();
             timer = null;
         }
-        Ogg.hideKeyBoard(getActivity());
+        Ogg.hideKeyBoard(activity);
         toFrag(getClass(), LoginFrag.class, null, false);
         return true;
     }

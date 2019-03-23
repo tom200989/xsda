@@ -2,10 +2,13 @@
     <string name="app_sui">com.higesea.xsda</string>
     <string name="app_name">小绳大爱</string>
     <string name="app_company">呵护你的每一天</string>
+    <string name="splash_permiss_tip_title">以下权限通过</string>
+    <string name="splash_permiss_tip_content">1.读写权限未通过\n2.电话状态未通过\n\n点击[去设置]可自行打开</string>
+    <string name="splash_permiss_tip_cancel">稍候再说</string>
+    <string name="splash_permiss_tip_ok">去设置</string>
     <string name="splash_no_pass_title">警告</string>
-    <string name="splash_tip_no_pass_content">使用APP需要通过以下列举的权限,否则将退出APP.为了让您拥有更优质的体验,请点击同意并重新打开APP,谢谢！</string>
-    <string name="splash_no_pass_leave">离开</string>
-    <string name="splash_no_pass_agree">好的</string>
+    <string name="splash_tip_no_pass_content">使用APP需要通过默认权限,否则将影响正常使用.为了让您拥有更优质的体验,请重启APP并点击同意,谢谢！</string>
+    <string name="splash_no_pass_leave">好的,我知道了</string>
     <string name="neterror">T_T</string>
     <string name="neterror_retry">点击重试</string>
     <string name="exit">退出</string>

@@ -167,7 +167,7 @@ public class RegisterFrag extends BaseFrag {
 
                 if (currentServerDate != -1) {
                     /* 提交验证码 */
-                    VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
+                    VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(activity);
                     verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setVisibleByAnim());
                     verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
                     verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(activity, text_Verify_error, 2000));
@@ -226,7 +226,7 @@ public class RegisterFrag extends BaseFrag {
 
     @Override
     public boolean onBackPresss() {
-        Ogg.hideKeyBoard(getActivity());
+        Ogg.hideKeyBoard(activity);
         toFrag(getClass(), LoginFrag.class, null, false);
         return true;
     }
@@ -337,7 +337,7 @@ public class RegisterFrag extends BaseFrag {
     private void getVerifyCode(String phoneNum, String password) {
 
         /* 申请获取验证码 */
-        VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
+        VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(activity);
         verifyCodeHelper.setOnGetServerDateErrorListener(e -> Tgg.show(activity, text_timeout, 2000));
         verifyCodeHelper.setOnUserHadExistListener(() -> Tgg.show(activity, text_user_exist, 2000));
         verifyCodeHelper.setOnGetVerifyErrorListener(e -> {

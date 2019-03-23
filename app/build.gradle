@@ -124,7 +124,7 @@ dependencies {
     // xutils 网络框架
     api 'org.xutils:xutils:3.5.0'
     // 布局架构
-    api(name: 'ma_hiber2', ext: 'aar')
+    api(name: 'ma_hiber2_1', ext: 'aar')
     // implementation(name: 'hiber_mkn0', ext: 'aar')
     // key
     api(name: 'keys', ext: 'aar')

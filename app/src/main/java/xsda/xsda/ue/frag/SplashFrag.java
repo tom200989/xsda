@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
+import com.hiber.bean.PermissBean;
+import com.hiber.bean.StringBean;
 import com.qianli.NumberProgressBar;
 
 import butterknife.BindView;
@@ -24,6 +26,7 @@ import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
+import xsda.xsda.widget.NoPassPermissWidget;
 import xsda.xsda.widget.WaitingWidget;
 
 /**
@@ -31,7 +34,6 @@ import xsda.xsda.widget.WaitingWidget;
  */
 
 public class SplashFrag extends BaseFrag {
-
 
     @BindView(R.id.iv_splash_logo)
     ImageView ivSplashLogo;// 图标
@@ -45,6 +47,8 @@ public class SplashFrag extends BaseFrag {
     TextView tvSplashLoadingText;// 进度文本
     @BindView(R.id.wd_splash_wait)
     WaitingWidget widgetLoginWaitting;// 等待面板
+    @BindView(R.id.wd_splash_no_pass_permiss)
+    NoPassPermissWidget wdSplashNoPassPermiss;// 权限未通过面板
 
     public static String DEFAULT_TEXT = "";
     private String check_net;
@@ -69,26 +73,54 @@ public class SplashFrag extends BaseFrag {
 
     @Override
     public void initViewFinish(View inflateView) {
+
+    }
+
+    @Override
+    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
         initRes();
         handler.postDelayed(this::ping, 2000);
     }
 
     @Override
-    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
-
-    }
-
-    @Override
     public String[] initPermissed() {
         setPermissedListener((isAllPass, strings) -> {
-            // TODO: 2019/3/22 0022 弹出提示面板进行提示
+            // 弹出提示面板进行提示
+            wdSplashNoPassPermiss.setVisibility(View.VISIBLE);
         });
+        // 设置权限提醒
+        setPermissBean(setPermissContent());
         return permissions;
+    }
+
+    /**
+     * 设置权限提醒
+     *
+     * @return 权限permissbean
+     */
+    private PermissBean setPermissContent() {
+        PermissBean permissBean = new PermissBean();
+        StringBean stringBean = new StringBean();
+        stringBean.setTitle(getString(R.string.splash_permiss_tip_title));
+        stringBean.setContent(getString(R.string.splash_permiss_tip_content));
+        stringBean.setCancel(getString(R.string.splash_permiss_tip_cancel));
+        stringBean.setOk(getString(R.string.splash_permiss_tip_ok));
+        stringBean.setColorTitle(getRootColor(R.color.colorCompanyDark));
+        stringBean.setColorContent(getRootColor(R.color.colorCompany));
+        stringBean.setColorCancel(getRootColor(R.color.colorCompany));
+        stringBean.setColorOk(getRootColor(R.color.colorCompanyDark));
+        permissBean.setPermissView(null);
+        permissBean.setStringBean(stringBean);
+        return permissBean;
     }
 
     @Override
     public boolean onBackPresss() {
-        kill();
+        if (wdSplashNoPassPermiss.getVisibility() == View.VISIBLE) {
+            Lgg.t(Cons.TAG).ii("splash click no pass permiss backpress");
+        } else {
+            kill();
+        }
         return true;
     }
 
@@ -110,7 +142,7 @@ public class SplashFrag extends BaseFrag {
             GetServerDateHelper getServerDateHelper = new GetServerDateHelper();
             getServerDateHelper.setOnGetServerErrorListener(e -> checkUpdate());
             getServerDateHelper.setOnGetServerDateLongSuccessListener(currentTime -> {
-                long lastTime = Sgg.getInstance(getActivity()).getLong(Cons.SP_LAST_CANCEL_UPDATE_DATE, 0);
+                long lastTime = Sgg.getInstance(activity).getLong(Cons.SP_LAST_CANCEL_UPDATE_DATE, 0);
                 if (lastTime >= currentTime) {/* 时间被修改过 */
                     checkUpdate();// 检测是否有新版本
                 } else if (currentTime - lastTime > 24 * 60 * 60 * 1000) {/* 距离上次点击取消超过24小时 */
@@ -218,16 +250,16 @@ public class SplashFrag extends BaseFrag {
         String phoneNum = loginBean.getPhoneNum();
         String password = loginBean.getPassword();
 
-        LoginOrOutHelper loginHelper = new LoginOrOutHelper(getActivity());
+        LoginOrOutHelper loginHelper = new LoginOrOutHelper(activity);
         loginHelper.setOnLoginPrepareListener(() -> widgetLoginWaitting.setVisibleText(getString(R.string.logining)));
         loginHelper.setOnLoginAfterListener(() -> widgetLoginWaitting.setGone());
-        loginHelper.setOnLoginErrorListener(ex -> Tgg.show(getActivity(), R.string.login_failed, 2500));
-        loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(getActivity(), R.string.login_user_not_exist, 2500));
+        loginHelper.setOnLoginErrorListener(ex -> Tgg.show(activity, R.string.login_failed, 2500));
+        loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(activity, R.string.login_user_not_exist, 2500));
         loginHelper.setOnLoginSuccessListener(avUser -> {
             // 保存用户对象以及即时通讯对象
             ((SplashActivity) activity).avUser = avUser;
             // 隐藏软键盘
-            Ogg.hideKeyBoard(getActivity());
+            Ogg.hideKeyBoard(activity);
             toFrag(getClass(), MainFrag.class, null, false);
             Lgg.t(Cons.TAG).ii("login success to main fragment");
         });

@@ -71,7 +71,7 @@ public class UpdateFrag extends BaseFrag {
      */
     private void toGuideOrLogin() {
         // 提交用户点击「取消」的时间
-        Sgg.getInstance(getActivity()).putLong(Cons.SP_LAST_CANCEL_UPDATE_DATE, System.currentTimeMillis());
+        Sgg.getInstance(activity).putLong(Cons.SP_LAST_CANCEL_UPDATE_DATE, System.currentTimeMillis());
         // 向导页|登录页
         if (Sgg.getInstance(activity).getBoolean(Cons.SP_GUIDE, false)) {
             // 进入登录页

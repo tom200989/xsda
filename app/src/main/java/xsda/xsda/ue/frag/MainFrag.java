@@ -73,14 +73,14 @@ public class MainFrag extends BaseFrag {
 
     private void clickEvent() {
         tvTestMain.setOnClickListener(v -> {
-            LoginOrOutHelper loginOrOutHelper = new LoginOrOutHelper(getActivity());
+            LoginOrOutHelper loginOrOutHelper = new LoginOrOutHelper(activity);
             loginOrOutHelper.setOnLogOutSuccessListener(() -> {
                 LoginBean loginBean = Ogg.readLoginJson(activity);
                 Ogg.saveLoginJson(activity, loginBean.getPhoneNum(), loginBean.getPassword(), false);
                 toFrag(getClass(), LoginFrag.class, null, false);
-                Tgg.show(getActivity(), "登出成功", 2500);
+                Tgg.show(activity, "登出成功", 2500);
             });
-            loginOrOutHelper.setOnLogOutFailedListener(e -> Tgg.show(getActivity(), "登出失败", 2500));
+            loginOrOutHelper.setOnLogOutFailedListener(e -> Tgg.show(activity, "登出失败", 2500));
             loginOrOutHelper.logout();
         });
     }

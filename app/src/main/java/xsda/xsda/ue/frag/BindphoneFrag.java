@@ -196,7 +196,7 @@ public class BindphoneFrag extends RootFrag {
 
         /* 申请获取验证码 */
         widgetWaiting.setVisibleByAnim();
-        VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
+        VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(activity);
         verifyCodeHelper.setOnGetServerDateErrorListener(e -> {
             current_state = OP_CAN_EXIT;// 修改状态为「可退出」
             Tgg.show(activity, R.string.register_timeout, 2000);
@@ -290,7 +290,7 @@ public class BindphoneFrag extends RootFrag {
             String verifyCode = etBindphoneVerify.getText().toString();
             if (currentServerDate != -1) {
                 /* 提交验证码 */
-                VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(getActivity());
+                VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(activity);
                 verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setVisibleByAnim());
                 verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
                 verifyCodeHelper.setOnCommitVerifyErrorListener(e -> {
@@ -334,28 +334,28 @@ public class BindphoneFrag extends RootFrag {
      * @param password 密码
      */
     private void toLogin(String phoneNum, String password) {
-        LoginOrOutHelper loginHelper = new LoginOrOutHelper(getActivity());
+        LoginOrOutHelper loginHelper = new LoginOrOutHelper(activity);
         loginHelper.setOnLoginPrepareListener(() -> widgetWaiting.setVisibleText(getString(R.string.logining)));
         loginHelper.setOnLoginAfterListener(() -> widgetWaiting.setGone());
         loginHelper.setOnLoginErrorListener(ex -> {
             current_state = OP_CAN_EXIT;// 修改状态为「可修改」
-            Tgg.show(getActivity(), R.string.login_failed, 2500);
+            Tgg.show(activity, R.string.login_failed, 2500);
             Ogg.saveLoginJson(activity, "", "", false);
             exit(OP_CAN_EXIT);
         });
         loginHelper.setOnLoginUserNotExistListener(() -> {
             current_state = OP_CAN_EXIT;// 修改状态为「可修改」
-            Tgg.show(getActivity(), R.string.login_user_not_exist, 2500);
+            Tgg.show(activity, R.string.login_user_not_exist, 2500);
         });
         loginHelper.setOnLoginSuccessListener(avUser -> {
             // 保存用户对象以及即时通讯对象
-            ((SplashActivity) getActivity()).avUser = avUser;
+            ((SplashActivity) activity).avUser = avUser;
             // 提示
-            Tgg.show(getActivity(), R.string.login_success, 2500);
+            Tgg.show(activity, R.string.login_success, 2500);
             // 保存用户信息到临时集合
             Ogg.saveLoginJson(activity, phoneNum, password, true);
             // 封装数据并跳转
-            Ogg.hideKeyBoard(getActivity());
+            Ogg.hideKeyBoard(activity);
             toFrag(getClass(), MainFrag.class, null, false);
             Lgg.t(Cons.TAG).ii("login success to main fragment");
         });

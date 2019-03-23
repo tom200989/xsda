@@ -42,41 +42,27 @@
             android:textColor="@color/colorCompany"
             app:layout_textSizePercent="6.5%h" />
 
-        <!-- OK & CANCEL -->
+        <!-- i got it -->
         <com.hiber.tools.layout.PercentRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             app:layout_heightPercent="20%h">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.5"
+                android:background="@color/colorCompany" />
+
             <TextView
-                android:id="@+id/tv_no_pass_cancel"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_no_pass_got_it"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/splash_no_pass_leave"
-                android:textColor="@color/colorGray"
-                app:layout_textSizePercent="30%h"
-                app:layout_widthPercent="50%w" />
-
-            <TextView
-                android:id="@+id/tv_no_pass_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toEndOf="@id/tv_no_pass_cancel"
-                android:gravity="center"
-                android:text="@string/splash_no_pass_agree"
                 android:textColor="@color/colorCompanyDark"
-                app:layout_textSizePercent="30%h"
-                app:layout_widthPercent="50%w" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/colorCompanyDark" />
+                app:layout_textSizePercent="30%h" />
 
         </com.hiber.tools.layout.PercentRelativeLayout>
 
