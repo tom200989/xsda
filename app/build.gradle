@@ -19,7 +19,6 @@ android {
         versionCode 1
         versionName "1.0.0"
         multiDexEnabled true // 方法数超过65535分包
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     //为了解决部分第三方库重复打包了META-INF的问题
     packagingOptions {

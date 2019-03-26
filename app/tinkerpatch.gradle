@@ -105,7 +105,7 @@ tinkerPatch {
     }
     sevenZip {
         zipArtifact = "com.tencent.mm:SevenZip:1.1.10"
-//        path = "/usr/local/bin/7za"
+        // path = "/usr/local/bin/7za"
     }
     buildConfig {
         keepDexApply = false
