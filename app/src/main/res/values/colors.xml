@@ -10,9 +10,9 @@
     <color name="colorGrayDark">#bebebe</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>
-
     <color name="colorHiberPrimary">#3F51B5</color>
     <color name="colorHiberPrimaryDark">#303F9F</color>
     <color name="colorHiberAccent">#000000</color>
+    <color name="colorMainBottom">#FFFEF7</color>
     
 </resources>

@@ -63,19 +63,10 @@ MobSDK {
             Wechat {
                 id 1
                 sortId 1
-                appId "wxfb11cdec3869a117"
-                appSecret "990b881816fa54c4d9e151ba11abd6b7"
+                appId "wxa39caae2ec40ca5e"
+                appSecret "6f37c19c0434153c0bb1bd76e08a6e81"
                 bypassApproval false
                 shareByAppClient true
-                enable true
-            }
-
-            WechatMoments {
-                id 2
-                SortId 2
-                appId "wxfb11cdec3869a117"
-                appSecret "6f3ae857215eb5d5161b00f076c2810e"
-                bypassApproval = "false"
                 enable true
             }
         }
