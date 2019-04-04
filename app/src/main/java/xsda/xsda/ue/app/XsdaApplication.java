@@ -8,7 +8,6 @@ import com.avos.avoscloud.AVOSCloud;
 import com.jiagu.sdk.xsdakeyProtected;
 import com.mob.MobSDK;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.xsdakey.keyUtil.leanCloudKey;
 
 import org.xutils.x;
 
@@ -54,8 +53,8 @@ public class XsdaApplication extends MultiDexApplication {
         }
         Lgg.t(Cons.TAG).vv("application deviceId: " + deviceId);
         // 初始化LeanClound key
-        String appid = leanCloudKey.getAPPID();
-        String appkey = leanCloudKey.getAPPKEY();
+        String appid = Cons.LEANCLOUD_APP_ID;
+        String appkey = Cons.LEANCLOUD_APP_KEY;
         Lgg.t(Cons.TAG).ii("appid: " + appid + "; appkey: " + appkey);
         AVOSCloud.initialize(this, appid, appkey);
         // 开启LeanClound调试

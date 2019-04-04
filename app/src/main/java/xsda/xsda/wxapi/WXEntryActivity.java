@@ -40,15 +40,17 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         super.onNewIntent(intent);
         setIntent(intent);
         api.handleIntent(intent, this);
+        Lgg.v(TAG, "WXEntryActivity onNewIntent");
     }
 
     @Override
     public void onReq(BaseReq baseReq) {
-
+        Lgg.v(TAG, "req: \n" + baseReq.openId);
     }
 
     @Override
     public void onResp(BaseResp baseResp) {
+        Lgg.v(TAG, "resp: baseResp is null? " + (baseResp == null));
         // 植入监听
         wxHelper.setOnErrAuthDeniedListener(() -> {
             Lgg.t(TAG).ee(":onResp() 授权被拒绝");
@@ -101,7 +103,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             Lgg.t(TAG).ii(":checkOpenId(): openid had exist");
             toLogin(wechatInfo, phone, password);
         });
-        
+
         userVerifyHelper.setOnOpenidNotExistListener(() -> {/* openid不存在 */
             Lgg.t(TAG).ii(":checkOpenId(): openid not exist");
             wechatInfo.setAttach(Cons.ATTACH_GO_TO_BINDPHONE);
@@ -109,7 +111,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             EventBus.getDefault().postSticky(wechatInfo);
             finish();
         });
-        
+
         userVerifyHelper.setOnExceptionListener(e -> {/* 出错 */
             Lgg.t(TAG).ii(":checkOpenId(): error: " + e.getMessage());
             wechatInfo.setAttach(Cons.ATTACH_GO_TO_ERROR);
@@ -118,7 +120,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             finish();
         });
         userVerifyHelper.isOpenidExist(wxopenid);
-
     }
 
     /**
@@ -128,16 +129,19 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
      * @param password 密码
      */
     private void toLogin(WechatInfo wechatInfo, String phone, String password) {
+        Lgg.v(TAG, "WXEntryActivity toLogin");
         LoginOrOutHelper loginHelper = new LoginOrOutHelper(this);
         loginHelper.setOnLoginErrorListener(ex -> Tgg.show(this, R.string.login_failed, 2500));
         loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(this, R.string.login_user_not_exist, 2500));
         loginHelper.setOnLoginSuccessListener(avUser -> {
+            Lgg.v(TAG, "WXEntryActivity setOnLoginSuccessListener");
             // 保存密码到本地
             Ogg.saveLoginJson(this, phone, password, true);
             wechatInfo.setAttach(Cons.ATTACH_GO_TO_MAIN);
             // 发送至bindphonefrag.java & loginfrag.java & mainfrag.java
             EventBus.getDefault().postSticky(wechatInfo);
             finish();
+            Lgg.v(TAG, "WXEntryActivity had finish");
         });
         loginHelper.login(phone, password);
     }

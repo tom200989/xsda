@@ -11,7 +11,6 @@ import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.xsdakey.keyUtil.leanCloudKey;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -19,6 +18,7 @@ import org.xutils.x;
 
 import java.util.List;
 
+import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 
 /*
@@ -43,7 +43,7 @@ public class WXHelper {
     public IWXAPI initWXAPI(IWXAPIEventHandler handler) {
         // 1.初始化微信API
         Lgg.t(TAG).ii("Method--> " + getClass().getSimpleName() + ":initWXAPI()");
-        String wxAppId = leanCloudKey.getWXAppid();
+        String wxAppId = Cons.WX_APP_ID;
         api = WXAPIFactory.createWXAPI(activity, wxAppId, true);
         api.registerApp(wxAppId);
         api.handleIntent(activity.getIntent(), handler);
@@ -99,8 +99,8 @@ public class WXHelper {
      * @param code code
      */
     private void getAccessToken(String code) {
-        String wxAppId = leanCloudKey.getWXAppid();
-        String wxAppSecret = leanCloudKey.getWXAppSecret();
+        String wxAppId = Cons.WX_APP_ID;
+        String wxAppSecret = Cons.WX_APP_SECRECT;
         // 格式: https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?" // 基本网址
                              + "appid=" + wxAppId // appid
@@ -183,7 +183,7 @@ public class WXHelper {
      * @return true: had install
      */
     public static boolean isWXInstall(Context context) {
-        IWXAPI api = WXAPIFactory.createWXAPI(context, leanCloudKey.getWXAppid());
+        IWXAPI api = WXAPIFactory.createWXAPI(context, Cons.WX_APP_ID);
         if (api.isWXAppInstalled()) {
             return true;
         } else {

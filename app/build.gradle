@@ -64,7 +64,7 @@ MobSDK {
                 id 1
                 sortId 1
                 appId "wxa39caae2ec40ca5e"
-                appSecret "6f37c19c0434153c0bb1bd76e08a6e81"
+                appSecret "f87344faa2c19adbb6c5e0ad2211d436"
                 bypassApproval false
                 shareByAppClient true
                 enable true

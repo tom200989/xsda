@@ -5,6 +5,14 @@ package xsda.xsda.utils;
  */
 
 public class Cons {
+
+    /* -------------------------------------------- key -------------------------------------------- */
+    public final static String LEANCLOUD_APP_ID = "EDvBrq205LvJCIzfMPcpSo9T-gzGzoHsz";// LeanCloud app id
+    public final static String LEANCLOUD_APP_KEY = "hhBPs7YBSmcKNLJcPcOjgTk8";// LeanCloud app key
+    public final static String WX_APP_ID = "wxa39caae2ec40ca5e";// wechat app id
+    public final static String WX_APP_SECRECT = "f87344faa2c19adbb6c5e0ad2211d436";// wechat app secrect
+
+    /* -------------------------------------------- flag -------------------------------------------- */
     public final static String TAG = "ma_xsda";// LOG标记
     public final static String INSTALL_FILEPATH = "xsdaApk";// APK包目录名
     public final static String SP_DEVICE_ID = "SP_DEVICE_ID";// LOG标记

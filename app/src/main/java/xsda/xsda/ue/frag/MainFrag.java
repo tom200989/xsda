@@ -2,6 +2,7 @@ package xsda.xsda.ue.frag;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.avos.avoscloud.AVObject;
 
@@ -9,8 +10,15 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.wechat.friends.Wechat;
 import xsda.xsda.R;
+import xsda.xsda.bean.LoginBean;
+import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.utils.Lgg;
+import xsda.xsda.utils.Ogg;
+import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.OfflineWidget;
 import xsda.xsda.wxapi.WechatInfo;
 
@@ -27,6 +35,8 @@ public class MainFrag extends BaseFrag {
     RecyclerView rcvMainRight;
     @BindView(R.id.wd_main_offline)
     OfflineWidget wdOffline;
+    @BindView(R.id.tv_test)
+    TextView tvTest;
 
     @Override
     public int onInflateLayout() {
@@ -64,6 +74,21 @@ public class MainFrag extends BaseFrag {
     }
 
     private void clickEvent() {
+        tvTest.setOnClickListener(v -> {
+            LoginOrOutHelper loginOrOutHelper = new LoginOrOutHelper(activity);
+            loginOrOutHelper.setOnLogOutSuccessListener(() -> {
+                LoginBean loginBean = Ogg.readLoginJson(activity);
+                Ogg.saveLoginJson(activity, loginBean.getPhoneNum(), loginBean.getPassword(), false);
+                toFrag(getClass(), LoginFrag.class, null, false);
+                Tgg.show(activity, "登出成功", 2500);
+            });
+            loginOrOutHelper.setOnLogOutFailedListener(e -> Tgg.show(activity, "登出失败", 2500));
+            loginOrOutHelper.logout();
+
+            Platform plat = ShareSDK.getPlatform(Wechat.NAME);
+            plat.removeAccount(true);
+        });
+
         // tvTestMain.setOnClickListener(v -> {
         //     LoginOrOutHelper loginOrOutHelper = new LoginOrOutHelper(activity);
         //     loginOrOutHelper.setOnLogOutSuccessListener(() -> {

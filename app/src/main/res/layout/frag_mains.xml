@@ -38,5 +38,13 @@
     <xsda.xsda.widget.OfflineWidget
         android:id="@+id/wd_main_offline"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="main home page" />
 </com.hiber.tools.layout.PercentRelativeLayout>

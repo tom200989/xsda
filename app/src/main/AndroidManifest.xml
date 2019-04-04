@@ -62,7 +62,8 @@
         <!-- ************************ 微信登陆 ************************ -->
         <activity
             android:name=".wxapi.WXEntryActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

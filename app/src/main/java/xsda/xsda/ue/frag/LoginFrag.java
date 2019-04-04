@@ -95,9 +95,15 @@ public class LoginFrag extends BaseFrag {
     }
 
     @Override
-    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
+    public void initViewFinish(View inflateView) {
+        super.initViewFinish(inflateView);
         initRes();
         onClickEvent();
+    }
+
+    @Override
+    public void onNexts(Object yourBean, View view, String whichFragmentStart) {
+       
     }
 
     /**
@@ -211,9 +217,9 @@ public class LoginFrag extends BaseFrag {
      * 微信登陆逻辑
      */
     public void weChatLogin() {
-        Tgg.show(activity, "尚未开通\n敬请期待", 3000);
-        // widgetLoginAuthorized.setVisibility(View.VISIBLE);
-        // userWechatOriToAuthorize();
+        // Tgg.show(activity, "尚未开通\n敬请期待", 3000);
+        widgetLoginAuthorized.setVisibility(View.VISIBLE);
+        userWechatOriToAuthorize();
     }
 
     /**
