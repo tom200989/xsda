@@ -17,6 +17,7 @@ import com.avos.avoscloud.SaveCallback;
 import java.util.List;
 
 import xsda.xsda.app.XsdaApplication;
+import xsda.xsda.ue.activity.BaseActivity;
 import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
@@ -26,7 +27,6 @@ public class LoginOrOutHelper {
 
     private Activity activity;
     private String TAG = "LoginOrOutHelper";
-    private AVUser avUser;
 
     public LoginOrOutHelper(Activity activity) {
         this.activity = activity;
@@ -36,10 +36,10 @@ public class LoginOrOutHelper {
      * 登出
      */
     public void logout() {
-        avUser = AVUser.getCurrentUser();
-        if (avUser != null) {
-            String phoneNum = avUser.getMobilePhoneNumber();
-            queryLoginByPhone(avUser, phoneNum, false);
+        BaseActivity.avUser = AVUser.getCurrentUser();
+        if (BaseActivity.avUser != null) {
+            String phoneNum = BaseActivity.avUser.getMobilePhoneNumber();
+            queryLoginByPhone(BaseActivity.avUser, phoneNum, false);
         } else {
             logOutSuccessNext();
         }
@@ -92,7 +92,7 @@ public class LoginOrOutHelper {
         AVUser.loginByMobilePhoneNumberInBackground(phoneNum, password, new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
-                LoginOrOutHelper.this.avUser = avUser;
+                BaseActivity.avUser = avUser;
                 activity.runOnUiThread(() -> {
                     if (e == null) {
                         // 2.登陆成功--> 查询登陆对象及其状态
