@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hiber.hiber.RootFrag;
 import com.hiber.tools.layout.PercentRelativeLayout;
 
 import butterknife.BindView;
@@ -26,7 +27,7 @@ import xsda.xsda.utils.Sgg;
 import xsda.xsda.utils.Tgg;
 import xsda.xsda.widget.WaitingWidget;
 
-public class ForgotPsdFrag extends BaseFrag {
+public class ForgotPsdFrag extends RootFrag {
 
     // 全体
     @BindView(R.id.rl_forgot_all)

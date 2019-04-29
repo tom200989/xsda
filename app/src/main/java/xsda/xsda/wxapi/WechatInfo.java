@@ -1,11 +1,12 @@
 package xsda.xsda.wxapi;
 
+import java.io.Serializable;
 import java.util.List;
 
 /*
  * Created by qianli.ma on 2018/10/9 0009.
  */
-public class WechatInfo {
+public class WechatInfo implements Serializable {
     /**
      * openid : oM2MN1F2Tx5K6FTeBfXKNxHspKzQ
      * nickname : Doris

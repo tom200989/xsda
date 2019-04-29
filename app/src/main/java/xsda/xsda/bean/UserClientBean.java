@@ -6,7 +6,9 @@ package xsda.xsda.bean;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 
-public class UserClientBean {
+import java.io.Serializable;
+
+public class UserClientBean implements Serializable {
     private AVUser avUser;
     private AVIMClient avimClient;
 

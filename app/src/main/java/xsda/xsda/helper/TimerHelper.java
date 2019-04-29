@@ -31,7 +31,12 @@ public abstract class TimerHelper {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                activity.runOnUiThread(() -> doSomething());
+                if (activity != null) {
+                    activity.runOnUiThread(() -> doSomething());
+                } else {
+                    doSomething();
+                }
+
             }
         };
         timer.schedule(timerTask, 0, period);
@@ -47,7 +52,11 @@ public abstract class TimerHelper {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                activity.runOnUiThread(() -> doSomething());
+                if (activity != null) {
+                    activity.runOnUiThread(() -> doSomething());
+                } else {
+                    doSomething();
+                }
             }
         };
         timer.schedule(timerTask, delay);
@@ -62,7 +71,11 @@ public abstract class TimerHelper {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                activity.runOnUiThread(() -> doSomething());
+                if (activity != null) {
+                    activity.runOnUiThread(() -> doSomething());
+                } else {
+                    doSomething();
+                }
             }
         };
         timer.schedule(timerTask, delay, period);

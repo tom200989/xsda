@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVUser;
 import com.hiber.bean.PermissBean;
 import com.hiber.bean.StringBean;
+import com.hiber.hiber.RootFrag;
 import com.qianli.NumberProgressBar;
 
 import butterknife.BindView;
@@ -20,7 +21,8 @@ import xsda.xsda.helper.GetServerDateHelper;
 import xsda.xsda.helper.GetUpdateHelper;
 import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.helper.PingHelper;
-import xsda.xsda.ue.activity.SplashActivity;
+import xsda.xsda.ue.activity.BaseActivity;
+import xsda.xsda.ue.activity.MainActivity;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
@@ -33,7 +35,7 @@ import xsda.xsda.widget.WaitingWidget;
  * Created by qianli.ma on 2018/7/23 0023.
  */
 
-public class SplashFrag extends BaseFrag {
+public class SplashFrag extends RootFrag {
 
     @BindView(R.id.iv_splash_logo)
     ImageView ivSplashLogo;// 图标
@@ -226,9 +228,10 @@ public class SplashFrag extends BaseFrag {
                     toLogin();
                 } else {
                     /* 这里一定记得把user信息保存到全域 */
-                    ((SplashActivity) activity).avUser = AVUser.getCurrentUser();
+                    BaseActivity.avUser = AVUser.getCurrentUser();
                     // 登陆过直接跳到主页
-                    toFrag(getClass(), MainFrag.class, null, true);
+                    // toFrag(getClass(), MainFrag.class, null, true);
+                    toFragActivity(getClass(), MainActivity.class, MainFrag.class, null, true, false, 0);
                 }
 
             } else {
@@ -257,10 +260,11 @@ public class SplashFrag extends BaseFrag {
         loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(activity, R.string.login_user_not_exist, 2500));
         loginHelper.setOnLoginSuccessListener(avUser -> {
             // 保存用户对象以及即时通讯对象
-            ((SplashActivity) activity).avUser = avUser;
+            BaseActivity.avUser = avUser;
             // 隐藏软键盘
             Ogg.hideKeyBoard(activity);
-            toFrag(getClass(), MainFrag.class, null, false);
+            // toFrag(getClass(), MainFrag.class, null, false);
+            toFragActivity(getClass(), MainActivity.class, MainFrag.class, null, false, false, 0);
             Lgg.t(Cons.TAG).ii("login success to main fragment");
         });
         loginHelper.login(phoneNum, password);

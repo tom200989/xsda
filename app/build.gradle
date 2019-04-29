@@ -92,18 +92,13 @@ dependencies {
     api 'com.android.support:support-v4:28.0.0'
     api 'com.android.support:appcompat-v7:28.0.0'
     // LeanCloud 基础包
-    api 'cn.leancloud.android:avoscloud-sdk:v4.6.4'
+    api ('cn.leancloud.android:avoscloud-sdk:4.7.10')
     // 推送与实时聊天需要的包
-    api('cn.leancloud.android:avoscloud-push:v4.6.4@aar') { transitive = true }
-    // LeanCloud 统计包
-    api 'cn.leancloud.android:avoscloud-statistics:v4.6.4'
+    api ('cn.leancloud.android:avoscloud-push:4.7.10@aar'){transitive = true}
     // LeanCloud 用户反馈包
-    api 'cn.leancloud.android:avoscloud-feedback:v4.6.4@aar'
-    // avoscloud-sns：LeanCloud 第三方登录包
-    api 'cn.leancloud.android:avoscloud-sns:v4.6.4@aar'
-    api 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+    api ('cn.leancloud.android:avoscloud-feedback:4.7.10@aar')
     // LeanCloud 应用内搜索包
-    api 'cn.leancloud.android:avoscloud-search:v4.6.4@aar'
+    api ('cn.leancloud.android:avoscloud-search:4.7.10@aar')
     // RSA加密
     api files('libs/rsa.jar')
     // fastjson转换
@@ -114,8 +109,8 @@ dependencies {
     // xutils 网络框架
     api 'org.xutils:xutils:3.5.0'
     // 布局架构
-    api(name: 'ma_hiber2_1', ext: 'aar')
-    // implementation(name: 'hiber_mkn0', ext: 'aar')
+    api(name: 'ma_hiber3', ext: 'aar')
+    api(name: 'ma_lint3', ext: 'aar')
     // key
     api(name: 'keys', ext: 'aar')
     // wechat login
@@ -126,4 +121,6 @@ dependencies {
     api 'com.github.ybq:Android-SpinKit:1.2.0'
     // 波浪条
     api(name: 'waveviews', ext: 'aar')
+    // 底部切换栏
+    api(name: 'ma_bottomtab', ext: 'aar')
 }

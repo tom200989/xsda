@@ -1,9 +1,11 @@
 package xsda.xsda.wxapi;
 
+import java.io.Serializable;
+
 /*
  * Created by qianli.ma on 2018/9/29 0029.
  */
-public class WechatToken {
+public class WechatToken implements Serializable {
 
     private String access_token;
     private int expires_in;

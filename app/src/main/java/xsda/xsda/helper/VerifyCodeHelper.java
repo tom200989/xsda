@@ -13,7 +13,7 @@ import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 import com.hiber.tools.RootEncrypt;
 
-import xsda.xsda.ue.app.XsdaApplication;
+import xsda.xsda.app.XsdaApplication;
 import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;

@@ -8,11 +8,13 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.hiber.hiber.RootFrag;
 
 import java.util.List;
 
 import butterknife.BindView;
 import xsda.xsda.R;
+import xsda.xsda.ue.activity.MainActivity;
 import xsda.xsda.utils.Avfield;
 import xsda.xsda.utils.Tgg;
 
@@ -20,7 +22,7 @@ import xsda.xsda.utils.Tgg;
  * Created by qianli.ma on 2018/7/23 0023.
  */
 
-public class NetErrFrag extends BaseFrag {
+public class NetErrFrag extends RootFrag {
 
     @BindView(R.id.rl_neterror_all)
     RelativeLayout rlNeterrorAll;// 总布局
@@ -65,7 +67,8 @@ public class NetErrFrag extends BaseFrag {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
-                    toFrag(getClass(), MainFrag.class, null, false);
+                    // toFrag(getClass(), MainFrag.class, null, false);
+                    toFragActivity(getClass(), MainActivity.class, MainFrag.class, null, false, false, 0);
                 } else {
                     Tgg.show(activity, R.string.base_network_login, 2500);
                 }

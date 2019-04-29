@@ -9,9 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hiber.hiber.RootFrag;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.hiber.impl.RootEventListener;
 
 import butterknife.BindView;
 import xsda.xsda.R;
@@ -20,7 +18,8 @@ import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.helper.TimerHelper;
 import xsda.xsda.helper.UserVerifyHelper;
 import xsda.xsda.helper.VerifyCodeHelper;
-import xsda.xsda.ue.activity.SplashActivity;
+import xsda.xsda.ue.activity.BaseActivity;
+import xsda.xsda.ue.activity.MainActivity;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;
@@ -85,17 +84,25 @@ public class BindphoneFrag extends RootFrag {
         tvBindphoneCommit.setOnClickListener(v -> commitClick());
     }
 
+    @Override
+    public void initViewFinish(View inflateView) {
+        super.initViewFinish(inflateView);
+        onWechatEvent();
+    }
+
     /**
-     * 接收来自WXactivity的信息
-     *
-     * @param wechatInfo 微信用户信息
+     * 设置wechat对象监听
      */
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void getWechatInfo(WechatInfo wechatInfo) {
-        nickname = wechatInfo.getNickname();
-        openid = wechatInfo.getOpenid();
-        Lgg.t(TAG).ii("nickname from bindphone: " + nickname);
-        Lgg.t(TAG).ii("openid from bindphone: " + openid);
+    private void onWechatEvent() {
+        setEventListener(WechatInfo.class, new RootEventListener<WechatInfo>() {
+            @Override
+            public void getData(WechatInfo wechatInfo) {
+                nickname = wechatInfo.getNickname();
+                openid = wechatInfo.getOpenid();
+                Lgg.t(TAG).ii("nickname from bindphone: " + nickname);
+                Lgg.t(TAG).ii("openid from bindphone: " + openid);
+            }
+        });
     }
 
     /**
@@ -349,14 +356,15 @@ public class BindphoneFrag extends RootFrag {
         });
         loginHelper.setOnLoginSuccessListener(avUser -> {
             // 保存用户对象以及即时通讯对象
-            ((SplashActivity) activity).avUser = avUser;
+            BaseActivity.avUser = avUser;
             // 提示
             Tgg.show(activity, R.string.login_success, 2500);
             // 保存用户信息到临时集合
             Ogg.saveLoginJson(activity, phoneNum, password, true);
             // 封装数据并跳转
             Ogg.hideKeyBoard(activity);
-            toFrag(getClass(), MainFrag.class, null, false);
+            // toFrag(getClass(), MainFrag.class, null, false);
+            toFragActivity(getClass(), MainActivity.class, MainFrag.class, null, false, false, 0);
             Lgg.t(Cons.TAG).ii("login success to main fragment");
         });
         loginHelper.login(phoneNum, password);

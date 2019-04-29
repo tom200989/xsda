@@ -11,7 +11,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.avos.avoscloud.UpdatePasswordCallback;
 
-import xsda.xsda.ue.app.XsdaApplication;
+import xsda.xsda.app.XsdaApplication;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Egg;
 import xsda.xsda.utils.Lgg;

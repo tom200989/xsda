@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hiber.hiber.RootFrag;
 import com.hiber.tools.layout.PercentLinearLayout;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import xsda.xsda.utils.Sgg;
  * Created by qianli.ma on 2018/7/23 0023.
  */
 
-public class GuideFrag extends BaseFrag {
+public class GuideFrag extends RootFrag {
 
     @BindView(R.id.vp_guide)
     ViewPager vpGuide;
@@ -147,11 +148,5 @@ public class GuideFrag extends BaseFrag {
             container.addView(guideViews.get(position));
             return guideViews.get(position);
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 }

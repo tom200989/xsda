@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hiber.hiber.RootEvent;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -15,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 import xsda.xsda.R;
 import xsda.xsda.helper.LoginOrOutHelper;
 import xsda.xsda.helper.UserVerifyHelper;
+import xsda.xsda.ue.activity.BaseActivity;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
@@ -134,12 +136,13 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         loginHelper.setOnLoginErrorListener(ex -> Tgg.show(this, R.string.login_failed, 2500));
         loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(this, R.string.login_user_not_exist, 2500));
         loginHelper.setOnLoginSuccessListener(avUser -> {
+            BaseActivity.avUser = avUser;
             Lgg.v(TAG, "WXEntryActivity setOnLoginSuccessListener");
             // 保存密码到本地
             Ogg.saveLoginJson(this, phone, password, true);
             wechatInfo.setAttach(Cons.ATTACH_GO_TO_MAIN);
             // 发送至bindphonefrag.java & loginfrag.java & mainfrag.java
-            EventBus.getDefault().postSticky(wechatInfo);
+            RootEvent.sendEvent(wechatInfo, true);
             finish();
             Lgg.v(TAG, "WXEntryActivity had finish");
         });

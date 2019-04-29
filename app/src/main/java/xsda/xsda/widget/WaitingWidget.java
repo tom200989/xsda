@@ -18,7 +18,7 @@ import java.util.List;
 
 import xsda.xsda.R;
 import xsda.xsda.helper.TimerHelper;
-import xsda.xsda.ue.app.XsdaApplication;
+import xsda.xsda.app.XsdaApplication;
 
 /**
  * Created by qianli.ma on 2018/7/17 0017.

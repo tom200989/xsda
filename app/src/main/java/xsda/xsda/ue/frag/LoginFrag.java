@@ -8,11 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
+import com.hiber.hiber.RootFrag;
+import com.hiber.impl.RootEventListener;
 import com.hiber.tools.layout.PercentRelativeLayout;
 import com.qianli.WaveView;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,8 @@ import cn.sharesdk.framework.Platform;
 import xsda.xsda.R;
 import xsda.xsda.bean.LoginBean;
 import xsda.xsda.helper.LoginOrOutHelper;
-import xsda.xsda.ue.activity.SplashActivity;
+import xsda.xsda.ue.activity.BaseActivity;
+import xsda.xsda.ue.activity.MainActivity;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
@@ -37,7 +37,7 @@ import xsda.xsda.wxapi.WechatInfo;
  * Created by qianli.ma on 2018/7/23 0023.
  */
 
-public class LoginFrag extends BaseFrag {
+public class LoginFrag extends RootFrag {
 
     @BindView(R.id.rl_login_input_username)
     PercentRelativeLayout rlUsername;
@@ -99,11 +99,37 @@ public class LoginFrag extends BaseFrag {
         super.initViewFinish(inflateView);
         initRes();
         onClickEvent();
+        onWeChatEvent();// 设置微信对象监听器
+    }
+
+    /**
+     * 设置微信对象监听器
+     */
+    private void onWeChatEvent() {
+        setEventListener(WechatInfo.class, new RootEventListener<WechatInfo>() {
+            @Override
+            public void getData(WechatInfo wechatInfo) {
+                LoginFrag.this.wechatInfo = wechatInfo;
+                if (wechatInfo != null) {
+                    String attach = wechatInfo.getAttach();
+                    if (attach.contains(Cons.ATTACH_GO_TO_BINDPHONE)) {
+                        Lgg.t(TAG).ii("to bindphone");
+                        toFrag(this.getClass(), BindphoneFrag.class, null, true);
+                    } else if (attach.contains(Cons.ATTACH_GO_TO_MAIN)) {
+                        Lgg.t(TAG).ii("to main");
+                        toFragActivity(getClass(), MainActivity.class, MainFrag.class, wechatInfo, true, false, 0);
+                    } else if (attach.contains(Cons.ATTACH_GO_TO_ERROR)) {
+                        Lgg.t(TAG).ii("wx error");
+                        toast(R.string.login_wechat_authorized_openid_error, 2500);
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void onNexts(Object yourBean, View view, String whichFragmentStart) {
-       
+
     }
 
     /**
@@ -121,29 +147,6 @@ public class LoginFrag extends BaseFrag {
         }
     }
 
-    /**
-     * 获取到微信信息
-     *
-     * @param wechatInfo 微信信息
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void getWXInfo(WechatInfo wechatInfo) {
-        this.wechatInfo = wechatInfo;
-        if (wechatInfo != null) {
-            String attach = wechatInfo.getAttach();
-            if (attach.contains(Cons.ATTACH_GO_TO_BINDPHONE)) {
-                Lgg.t(TAG).ii("to bindphone");
-                toFrag(this.getClass(), BindphoneFrag.class, null, true);
-            } else if (attach.contains(Cons.ATTACH_GO_TO_MAIN)) {
-                Lgg.t(TAG).ii("to main");
-                toFrag(this.getClass(), MainFrag.class, null, true);
-            } else if (attach.contains(Cons.ATTACH_GO_TO_ERROR)) {
-                Lgg.t(TAG).ii("wx error");
-                toast(R.string.login_wechat_authorized_openid_error, 2500);
-            }
-        }
-    }
-
     @Override
     public boolean isReloadData() {
         // 页面切换回来不重载数据
@@ -155,12 +158,12 @@ public class LoginFrag extends BaseFrag {
         needAuthorizedLoadList.add(SplashFrag.class.getSimpleName());
         needAuthorizedLoadList.add(GuideFrag.class.getSimpleName());
         needAuthorizedLoadList.add(UpdateFrag.class.getSimpleName());
-        colorFocus = getResources().getColor(R.color.colorCompanyDark);
-        colorUnFocus = getResources().getColor(R.color.colorCompany);
-        visibleEye = getResources().getDrawable(R.drawable.visible_eye);
-        unVisibleEye = getResources().getDrawable(R.drawable.unvisible_eye);
-        checked = getResources().getDrawable(R.drawable.privacy_checkbox_checked);
-        uncheck = getResources().getDrawable(R.drawable.privacy_checkbox_uncheck);
+        colorFocus = getRootColor(R.color.colorCompanyDark);
+        colorUnFocus = getRootColor(R.color.colorCompany);
+        visibleEye = getRootDrawable(R.drawable.visible_eye);
+        unVisibleEye = getRootDrawable(R.drawable.unvisible_eye);
+        checked = getRootDrawable(R.drawable.privacy_checkbox_checked);
+        uncheck = getRootDrawable(R.drawable.privacy_checkbox_uncheck);
     }
 
     public void onClickEvent() {
@@ -204,13 +207,8 @@ public class LoginFrag extends BaseFrag {
 
     @Override
     public boolean onBackPresss() {
-        return false;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+        kill();
+        return true;
     }
 
     /**
@@ -239,7 +237,7 @@ public class LoginFrag extends BaseFrag {
             loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(activity, R.string.login_user_not_exist, 2500));
             loginHelper.setOnLoginSuccessListener(avUser -> {
                 // 保存用户对象以及即时通讯对象
-                ((SplashActivity) activity).avUser = avUser;
+                BaseActivity.avUser = avUser;
                 // 提示
                 Tgg.show(activity, R.string.login_success, 2500);
                 // 保存用户信息到临时集合
@@ -250,7 +248,8 @@ public class LoginFrag extends BaseFrag {
                 }
                 // 封装数据并跳转
                 Ogg.hideKeyBoard(activity);
-                toFrag(getClass(), MainFrag.class, null, false);
+                // toFrag(getClass(), MainFrag.class, null, false);
+                toFragActivity(getClass(), MainActivity.class, MainFrag.class, null, false, false, 0);
                 Lgg.t(Cons.TAG).ii("login success to main fragment");
             });
             loginHelper.login(phoneNum, password);

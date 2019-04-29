@@ -1,10 +1,10 @@
-package xsda.xsda.ue.app;
+package xsda.xsda.app;
 
 import android.content.Context;
-import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.hiber.hiber.language.RootApp;
 import com.jiagu.sdk.xsdakeyProtected;
 import com.mob.MobSDK;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -16,7 +16,7 @@ import xsda.xsda.utils.Lgg;
 import xsda.xsda.utils.Ogg;
 import xsda.xsda.utils.Sgg;
 
-public class XsdaApplication extends MultiDexApplication {
+public class XsdaApplication extends RootApp {
 
     public static XsdaApplication app;
     public static String deviceId;// 设备ID

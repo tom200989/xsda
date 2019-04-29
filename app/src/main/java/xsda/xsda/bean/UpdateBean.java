@@ -2,11 +2,13 @@ package xsda.xsda.bean;
 
 import com.avos.avoscloud.AVFile;
 
+import java.io.Serializable;
+
 /**
  * Created by qianli.ma on 2018/6/26 0026.
  */
 
-public class UpdateBean {
+public class UpdateBean implements Serializable {
 
     private String updatedAt;// 最近一次更新日期
     private String newVersionCode;// 新版本号
