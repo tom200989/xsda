@@ -109,8 +109,8 @@ dependencies {
     // xutils 网络框架
     api 'org.xutils:xutils:3.5.0'
     // 布局架构
-    api(name: 'ma_hiber3', ext: 'aar')
-    api(name: 'ma_lint3', ext: 'aar')
+    api(name: 'ma_hiber3_1', ext: 'aar')
+    api(name: 'ma_lints3', ext: 'aar')
     // key
     api(name: 'keys', ext: 'aar')
     // wechat login
@@ -122,5 +122,5 @@ dependencies {
     // 波浪条
     api(name: 'waveviews', ext: 'aar')
     // 底部切换栏
-    api(name: 'ma_bottomtab', ext: 'aar')
+    api(name: 'ma_bottomtbab', ext: 'aar')
 }

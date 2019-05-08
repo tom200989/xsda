@@ -7,12 +7,31 @@
     android:layout_height="match_parent"
     tools:context="xsda.xsda.ue.activity.SplashActivity">
 
+    <!-- 底部选择栏 -->
+    <com.bottomtab.bottomtab.BottomTab
+        android:id="@+id/bottom_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:item_default_position="2"
+        app:item_iv_check_color="#fd9bbc"
+        app:item_iv_scale_height_percent="0.4"
+        app:item_iv_scale_same="true"
+        app:item_iv_scale_width_percent="0.8"
+        app:item_tv_color_check="#fd9bbc"
+        app:item_tv_color_uncheck="#ffdce8"
+        app:item_tv_margin_top="10"
+        app:item_tv_size_percent="0.15"
+        app:layout_heightPercent="10%h" />
+
+    <!-- fragment 容器 -->
     <FrameLayout
         android:id="@+id/fl_main_contain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_tab" />
 
-    <!-- 离线显示 -->
+    <!-- 离线 offline -->
     <xsda.xsda.widget.OfflineWidget
         android:id="@+id/wd_main_offline"
         android:layout_width="match_parent"
