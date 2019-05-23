@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+import org.xutils.http.request.UriRequest;
 import org.xutils.x;
 
 import xsda.xsda.utils.Cons;
@@ -25,6 +26,11 @@ public class PingHelper {
     public void ping(Activity activity, String address) {
         RequestParams params = new RequestParams(address);
         x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void responseBody(UriRequest uriRequest) {
+                
+            }
+
             @Override
             public void onSuccess(String result) {
                 // 记住主线程

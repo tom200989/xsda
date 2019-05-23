@@ -14,6 +14,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+import org.xutils.http.request.UriRequest;
 import org.xutils.x;
 
 import java.util.List;
@@ -110,6 +111,11 @@ public class WXHelper {
         RequestParams rp = new RequestParams(url);
         x.http().get(rp, new Callback.CommonCallback<String>() {
             @Override
+            public void responseBody(UriRequest uriRequest) {
+                
+            }
+
+            @Override
             public void onSuccess(String tokenInfo) {
                 Lgg.t(TAG).ii(tokenInfo);
                 if (tokenInfo.contains("errcode")) {
@@ -154,6 +160,11 @@ public class WXHelper {
                              + "&openid=" + openid;// openid
         RequestParams rp = new RequestParams(url);
         x.http().get(rp, new Callback.CommonCallback<String>() {
+            @Override
+            public void responseBody(UriRequest uriRequest) {
+                
+            }
+
             @Override
             public void onSuccess(String userInfo) {
                 activity.runOnUiThread(() -> getWeChatInfoSuccessNext(userInfo));

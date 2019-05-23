@@ -64,10 +64,10 @@
 
         <!-- ************************ 微信登陆 ************************ -->
         <activity
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -87,9 +87,9 @@
 
         <!-- 启动页 -->
         <activity
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".ue.activity.SplashActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -99,7 +99,8 @@
         </activity>
 
         <!-- 主页 -->
-        <activity android:name=".ue.activity.MainActivity">
+        <activity
+            android:name=".ue.activity.MainActivity">
             <intent-filter>
                 <action android:name="xsda.xsda.ue.activity.MainActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

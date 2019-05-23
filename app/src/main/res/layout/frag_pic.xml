@@ -1,13 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.hiber.tools.layout.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <TextView
-        android:textSize="30dp"
-        android:text="PIC"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    android:layout_height="match_parent"
+    android:background="@color/colorGray">
 
-</RelativeLayout>
+    <!-- 搜索栏 -->
+    <com.hiber.tools.layout.PercentRelativeLayout
+        android:id="@+id/rl_pic_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_heightPercent="9%h">
+
+        <ImageView
+            android:id="@+id/iv_pic_search_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/search"
+            app:layout_heightPercent="40%h"
+            app:layout_widthPercent="40%h" />
+
+        <EditText
+            android:id="@+id/et_pic_search_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_conner_500"
+            android:hint="@string/pic_search_hint"
+            android:inputType="text"
+            android:maxLength="12"
+            android:maxLines="1"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textColor="@color/colorCompanyDark"
+            app:layout_heightPercent="50%h"
+            app:layout_textSizePercent="22%h"
+            app:layout_widthPercent="70%w" />
+
+    </com.hiber.tools.layout.PercentRelativeLayout>
+
+    <!-- 列表 -->
+    <com.p_recycler.p_recycler.core.RcvRefreshWidget
+        android:id="@+id/rf_pic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_pic_banner"
+        app:bottom_background_color="#000000"
+        app:bottom_logo_rate="0.5"
+        app:bottom_logo_src_id="@drawable/loading_pic_refresh"
+        app:head_background_color="#000000"
+        app:head_logo_rate="0.5"
+        app:head_logo_src_id="@drawable/loading_pic_loadmore"
+        app:logo_rotate_duration="500" />
+
+</com.hiber.tools.layout.PercentRelativeLayout>

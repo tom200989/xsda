@@ -107,9 +107,10 @@ dependencies {
     // eventbus
     api 'org.greenrobot:eventbus:3.1.1'
     // xutils 网络框架
-    api 'org.xutils:xutils:3.5.0'
+    // api 'org.xutils:xutils:3.5.0'
+    api(name: 'ma_xutils2', ext: 'aar')
     // 布局架构
-    api(name: 'ma_hiber3_1', ext: 'aar')
+    api(name: 'ma_hiber3_2', ext: 'aar')
     api(name: 'ma_lints3', ext: 'aar')
     // key
     api(name: 'keys', ext: 'aar')
@@ -123,4 +124,8 @@ dependencies {
     api(name: 'waveviews', ext: 'aar')
     // 底部切换栏
     api(name: 'ma_bottomtbab', ext: 'aar')
+    // 下拉刷新
+    api(name: 'ma_refreshview', ext: 'aar')
+    // 圆形\圆角头像
+    api(name: 'ma_cornerview', ext: 'aar')
 }

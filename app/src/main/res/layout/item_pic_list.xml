@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hiber.tools.layout.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp">
+
+    <!--  * 主图 -->
+    <com.p_circleview.p_circleview.core.CornerMaView
+        android:id="@+id/iv_item_pic_list_mainpic"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:corner_radius="10dp"
+        app:layout_marginBottomPercent="5%sh" />
+
+    <!-- * 头像 -->
+    <com.p_circleview.p_circleview.core.CornerMaView
+        android:id="@+id/iv_item_pic_list_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        app:isCircle="true"
+        app:layout_heightPercent="7%sh"
+        app:layout_marginBottomPercent="3%sh"
+        app:layout_widthPercent="7%sh" />
+
+    <!-- 点赞面板 -->
+    <com.hiber.tools.layout.PercentRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        app:layout_heightPercent="5%sh"
+        app:layout_widthPercent="40%sw">
+
+        <!-- * 点赞数 -->
+        <TextView
+            android:id="@+id/tv_item_pic_list_good"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:text="16811"
+            android:textColor="@color/colorGrayDeep"
+            app:layout_textSizePercent="45%h" />
+
+        <!-- 点赞图标(固定) -->
+        <ImageView
+            android:id="@+id/iv_item_pic_list_good"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:layout_toStartOf="@id/tv_item_pic_list_good"
+            android:src="@drawable/heart"
+            app:layout_heightPercent="50%h"
+            app:layout_widthPercent="50%h" />
+
+    </com.hiber.tools.layout.PercentRelativeLayout>
+
+</com.hiber.tools.layout.PercentRelativeLayout>
