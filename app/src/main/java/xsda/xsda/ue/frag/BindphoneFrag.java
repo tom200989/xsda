@@ -202,7 +202,7 @@ public class BindphoneFrag extends RootFrag {
         }
 
         /* 申请获取验证码 */
-        widgetWaiting.setVisibleByAnim();
+        widgetWaiting.setDefaultTextAnim();
         VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(activity);
         verifyCodeHelper.setOnGetServerDateErrorListener(e -> {
             current_state = OP_CAN_EXIT;// 修改状态为「可退出」
@@ -298,7 +298,7 @@ public class BindphoneFrag extends RootFrag {
             if (currentServerDate != -1) {
                 /* 提交验证码 */
                 VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(activity);
-                verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setVisibleByAnim());
+                verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setDefaultTextAnim());
                 verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
                 verifyCodeHelper.setOnCommitVerifyErrorListener(e -> {
                     current_state = OP_CAN_EXIT;// 修改状态为「可修改」
@@ -342,7 +342,7 @@ public class BindphoneFrag extends RootFrag {
      */
     private void toLogin(String phoneNum, String password) {
         LoginOrOutHelper loginHelper = new LoginOrOutHelper(activity);
-        loginHelper.setOnLoginPrepareListener(() -> widgetWaiting.setVisibleText(getString(R.string.logining)));
+        loginHelper.setOnLoginPrepareListener(() -> widgetWaiting.setDescritionText(getString(R.string.logining)));
         loginHelper.setOnLoginAfterListener(() -> widgetWaiting.setGone());
         loginHelper.setOnLoginErrorListener(ex -> {
             current_state = OP_CAN_EXIT;// 修改状态为「可修改」

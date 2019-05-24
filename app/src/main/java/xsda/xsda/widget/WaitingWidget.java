@@ -57,27 +57,38 @@ public class WaitingWidget extends RelativeLayout {
         ivWaitingPin2 = findViewById(R.id.iv_waiting_pin2);
         tvWaitingDes = findViewById(R.id.tv_waiting_des);
         initRes();
-        initPinAnim();
+        initPinAnim((Activity) context);
     }
 
-    private void initPinAnim() {
-        ra1 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
-        ra1.setDuration(1000);
-        ra1.setRepeatCount(Animation.INFINITE);
-        ra1.setRepeatMode(Animation.INFINITE);
-        ra1.setInterpolator(new LinearInterpolator());
-        ivWaitingPin1.setAnimation(ra1);
-        ivWaitingPin1.startAnimation(ra1);
-        ra1.startNow();
+    private void initPinAnim(Activity activity) {
+        clearAll();
+        activity.runOnUiThread(() -> {
+            ra1 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
+            ra1.setDuration(1000);
+            ra1.setRepeatCount(Animation.INFINITE);
+            ra1.setRepeatMode(Animation.INFINITE);
+            ra1.setInterpolator(new LinearInterpolator());
+            ivWaitingPin1.setAnimation(ra1);
+            ivWaitingPin1.startAnimation(ra1);
+            ra1.startNow();
 
-        ra2 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
-        ra2.setDuration(2500);
-        ra2.setRepeatCount(Animation.INFINITE);
-        ra2.setRepeatMode(Animation.INFINITE);
-        ra2.setInterpolator(new LinearInterpolator());
-        ivWaitingPin2.setAnimation(ra2);
-        ivWaitingPin2.startAnimation(ra2);
-        ra2.startNow();
+            ra2 = new RotateAnimation(0, 360, 1, 0.5f, 1, 0.5f);
+            ra2.setDuration(2500);
+            ra2.setRepeatCount(Animation.INFINITE);
+            ra2.setRepeatMode(Animation.INFINITE);
+            ra2.setInterpolator(new LinearInterpolator());
+            ivWaitingPin2.setAnimation(ra2);
+            ivWaitingPin2.startAnimation(ra2);
+            ra2.startNow();
+        });
+    }
+
+    private void clearAll() {
+        ivWaitingPin1.clearAnimation();
+        ivWaitingPin2.clearAnimation();
+        clearAnimation();
+        ra1 = null;
+        ra2 = null;
     }
 
     /**
@@ -101,9 +112,10 @@ public class WaitingWidget extends RelativeLayout {
     /**
      * 设置有动画(默认文本)
      */
-    public void setVisibleByAnim() {
+    public void setDefaultTextAnim() {
         count = 0;
         setVisibility(VISIBLE);
+        initPinAnim((Activity) context);
         tvWaitingDes.setVisibility(VISIBLE);
         // 启动定时器
         if (timerHelper != null) {
@@ -128,8 +140,9 @@ public class WaitingWidget extends RelativeLayout {
     /**
      * 设置没有动画(默认文本)
      */
-    public void setVisibleByNoAnim() {
+    public void setDefaultTextNoAnim() {
         setVisibility(VISIBLE);
+        initPinAnim((Activity) context);
         tvWaitingDes.setVisibility(VISIBLE);
         ((Activity) context).runOnUiThread(() -> tvWaitingDes.setText(XsdaApplication.getApp().getString(R.string.waitting_text)));
 
@@ -140,11 +153,11 @@ public class WaitingWidget extends RelativeLayout {
      *
      * @param text 文本
      */
-    public void setVisibleText(String text) {
+    public void setDescritionText(String text) {
         setVisibility(VISIBLE);
+        initPinAnim((Activity) context);
         tvWaitingDes.setVisibility(VISIBLE);
         ((Activity) context).runOnUiThread(() -> tvWaitingDes.setText(text));
-
     }
 
     /**

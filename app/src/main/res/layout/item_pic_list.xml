@@ -4,18 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp">
+    android:layout_marginStart="2dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="2dp"
+    android:layout_marginBottom="10dp">
 
     <!--  * 主图 -->
     <com.p_circleview.p_circleview.core.CornerMaView
         android:id="@+id/iv_item_pic_list_mainpic"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         app:corner_radius="10dp"
+        android:scaleType="fitXY"
         app:layout_marginBottomPercent="5%sh" />
 
     <!-- * 头像 -->
     <com.p_circleview.p_circleview.core.CornerMaView
+        android:scaleType="fitXY"
         android:id="@+id/iv_item_pic_list_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +28,6 @@
         android:layout_marginStart="15dp"
         app:isCircle="true"
         app:layout_heightPercent="7%sh"
-        app:layout_marginBottomPercent="3%sh"
         app:layout_widthPercent="7%sh" />
 
     <!-- 点赞面板 -->
@@ -45,7 +49,7 @@
             android:layout_marginEnd="15dp"
             android:text="16811"
             android:textColor="@color/colorGrayDeep"
-            app:layout_textSizePercent="45%h" />
+            app:layout_textSizePercent="35%h" />
 
         <!-- 点赞图标(固定) -->
         <ImageView
@@ -56,8 +60,8 @@
             android:layout_marginEnd="15dp"
             android:layout_toStartOf="@id/tv_item_pic_list_good"
             android:src="@drawable/heart"
-            app:layout_heightPercent="50%h"
-            app:layout_widthPercent="50%h" />
+            app:layout_heightPercent="40%h"
+            app:layout_widthPercent="40%h" />
 
     </com.hiber.tools.layout.PercentRelativeLayout>
 

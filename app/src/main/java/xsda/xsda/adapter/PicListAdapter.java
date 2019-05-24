@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
@@ -59,7 +60,7 @@ public class PicListAdapter extends RecyclerView.Adapter<PicListHolder> {
 
     @Override
     public int getItemCount() {
-        return picListItemBeans.size();
+        return picListItemBeans != null ? picListItemBeans.size() : 0;
     }
 
     /**
@@ -69,8 +70,9 @@ public class PicListAdapter extends RecyclerView.Adapter<PicListHolder> {
      */
     private ImageOptions getImgOption() {
         ImageOptions.Builder ib = new ImageOptions.Builder();
-        ib.setFailureDrawableId(R.drawable.loading_failed);
-        ib.setLoadingDrawableId(R.drawable.loading_pic_list);
+        ib.setImageScaleType(ImageView.ScaleType.FIT_XY);
+        ib.setFailureDrawableId(R.drawable.loadfailed_bg_pure);
+        ib.setLoadingDrawableId(R.drawable.loading_bg_pure);
         ib.setUseMemCache(true);
         ib.setIgnoreGif(false);
         return ib.build();

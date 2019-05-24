@@ -1,8 +1,6 @@
 package xsda.xsda.ue.frag;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,20 +10,22 @@ import com.hiber.tools.layout.PercentRelativeLayout;
 import com.p_recycler.p_recycler.core.RcvMAWidget;
 import com.p_recycler.p_recycler.core.RcvRefreshWidget;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import xsda.xsda.R;
 import xsda.xsda.adapter.PicListAdapter;
 import xsda.xsda.bean.PicListItemBean;
+import xsda.xsda.test.PicListTest;
+import xsda.xsda.widget.WaitingWidget;
 
 /*
  * Created by qianli.ma on 2019/5/7 0007.
  */
 public class PicFrag extends RootFrag {
 
-
+    @BindView(R.id.wv_pic)
+    WaitingWidget wvPic;// 等待控件
     @BindView(R.id.rl_pic_banner)
     PercentRelativeLayout rlBanner;// 标题栏
     @BindView(R.id.et_pic_search_input)
@@ -34,7 +34,10 @@ public class PicFrag extends RootFrag {
     ImageView ivSearchLogo;// 搜索按钮
     @BindView(R.id.rf_pic)
     RcvRefreshWidget rfPic;// 下拉上拉控件
+
     private RcvMAWidget rcv;// 列表
+    private PicListAdapter picListAdapter;
+    private List<PicListItemBean> picListItemBeans;
 
     @Override
     public int onInflateLayout() {
@@ -44,26 +47,42 @@ public class PicFrag extends RootFrag {
     @Override
     public void initViewFinish(View inflateView) {
         super.initViewFinish(inflateView);
-        initView();
+        initAdapter();// 初始化适配器
+        initData();// 初始化数据
     }
 
-    private void initView() {
 
-        // TODO: 2019/5/22 0022  测试设置数据
-        List<PicListItemBean> piclists = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            PicListItemBean itemBean = new PicListItemBean();
-            itemBean.setGoodNum(String.valueOf(130 + i));
-            itemBean.setHead(((BitmapDrawable) getResources().getDrawable(R.drawable.pic_test_1)).getBitmap());
-            itemBean.setMainPic(((BitmapDrawable) getResources().getDrawable(R.drawable.pic_test_2)).getBitmap());
-            piclists.add(itemBean);
-        }
-
+    /**
+     * 初始化适配器
+     */
+    private void initAdapter() {
         rcv = rfPic.getRcv();
-        GridLayoutManager layoutManager = new GridLayoutManager(activity, 2, LinearLayoutManager.VERTICAL, false);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, 1);
+        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);// 如果采用瀑布流, 建议加上这个, 用于防止item闪烁
         rcv.setLayoutManager(layoutManager);
-        rcv.setAdapter(new PicListAdapter(activity, piclists));
+        picListAdapter = new PicListAdapter(activity, picListItemBeans);
+        rcv.setAdapter(picListAdapter);
     }
+
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+
+        // TODO: 2019/5/24 0024  建议获取网络图片的方式是: ［统一下载图片后再显示］而不要用xutils的在线显示模式
+        // 显示等待
+        wvPic.setDescritionText(getString(R.string.pic_loading_text));
+        new Thread(() -> {
+            picListItemBeans = PicListTest.testData(activity);
+            // 测试数据
+            activity.runOnUiThread(() -> {
+                picListAdapter.notifys(picListItemBeans);
+                wvPic.setGone();
+            });
+        }).start();
+
+    }
+
 
     @Override
     public void onNexts(Object o, View view, String s) {
@@ -72,6 +91,8 @@ public class PicFrag extends RootFrag {
 
     @Override
     public boolean onBackPresss() {
-        return false;
+        killAllActivitys();
+        kill();
+        return true;
     }
 }

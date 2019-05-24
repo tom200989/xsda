@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorGray">
+    android:background="@color/colorWhite">
 
     <!-- 搜索栏 -->
     <com.hiber.tools.layout.PercentRelativeLayout
@@ -37,7 +37,7 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:textColor="@color/colorCompanyDark"
-            app:layout_heightPercent="50%h"
+            app:layout_heightPercent="65%h"
             app:layout_textSizePercent="22%h"
             app:layout_widthPercent="70%w" />
 
@@ -49,12 +49,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_pic_banner"
-        app:bottom_background_color="#000000"
+        app:bottom_background_color="#ffffff"
         app:bottom_logo_rate="0.5"
         app:bottom_logo_src_id="@drawable/loading_pic_refresh"
-        app:head_background_color="#000000"
+        app:head_background_color="#FFFFFF"
         app:head_logo_rate="0.5"
         app:head_logo_src_id="@drawable/loading_pic_loadmore"
         app:logo_rotate_duration="500" />
+
+    <!-- 等待 -->
+    <xsda.xsda.widget.WaitingWidget
+        android:id="@+id/wv_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
 </com.hiber.tools.layout.PercentRelativeLayout>

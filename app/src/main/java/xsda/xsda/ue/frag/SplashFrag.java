@@ -254,7 +254,7 @@ public class SplashFrag extends RootFrag {
         String password = loginBean.getPassword();
 
         LoginOrOutHelper loginHelper = new LoginOrOutHelper(activity);
-        loginHelper.setOnLoginPrepareListener(() -> widgetLoginWaitting.setVisibleText(getString(R.string.logining)));
+        loginHelper.setOnLoginPrepareListener(() -> widgetLoginWaitting.setDescritionText(getString(R.string.logining)));
         loginHelper.setOnLoginAfterListener(() -> widgetLoginWaitting.setGone());
         loginHelper.setOnLoginErrorListener(ex -> Tgg.show(activity, R.string.login_failed, 2500));
         loginHelper.setOnLoginUserNotExistListener(() -> Tgg.show(activity, R.string.login_user_not_exist, 2500));

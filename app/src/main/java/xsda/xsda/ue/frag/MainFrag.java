@@ -76,7 +76,9 @@ public class MainFrag extends RootFrag {
 
     @Override
     public boolean onBackPresss() {
-        return false;
+        killAllActivitys();
+        kill();
+        return true;
     }
 
     // @OnClick(R.id.bt_quit_wechat)

@@ -169,7 +169,7 @@ public class RegisterFrag extends RootFrag {
                 if (currentServerDate != -1) {
                     /* 提交验证码 */
                     VerifyCodeHelper verifyCodeHelper = new VerifyCodeHelper(activity);
-                    verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setVisibleByAnim());
+                    verifyCodeHelper.setOnCommitVerifyPrepareListener(() -> widgetWaiting.setDefaultTextAnim());
                     verifyCodeHelper.setOnCommitVerifyAfterListener(() -> widgetWaiting.setGone());
                     verifyCodeHelper.setOnCommitVerifyErrorListener(e -> Tgg.show(activity, text_Verify_error, 2000));
                     verifyCodeHelper.setOnCommitVerifySuccessListener(() -> {

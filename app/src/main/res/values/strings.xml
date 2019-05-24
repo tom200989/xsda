@@ -96,5 +96,6 @@
     <string name="main_bottomtab_cart">购物车</string>
     <string name="main_bottomtab_my">我的</string>
     <string name="pic_search_hint">热门搜索: %s</string>
+    <string name="pic_loading_text">加载中…</string>
 
 </resources>

@@ -216,7 +216,7 @@ public class ForgotPsdFrag extends RootFrag {
                 if (currentServerDate != -1) {
                     /* 提交验证码 */
                     ResetPasswordHelper resetPasswordHelper = new ResetPasswordHelper(activity);
-                    resetPasswordHelper.setOnPrepareListener(() -> widgetWaiting.setVisibleByAnim());
+                    resetPasswordHelper.setOnPrepareListener(() -> widgetWaiting.setDefaultTextAnim());
                     resetPasswordHelper.setOnAfterListener(() -> widgetWaiting.setGone());
                     resetPasswordHelper.setOnResetGetVerifyErrorListener(err -> Tgg.show(activity, text_Verify_error, 2000));
                     resetPasswordHelper.setOnCommitResetVerifySuccessListener(() -> {
@@ -240,7 +240,7 @@ public class ForgotPsdFrag extends RootFrag {
 
         /* 申请获取重置验证码 */
         ResetPasswordHelper resetPasswordHelper = new ResetPasswordHelper(activity);
-        resetPasswordHelper.setOnPrepareListener(() -> widgetWaiting.setVisibleByAnim());
+        resetPasswordHelper.setOnPrepareListener(() -> widgetWaiting.setDefaultTextAnim());
         resetPasswordHelper.setOnAfterListener(() -> widgetWaiting.setGone());
         resetPasswordHelper.setOnResetGetVerifyErrorListener(err -> {
             if (err.getCode() == Egg.CANT_SEND_SMS_TOO_FREQUENTLY) {
