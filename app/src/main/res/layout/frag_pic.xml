@@ -8,7 +8,7 @@
 
     <!-- 搜索栏 -->
     <com.hiber.tools.layout.PercentRelativeLayout
-        android:id="@+id/rl_pic_banner"
+        android:id="@+id/rl_pic_search_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_heightPercent="9%h">
@@ -48,7 +48,7 @@
         android:id="@+id/rf_pic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_pic_banner"
+        android:layout_below="@id/rl_pic_search_banner"
         app:bottom_background_color="#ffffff"
         app:bottom_logo_rate="0.5"
         app:bottom_logo_src_id="@drawable/loading_pic_refresh"
@@ -56,6 +56,14 @@
         app:head_logo_rate="0.5"
         app:head_logo_src_id="@drawable/loading_pic_loadmore"
         app:logo_rotate_duration="500" />
+
+    <!-- 搜索记录 -->
+    <com.p_historyrecommend.p_historyrecommend.core.HistoryRecommond
+        android:id="@+id/hrv_pic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_pic_search_banner"
+        android:visibility="gone" />
 
     <!-- 等待 -->
     <xsda.xsda.widget.WaitingWidget

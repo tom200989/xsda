@@ -2,6 +2,7 @@
 <com.hiber.tools.layout.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_item_pic_list_all"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="2dp"
@@ -14,18 +15,18 @@
         android:id="@+id/iv_item_pic_list_mainpic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:corner_radius="10dp"
         android:scaleType="fitXY"
+        app:corner_radius="10dp"
         app:layout_marginBottomPercent="5%sh" />
 
     <!-- * 头像 -->
     <com.p_circleview.p_circleview.core.CornerMaView
-        android:scaleType="fitXY"
         android:id="@+id/iv_item_pic_list_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="15dp"
+        android:scaleType="fitXY"
         app:isCircle="true"
         app:layout_heightPercent="7%sh"
         app:layout_widthPercent="7%sh" />

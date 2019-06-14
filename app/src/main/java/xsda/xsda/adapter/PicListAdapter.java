@@ -42,6 +42,8 @@ public class PicListAdapter extends RecyclerView.Adapter<PicListHolder> {
     @Override
     public void onBindViewHolder(@NonNull PicListHolder holder, int i) {
         PicListItemBean plib = picListItemBeans.get(i);
+        // 设置点击
+        holder.rlItemAll.setOnClickListener(v -> picItemClickNext(plib));
         // 设置主图
         if (plib.getMainPic() == null) {
             x.image().bind(holder.ivMainPic, plib.getMainPicUrl(), getImgOption());
@@ -76,5 +78,26 @@ public class PicListAdapter extends RecyclerView.Adapter<PicListHolder> {
         ib.setUseMemCache(true);
         ib.setIgnoreGif(false);
         return ib.build();
+    }
+
+    /* -------------------------------------------- impl -------------------------------------------- */
+
+    private OnPicItemClickListener onPicItemClickListener;
+
+    // Inteerface--> 接口OnPicItemClickListener
+    public interface OnPicItemClickListener {
+        void picItemClick(PicListItemBean picItemBean);
+    }
+
+    // 对外方式setOnPicItemClickListener
+    public void setOnPicItemClickListener(OnPicItemClickListener onPicItemClickListener) {
+        this.onPicItemClickListener = onPicItemClickListener;
+    }
+
+    // 封装方法picItemClickNext
+    private void picItemClickNext(PicListItemBean picItemBean) {
+        if (onPicItemClickListener != null) {
+            onPicItemClickListener.picItemClick(picItemBean);
+        }
     }
 }

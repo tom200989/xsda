@@ -89,7 +89,8 @@
         <activity
             android:name=".ue.activity.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -100,7 +101,9 @@
 
         <!-- 主页 -->
         <activity
-            android:name=".ue.activity.MainActivity">
+            android:name=".ue.activity.MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="xsda.xsda.ue.activity.MainActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

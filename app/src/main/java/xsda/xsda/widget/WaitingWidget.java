@@ -83,6 +83,9 @@ public class WaitingWidget extends RelativeLayout {
         });
     }
 
+    /**
+     * 清空所有的动画
+     */
     private void clearAll() {
         ivWaitingPin1.clearAnimation();
         ivWaitingPin2.clearAnimation();

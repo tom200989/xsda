@@ -19,7 +19,7 @@ public class PicListTest {
     public static List<PicListItemBean> testData(Activity activity) {
         // TODO: 2019/5/22 0022 ----------------测试设置数据----------------
         List<PicListItemBean> piclists = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 10; i++) {
             PicListItemBean itemBean = new PicListItemBean();
             itemBean.setGoodNum(String.valueOf(130 + i));
             int mod = (i + 5) % 5;

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hiber.tools.RootEncrypt;
@@ -31,6 +32,17 @@ import xsda.xsda.bean.LoginBean;
  */
 
 public class Ogg {
+
+    /**
+     * 设置编辑域编辑状态
+     *
+     * @param et         编辑框
+     * @param isEditable true:可编辑
+     */
+    public static void setEdittextEditable(EditText et, boolean isEditable) {
+        et.setFocusable(isEditable);
+        et.setFocusableInTouchMode(isEditable);
+    }
 
     /**
      * 把流转换成字符

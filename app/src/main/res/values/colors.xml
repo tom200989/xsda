@@ -9,6 +9,7 @@
     <color name="colorGray">#dcdcdc</color>
     <color name="colorGrayDark">#bebebe</color>
     <color name="colorGrayDeep">#A3A3A3</color>
+    <color name="colorAlpha66GrayDeep">#66A3A3A3</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorLightWhite">#FFFFF1</color>
     <color name="colorBlack">#000000</color>

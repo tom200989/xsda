@@ -110,7 +110,7 @@ dependencies {
     // api 'org.xutils:xutils:3.5.0'
     api(name: 'ma_xutils2', ext: 'aar')
     // 布局架构
-    api(name: 'ma_hiber3_2', ext: 'aar')
+    api(name: 'ma_hiber3_3', ext: 'aar')
     api(name: 'ma_lints3', ext: 'aar')
     // key
     api(name: 'keys', ext: 'aar')
@@ -125,7 +125,9 @@ dependencies {
     // 底部切换栏
     api(name: 'ma_bottomtbab', ext: 'aar')
     // 下拉刷新
-    api(name: 'ma_refreshview', ext: 'aar')
+    api(name: 'ma_refreshview2', ext: 'aar')
     // 圆形\圆角头像
     api(name: 'ma_cornerview', ext: 'aar')
+    // 历史记录 + 推荐
+    api(name: 'ma_hisrecom', ext: 'aar')
 }

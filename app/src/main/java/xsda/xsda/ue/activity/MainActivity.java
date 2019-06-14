@@ -19,6 +19,7 @@ import xsda.xsda.ue.frag.PicFrag;
 import xsda.xsda.ue.frag.VideoFrag;
 import xsda.xsda.utils.Cons;
 import xsda.xsda.utils.Lgg;
+import xsda.xsda.utils.Ogg;
 import xsda.xsda.widget.OfflineWidget;
 
 /*
@@ -66,7 +67,10 @@ public class MainActivity extends BaseActivity {
         int[] icons = {R.drawable.pic, R.drawable.video, R.drawable.shop, R.drawable.cart, R.drawable.my};
         int[] titles = {R.string.main_bottomtab_pic, R.string.main_bottomtab_video, R.string.main_bottomtab_shop, R.string.main_bottomtab_cart, R.string.main_bottomtab_my};
         // 设置切换
-        bottomTab.setOnBottomTabItemClickListener(position -> toFrag(getClass(), frags[position], null, false));
+        bottomTab.setOnBottomTabItemClickListener(position -> {
+            Ogg.hideKeyBoard(this);
+            toFrag(getClass(), frags[position], null, false);
+        });
         bottomTab.setOnBottomTabFinishListener(position -> toFrag(getClass(), frags[2], null, true));
         bottomTab.create(icons, titles);
     }
