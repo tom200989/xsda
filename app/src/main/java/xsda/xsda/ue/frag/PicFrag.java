@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.hiber.hiber.RootFrag;
 import com.hiber.tools.layout.PercentRelativeLayout;
@@ -22,6 +21,7 @@ import xsda.xsda.adapter.PicListAdapter;
 import xsda.xsda.bean.PicListItemBean;
 import xsda.xsda.test.PicListTest;
 import xsda.xsda.utils.Ogg;
+import xsda.xsda.widget.SearchWidget;
 import xsda.xsda.widget.WaitingWidget;
 
 /*
@@ -34,7 +34,7 @@ public class PicFrag extends RootFrag {
     @BindView(R.id.et_pic_search_input)
     EditText etSearchInput;// 输入框
     @BindView(R.id.iv_pic_search_logo)
-    ImageView ivSearchLogo;// 搜索按钮
+    SearchWidget ivSearchLogo;// 搜索按钮
     @BindView(R.id.rf_pic)
     RcvRefreshWidget rfPic;// 下拉上拉控件
     @BindView(R.id.wv_pic)
@@ -44,7 +44,8 @@ public class PicFrag extends RootFrag {
 
     private RcvMAWidget rcvPic;// 图片列表
     private PicListAdapter picListAdapter;
-    private List<PicListItemBean> picListItemBeans;
+    private List<PicListItemBean> picListItemBeans = new ArrayList<>();
+    private boolean isSoftShow = false;// 软键盘是否弹出
 
     @Override
     public int onInflateLayout() {
@@ -71,7 +72,7 @@ public class PicFrag extends RootFrag {
         picListAdapter = new PicListAdapter(activity, picListItemBeans);
         picListAdapter.setOnPicItemClickListener(picItemBean -> {
             // TODO: 2019/6/14 0014  跳转到详情页
-            toast("click : " + picItemBean.getGoodNum(), 3000);
+            toast("click : " + picItemBean.getGoodNum(), 2000);
         });
         rcvPic.setAdapter(picListAdapter);
     }
@@ -85,9 +86,9 @@ public class PicFrag extends RootFrag {
         // TOAT: 建议获取网络图片的方式是: ［统一下载图片后再显示］而不要用xutils的在线显示模式
         // 显示等待
         wvPic.setDescritionText(getString(R.string.pic_loading_text));
+        // TOGO: 测试数据
         new Thread(() -> {
             picListItemBeans = PicListTest.testData(activity);
-            // 测试数据
             activity.runOnUiThread(() -> {
                 picListAdapter.notifys(picListItemBeans);
                 wvPic.setGone();
@@ -99,6 +100,10 @@ public class PicFrag extends RootFrag {
      * 初始化事件
      */
     private void initEvent() {
+
+        /* ed提示搜索词 */
+        String hint = String.format(getString(R.string.pic_search_hint), "amiee");
+        etSearchInput.setHint(hint);
 
         /* 设置edittext监听 */
         etSearchInput.setOnFocusChangeListener((v, hasFocus) -> {
@@ -116,12 +121,14 @@ public class PicFrag extends RootFrag {
                 hrvPic.setVisibility(View.VISIBLE);
                 hrvPic.setData(hiss, recoms);
             } else {
+                Ogg.hideKeyBoard(activity);
                 hrvPic.setVisibility(View.GONE);
             }
         });
 
         /* 点击搜索按钮 */
-        ivSearchLogo.setOnClickListener(v -> {
+        // 必须采用实现了［onTouchListener］的控件来重新设定点击行为
+        ivSearchLogo.setOnClickItListener(() -> {
             // TODO: 2019/6/14 0014  请求数据库搜索
             Ogg.hideKeyBoard(activity);
             String searchContent = etSearchInput.getText().toString();
@@ -149,30 +156,35 @@ public class PicFrag extends RootFrag {
         /* 点击历史记录条目 */
         hrvPic.setOnHistoryItemClickListener(historyItemBean -> {
             // TODO: 2019/6/14 0014  请求网络 -- 点击历史条目 
+            Ogg.hideKeyBoard(activity);
             toast("click history :" + historyItemBean.getItemHistoryTvTitleString(), 1500);
         });
 
         /* 点击历史记录条目删除 */
         hrvPic.setOnHistoryItemDelClickListener(() -> {
             // TODO: 2019/6/14 0014  删除缓存数据
+            Ogg.hideKeyBoard(activity);
             toast("click history del item", 1500);
         });
 
         /* 点击清空历史记录 */
         hrvPic.setOnClearAllHistoryListener(() -> {
             // TODO: 2019/6/14 0014  删除全部历史记录缓存数据
+            Ogg.hideKeyBoard(activity);
             toast("click history del all item", 1500);
         });
 
         /* 点击换一拨 */
         hrvPic.setOnRecomTurnClickListener(() -> {
             // TODO: 2019/6/14 0014 请求网络 -- 获取换一拨的新数据
+            Ogg.hideKeyBoard(activity);
             toast("click recom turn", 1500);
         });
 
         /* 点击推荐item */
         hrvPic.setOnRecomItemClickListener(textView -> {
             // TODO: 2019/6/14 0014 请求网络 -- 跳转推荐条目的详情页
+            Ogg.hideKeyBoard(activity);
             toast("click recom item: " + textView.getText().toString(), 1500);
         });
     }
@@ -185,6 +197,7 @@ public class PicFrag extends RootFrag {
 
     @Override
     public boolean onBackPresss() {
+
         if (hrvPic.getVisibility() == View.VISIBLE) {
             // 隐藏软键盘
             Ogg.hideKeyBoard(activity);
@@ -195,7 +208,11 @@ public class PicFrag extends RootFrag {
             // 再重新恢复焦点跟随触摸模式
             Ogg.setEdittextEditable(etSearchInput, true);
             return true;
+
+        } else if (wvPic.getVisibility() == View.VISIBLE) {
+            return true;
         }
+
         killAllActivitys();
         kill();
         return true;

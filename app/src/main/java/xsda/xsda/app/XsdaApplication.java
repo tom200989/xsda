@@ -52,6 +52,11 @@ public class XsdaApplication extends RootApp {
             Sgg.getInstance(this).putString(Cons.SP_DEVICE_ID, deviceId);
         }
         Lgg.t(Cons.TAG).vv("application deviceId: " + deviceId);
+        // TOAT: 域名更新 2019-06-21 更新 -- 未来域名可能会有变动以此记录
+        AVOSCloud.setServer(AVOSCloud.SERVER_TYPE.API, "https://avoscloud.com");// 存储
+        AVOSCloud.setServer(AVOSCloud.SERVER_TYPE.ENGINE, "https://avoscloud.com");// 引擎
+        AVOSCloud.setServer(AVOSCloud.SERVER_TYPE.PUSH, "https://avoscloud.com");// 推送
+        AVOSCloud.setServer(AVOSCloud.SERVER_TYPE.RTM, "https://router-g0-push.avoscloud.com");// 即时通讯
         // 初始化LeanClound key
         String appid = Cons.LEANCLOUD_APP_ID;
         String appkey = Cons.LEANCLOUD_APP_KEY;

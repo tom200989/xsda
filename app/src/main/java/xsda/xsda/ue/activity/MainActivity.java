@@ -7,6 +7,10 @@ import android.view.View;
 import com.bottomtab.bottomtab.BottomTab;
 import com.hiber.bean.RootProperty;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import butterknife.BindView;
 import xsda.xsda.BuildConfig;
 import xsda.xsda.R;
@@ -28,9 +32,9 @@ import xsda.xsda.widget.OfflineWidget;
 public class MainActivity extends BaseActivity {
 
     public Class[] frags = {// 页面
+            MainFrag.class, // 商城-3
             PicFrag.class, // 图片-1
             VideoFrag.class, // 视频-2
-            MainFrag.class, // 商城-3
             CartFrag.class, // 购物车-4
             MyFrag.class // 我的-5
     };
@@ -39,6 +43,8 @@ public class MainActivity extends BaseActivity {
     OfflineWidget wdMainOffline;// 离线面板
     @BindView(R.id.bottom_tab)
     BottomTab bottomTab;// 底部切换栏
+    
+    private List<Class> fragList = new ArrayList<>();
 
     @Override
     public RootProperty initProperty() {
@@ -51,8 +57,11 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void initViewFinish(int layoutId) {
         super.initViewFinish(layoutId);
+        // 0.转换集合
+        fragList = Ogg.turnFragList(0, 2, Arrays.asList(frags));
         // 1.创建底部切换栏
         createBottomTab();
         // 2.启动后台防踢服务
@@ -69,9 +78,8 @@ public class MainActivity extends BaseActivity {
         // 设置切换
         bottomTab.setOnBottomTabItemClickListener(position -> {
             Ogg.hideKeyBoard(this);
-            toFrag(getClass(), frags[position], null, false);
+            toFrag(getClass(), fragList.get(position), null, false);
         });
-        bottomTab.setOnBottomTabFinishListener(position -> toFrag(getClass(), frags[2], null, true));
         bottomTab.create(icons, titles);
     }
 

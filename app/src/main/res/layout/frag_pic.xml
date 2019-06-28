@@ -13,13 +13,15 @@
         android:layout_height="wrap_content"
         app:layout_heightPercent="9%h">
 
-        <ImageView
+        <xsda.xsda.widget.SearchWidget
             android:id="@+id/iv_pic_search_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:src="@drawable/search"
             app:layout_heightPercent="40%h"
             app:layout_widthPercent="40%h" />

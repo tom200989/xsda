@@ -17,5 +17,13 @@
     <color name="colorHiberPrimaryDark">#303F9F</color>
     <color name="colorHiberAccent">#000000</color>
     <color name="colorMainBottom">#FFFEF7</color>
+    <color name="colorMainLeftItemCheck">#fd9bbc</color>
+    <color name="colorMainLeftItemUnCheck">#FFFFFF</color>
+    <color name="colorMainLeftItemTextUnCheck">#000000</color>
+    <color name="colorMainRcvSplit">#ffdce8</color>
+    <color name="colorMainRightTitle">#555555</color>
+    <color name="colorMainRightMore">#fd9bbc</color>
+    <color name="colorMainRightItemTitle">#555555</color>
+    <color name="colorMainSearchEdittextbg">#ffc6d9</color>
     
 </resources>

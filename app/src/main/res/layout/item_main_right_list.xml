@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hiber.tools.layout.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.hiber.tools.layout.PercentLinearLayout
+        app:layout_marginBottomPercent="2%sh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 头部图片 -->
+        <ImageView
+            android:id="@+id/iv_content_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:layout_heightPercent="40%w" />
+
+        <!-- 标题文本 -->
+        <com.hiber.tools.layout.PercentRelativeLayout
+            android:id="@+id/rl_content_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_content_pic"
+            app:layout_heightPercent="8%sh">
+
+            <TextView
+                android:id="@+id/tv_content_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Categoty"
+                android:textColor="@color/colorMainRightTitle"
+                app:layout_textSizePercent="2%sh" />
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="1dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:layout_toStartOf="@id/tv_content_title"
+                android:background="@color/colorGrayDeep" />
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="1dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@id/tv_content_title"
+                android:background="@color/colorGrayDeep" />
+
+        </com.hiber.tools.layout.PercentRelativeLayout>
+
+        <!-- 物品列表 -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_content_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdge="none"
+            android:overScrollMode="never" />
+
+        <!-- 底部更多 -->
+        <TextView
+            android:id="@+id/tv_content_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorRoot"
+            android:gravity="center"
+            android:text="@string/main_right_item_more"
+            android:textColor="@color/colorMainRightMore"
+            app:layout_heightPercent="8%sh"
+            app:layout_textSizePercent="2.2%sh" />
+
+    </com.hiber.tools.layout.PercentLinearLayout>
+
+</com.hiber.tools.layout.PercentRelativeLayout>

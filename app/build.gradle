@@ -92,13 +92,13 @@ dependencies {
     api 'com.android.support:support-v4:28.0.0'
     api 'com.android.support:appcompat-v7:28.0.0'
     // LeanCloud 基础包
-    api ('cn.leancloud.android:avoscloud-sdk:4.7.10')
+    api('cn.leancloud.android:avoscloud-sdk:4.7.10')
     // 推送与实时聊天需要的包
-    api ('cn.leancloud.android:avoscloud-push:4.7.10@aar'){transitive = true}
+    api('cn.leancloud.android:avoscloud-push:4.7.10@aar') { transitive = true }
     // LeanCloud 用户反馈包
-    api ('cn.leancloud.android:avoscloud-feedback:4.7.10@aar')
+    api('cn.leancloud.android:avoscloud-feedback:4.7.10@aar')
     // LeanCloud 应用内搜索包
-    api ('cn.leancloud.android:avoscloud-search:4.7.10@aar')
+    api('cn.leancloud.android:avoscloud-search:4.7.10@aar')
     // RSA加密
     api files('libs/rsa.jar')
     // fastjson转换
@@ -110,7 +110,7 @@ dependencies {
     // api 'org.xutils:xutils:3.5.0'
     api(name: 'ma_xutils2', ext: 'aar')
     // 布局架构
-    api(name: 'ma_hiber3_3', ext: 'aar')
+    api(name: 'ma_hiber3_4', ext: 'aar')
     api(name: 'ma_lints3', ext: 'aar')
     // key
     api(name: 'keys', ext: 'aar')
@@ -130,4 +130,6 @@ dependencies {
     api(name: 'ma_cornerview', ext: 'aar')
     // 历史记录 + 推荐
     api(name: 'ma_hisrecom', ext: 'aar')
+    // 商城页面滚动图
+    api(name: 'ma_scroll3', ext: 'aar')
 }

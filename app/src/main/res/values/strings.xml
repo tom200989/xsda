@@ -97,5 +97,7 @@
     <string name="main_bottomtab_my">我的</string>
     <string name="pic_search_hint">热门搜索: %s</string>
     <string name="pic_loading_text">加载中…</string>
+    <string name="video_loading_text">加载中…</string>
+    <string name="main_right_item_more">进入%s频道</string>
 
 </resources>

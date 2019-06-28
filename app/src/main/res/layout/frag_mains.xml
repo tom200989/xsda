@@ -5,47 +5,107 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--&lt;!&ndash; 底部选项板 &ndash;&gt;-->
-    <!--<com.hiber.tools.layout.PercentLinearLayout-->
-        <!--android:id="@+id/rl_main_bottom"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:orientation="horizontal"-->
-        <!--app:layout_heightPercent="8%h">-->
+    <!-- 搜索框 -->
+    <com.hiber.tools.layout.PercentRelativeLayout
+        android:id="@+id/rl_main_search_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMainSearchEdittextbg"
+        app:layout_heightPercent="9%h">
 
-        <!--&lt;!&ndash;todo 继续完善UI&ndash;&gt;-->
+        <com.hiber.tools.layout.PercentRelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            app:layout_widthPercent="40%h">
 
-    <!--</com.hiber.tools.layout.PercentLinearLayout>-->
+            <xsda.xsda.widget.SearchWidget
+                android:id="@+id/iv_main_search_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/search2"/>
 
-    <!--&lt;!&ndash; 类目列表 &ndash;&gt;-->
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/rcv_main_left"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_above="@id/rl_main_bottom"-->
-        <!--app:layout_widthPercent="20%w" />-->
+        </com.hiber.tools.layout.PercentRelativeLayout>
 
-    <!--&lt;!&ndash; 内容列表 &ndash;&gt;-->
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/rcv_main_right"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_above="@id/rl_main_bottom"-->
-        <!--android:layout_toEndOf="@id/rcv_main_left" />-->
+        <EditText
+            android:id="@+id/et_main_search_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg1_conner_500"
+            android:hint="@string/pic_search_hint"
+            android:inputType="text"
+            android:maxLength="12"
+            android:maxLines="1"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textColor="@color/colorCompanyDark"
+            app:layout_heightPercent="65%h"
+            app:layout_textSizePercent="22%h"
+            app:layout_widthPercent="85%w" />
 
-    <!--&lt;!&ndash; 离线显示 &ndash;&gt;-->
-    <!--<xsda.xsda.widget.OfflineWidget-->
-        <!--android:id="@+id/wd_main_offline"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:visibility="gone" />-->
+    </com.hiber.tools.layout.PercentRelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_main_test"
-        android:background="@color/avoscloud_feedback_text_gray"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:layout_centerInParent="true"
-        android:text="main home page" />
+    <!-- 联动布局 -->
+    <com.hiber.tools.layout.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_main_search_banner">
+
+        <!-- 左侧类目 -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_main_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fadingEdge="none"
+            android:overScrollMode="never"
+            app:layout_widthPercent="20%w" />
+
+        <!-- 分割线 -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/rcv_main_left"
+            android:background="@color/colorMainRcvSplit" />
+
+        <!-- 右侧内容 -->
+        <com.p_mascroll.p_mascroll.MAScrollView
+            android:id="@+id/sv_main_right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/rcv_main_left"
+            android:fadingEdge="none"
+            android:overScrollMode="never">
+
+            <com.hiber.tools.layout.PercentLinearLayout
+                android:id="@+id/ll_main_right"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </com.p_mascroll.p_mascroll.MAScrollView>
+
+    </com.hiber.tools.layout.PercentRelativeLayout>
+
+    <!-- 搜索记录 -->
+    <com.p_historyrecommend.p_historyrecommend.core.HistoryRecommond
+        android:id="@+id/hrv_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_main_search_banner"
+        android:visibility="gone" />
+
+    <!-- 等待 -->
+    <xsda.xsda.widget.WaitingWidget
+        android:id="@+id/wv_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
 </com.hiber.tools.layout.PercentRelativeLayout>

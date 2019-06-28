@@ -5,10 +5,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.support.annotation.ColorRes;
+import android.support.annotation.IntRange;
 import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hiber.tools.RootEncrypt;
@@ -21,7 +26,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -32,6 +40,96 @@ import xsda.xsda.bean.LoginBean;
  */
 
 public class Ogg {
+
+    /**
+     * 对imageview进行渲染
+     *
+     * @param context   域
+     * @param imageView 图元
+     * @param colorRes  颜色资源
+     * @return 新图元
+     */
+    public static ImageView getFilterDraw(Context context, ImageView imageView, @ColorRes int colorRes) {
+        int color = context.getResources().getColor(colorRes);
+        Drawable background = imageView.getDrawable();
+        background.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        return imageView;
+    }
+
+    /**
+     * 获取联动滚动的最佳跳跃点
+     *
+     * @param rightBottoms 右侧layout的bottom
+     * @param scrollY      当前滚动的Y值
+     * @param baseline     参考线(用于检测scrollY到达该线后认为已经到达跳跃点)
+     *                     baseline数值越大 -- 越早进入下一个面板
+     * @return 跳跃点索引
+     */
+    public static int getBestPostion(List<Integer> rightBottoms, int scrollY, @IntRange(from = 0) int baseline) {
+        for (int rb : rightBottoms) {
+            if (scrollY != 0) {
+                // baseline数值越大 -- 越早进入下一个面板
+                int divide = rb / (scrollY + baseline);
+                if (divide > 0) {
+                    return rightBottoms.indexOf(rb);
+                }
+            } else {
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * 调换元素位置
+     *
+     * @param need    需要调转的位标
+     * @param target  要落户的目标位标
+     * @param oriList 原生集合
+     * @return 新集合
+     */
+    @SuppressWarnings("unchecked")
+    public static List turnFragList(int need, int target, List oriList) {
+
+        // 0.目标位置 > 元素个数 | 被动元素位置与目标位置相同 -- 返回原集合
+        if (target > oriList.size() | need == target) {
+            return oriList;
+        }
+
+        // 1.获取需要移位的元素
+        List newList = new ArrayList<>();
+        Object needClass = oriList.get(need);
+
+        // 2.检测位置
+        if (need > target) {
+            // 2.1.集合反转
+            Collections.reverse(oriList);
+            // 2.2.位标互换
+            need = need ^ target;
+            target = need ^ target;
+            need = need ^ target;
+        }
+
+        // 3.添加第一段
+        for (int i = 0; i <= target; i++) {
+            if (i != need) {
+                newList.add(oriList.get(i));
+            }
+        }
+        // 4.添加指定needClass
+        newList.add(needClass);
+        // 5.添加剩余
+        for (int i = target + 1; i < oriList.size(); i++) {
+            newList.add(oriList.get(i));
+        }
+
+        // 6.检测位置 -- 决定是否需要反转
+        if (need > target) {
+            Collections.reverse(newList);
+        }
+
+        return newList;
+    }
 
     /**
      * 设置编辑域编辑状态
@@ -67,7 +165,7 @@ public class Ogg {
     /**
      * 获取本地版本号
      *
-     * @param context
+     * @param context 域
      * @return 版本号整型
      */
     public static int getLocalVersion(Context context) {
@@ -76,9 +174,8 @@ public class Ogg {
             // 00_从上下文中获取包管理者 --> 获取当前包用getPackageName
             PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
             // 01_获取包信息中的版本号
-            int versionCode = packageInfo.versionCode;
             // 02_返回版本号
-            return versionCode;
+            return packageInfo.versionCode;
         } catch (Exception e) {
             e.printStackTrace();
         }
